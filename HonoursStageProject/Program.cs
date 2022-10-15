@@ -1,3 +1,13 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using HonoursStageProject.Managers;
 
-Console.WriteLine("Hello, World!");
+namespace HonoursStageProject;
+
+public static class Program
+{
+    // Main Method
+    public static void Main()
+    {
+        using SceneManager program = new SceneManager();
+        program.Run(60.0);
+    }
+}
