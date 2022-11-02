@@ -10,6 +10,7 @@ public class TerrainScene : Scene
     {
         sceneManager._renderer = Render;
         sceneManager._updater = Update;
+        sceneManager._mouseEvent = null;
         
         Initialize();
     }

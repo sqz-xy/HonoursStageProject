@@ -18,7 +18,7 @@ public class SceneManager : GameWindow
 
     public delegate void MouseDelegate(MouseEventArgs e);
 
-    public MouseDelegate _mouseEvent;
+    public MouseDelegate? _mouseEvent;
 
     // Stack of render delegates
     // Update delegate stays the same
@@ -68,7 +68,7 @@ public class SceneManager : GameWindow
 
     protected override void OnMouseMove(MouseMoveEventArgs e)
     {
-        _mouseEvent(e);
+        _mouseEvent?.Invoke(e);
     }
 
     public void ChangeScene(SceneTypes pSceneType)

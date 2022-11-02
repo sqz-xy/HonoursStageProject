@@ -11,12 +11,7 @@ static class VertexManager
     private static int _VBOIndex;
     private static int _VAOIndex;
     private static int _EBOIndex;
-
-    static VertexManager()
-    {
-        
-    }
-
+    
     public static void Initialize(int pVBOSize, int pVAOSize, int pEBOSize)
     {
         _VBO_IDs = new int[pVBOSize];

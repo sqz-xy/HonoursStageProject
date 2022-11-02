@@ -10,7 +10,6 @@ namespace HonoursStageProject.Scenes;
 
 public class MainMenuScene : Scene
 {
-    // We modify the vertex array to include four vertices for our rectangle.
     private readonly float[] _triangleVertices =
     {
         0.5f,  0.5f, 0.0f, // top right
@@ -18,9 +17,7 @@ public class MainMenuScene : Scene
         -0.5f, -0.5f, 0.0f, // bottom left
         -0.5f,  0.5f, 0.0f, // top left
     };
-
-    // Then, we create a new array: indices.
-    // This array controls how the EBO will use those vertices to create triangles
+    
     private readonly uint[] _triangleIndices =
     {
         // Note that indices start at 0!
