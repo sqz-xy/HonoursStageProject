@@ -51,7 +51,7 @@ static class VertexManager
     /// <param name="pPositionLocation">The vertex position information from the shader</param>
     /// <param name="pNormalLocation">The vertex normal information from the shader</param>
     /// <returns>The VAO index of the bound vertices</returns>
-    public static int BindVertexData(float[] pVertices, int[] pIndices, int pPositionLocation, int pNormalLocation, int pTextureLocation)
+    public static int BindVertexData(float[] pVertices, uint[] pIndices, int pPositionLocation, int pNormalLocation, int pTextureLocation)
     {
         GL.BindVertexArray(_VAO_IDs[_VAOIndex]);
         _VAOIndex++;
@@ -80,6 +80,7 @@ static class VertexManager
         // No normals or textures yet
         EnableVertexAttributes(pPositionLocation, 0, 0);
 
+        GL.BindVertexArray(0);
         return _VAOIndex - 1;
     }
 

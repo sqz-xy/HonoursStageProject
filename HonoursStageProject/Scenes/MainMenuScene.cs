@@ -34,7 +34,7 @@ public class MainMenuScene : Scene
     private Shader _shader;
 
     private Vector4 buttonColour;
-    private int ButtonIndex;
+    private int buttonIndex;
 
     public MainMenuScene(SceneManager sceneManager) : base(sceneManager)
     {
@@ -53,35 +53,9 @@ public class MainMenuScene : Scene
     {
         // Initialise variables
         _shader = new Shader(@"Shaders/vs.vert", @"Shaders/fs.frag");
-        _VBO = GL.GenBuffer();
-        _VAO = GL.GenVertexArray();
-        _EBO = GL.GenBuffer();
-        
-        GL.BindVertexArray(_VAO);
+        VertexManager.Initialize(1, 1, 1);
 
-        GL.BindBuffer(BufferTarget.ArrayBuffer, _VBO);
-        GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(_triangleVertices.Length * sizeof(float)), _triangleVertices, BufferUsageHint.StaticDraw);
-
-        GL.BindBuffer(BufferTarget.ElementArrayBuffer, _EBO);
-        GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(_triangleIndices.Length * sizeof(uint)), _triangleIndices, BufferUsageHint.StaticDraw);
-        
-        // Make sure data is buffered correctly
-        GL.GetBufferParameter(BufferTarget.ArrayBuffer, BufferParameterName.BufferSize, out int size);
-        if (_triangleVertices.Length * sizeof(float) != size)
-        {
-            throw new ApplicationException("Vertex data not loaded onto graphics card correctly");
-        }
-
-        GL.GetBufferParameter(BufferTarget.ElementArrayBuffer, BufferParameterName.BufferSize, out size);
-        if (_triangleIndices.Length * sizeof(float) != size)
-        {
-            throw new ApplicationException("Index data not loaded onto graphics card correctly");
-        }
-
-        GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
-        GL.EnableVertexAttribArray(0);
-
-        GL.BindVertexArray(0);
+        buttonIndex = VertexManager.BindVertexData(_triangleVertices, _triangleIndices, 0, 0, 0);
         
         // Shader stuff
         _shader.UseShader();
@@ -94,7 +68,7 @@ public class MainMenuScene : Scene
         
         _shader.UseShader();
         
-        GL.BindVertexArray(_VAO);
+        GL.BindVertexArray(VertexManager.GetVAOAtIndex(buttonIndex));
         GL.DrawElements(PrimitiveType.Triangles, _triangleIndices.Length, DrawElementsType.UnsignedInt, 0);
     }
 
@@ -118,8 +92,6 @@ public class MainMenuScene : Scene
 
     public override void Close()
     {
-        GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-        GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
-        GL.BindVertexArray(0);
+        VertexManager.ClearData();
     }
 }
