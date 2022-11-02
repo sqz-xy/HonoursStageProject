@@ -10,7 +10,8 @@ public class TerrainScene : Scene
     {
         sceneManager.Renderer = Render;
         sceneManager.Updater = Update;
-        sceneManager.MouseEvent = null;
+        sceneManager.MouseMoveEvent = null;
+        sceneManager.MouseClickEvent = null;
         
         Initialize();
     }

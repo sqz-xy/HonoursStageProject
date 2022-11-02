@@ -29,7 +29,7 @@ public class MainMenuScene : Scene
     private int _ebo;
     private Shader _shader;
 
-    private Quadrilateral _button;
+    private Quadrilateral2D _button;
 
     public MainMenuScene(SceneManager sceneManager) : base(sceneManager)
     {
@@ -37,17 +37,20 @@ public class MainMenuScene : Scene
 
         sceneManager.Renderer = Render;
         sceneManager.Updater = Update;
-        sceneManager.MouseEvent += MouseMovement;
+        sceneManager.MouseMoveEvent += MouseMovement;
+        sceneManager.MouseClickEvent += MouseClick;
+        
         Initialize();
     }
 
     public override void Initialize()
     {
         // Initialise variables
-        _shader = new Shader(@"Shaders/vs.vert", @"Shaders/fs.frag");
         VertexManager.Initialize(1, 1, 1);
         
-        _button = new Quadrilateral(0.5f, 0.9f, Vector4.One);
+        _shader = new Shader(@"Shaders/vs.vert", @"Shaders/fs.frag");
+        
+        _button = new Quadrilateral2D(new Vector2(0.5f, 0.0f),0.2f, 0.1f, Vector4.One);
         _button.Colour = Vector4.One;
         _button.Index = VertexManager.BindVertexData(_button.Vertices, _button.Indices, 0, 0, 0);
         
@@ -68,17 +71,24 @@ public class MainMenuScene : Scene
 
     private void MouseMovement(MouseEventArgs e)
     {
-        double normalizedX = -1.0 + 2.0 * (double)e.X / SceneManager.Width; 
-        double normalizedY = 1.0 - 2.0 * (double)e.Y / SceneManager.Height; 
-        Console.WriteLine($"{normalizedX} {normalizedY}");
+        Vector2 mousePos = new Vector2((float) (-1.0 + 2.0 * (double) e.X / SceneManager.Width),
+            (float) (1.0 - 2.0 * (double) e.Y / SceneManager.Height));
 
-        if ((normalizedX >= -_button.Width && normalizedX <= _button.Width) && (normalizedY >= -_button.Height && normalizedY <= _button.Height))
+        if (Shape2D.CheckSquareIntersection(_button, mousePos))
             _button.Colour = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
-            //_sceneManager.ChangeScene(SceneTypes.SCENE_TERRAIN);
         else
             _button.Colour = Vector4.One;
     }
-    
+
+    private void MouseClick(MouseEventArgs e)
+    {
+        Vector2 mousePos = new Vector2((float) (-1.0 + 2.0 * (double) e.X / SceneManager.Width),
+            (float) (1.0 - 2.0 * (double) e.Y / SceneManager.Height));
+
+        if (Shape2D.CheckSquareIntersection(_button, mousePos))
+            SceneManager.ChangeScene(SceneTypes.SceneTerrain);
+    }
+
     public override void Update(FrameEventArgs e)
     {
         int vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "uColour");
