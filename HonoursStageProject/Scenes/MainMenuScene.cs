@@ -79,7 +79,8 @@ public class MainMenuScene : Scene
         Console.WriteLine($"{normalizedX} {normalizedY}");
 
         if ((normalizedX >= -0.5f && normalizedX <= 0.5f) && (normalizedY >= -0.5f && normalizedY <= 0.5f))
-            buttonColour = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
+            //buttonColour = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
+            _sceneManager.ChangeScene(SceneTypes.SCENE_TERRAIN);
         else
             buttonColour = Vector4.One;
     }

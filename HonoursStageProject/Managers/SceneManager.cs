@@ -71,9 +71,33 @@ public class SceneManager : GameWindow
         _mouseEvent(e);
     }
 
+    public void ChangeScene(SceneTypes pSceneType)
+    {
+        _currentScene.Close();
+
+        try
+        {
+            switch (pSceneType)
+            {
+                case SceneTypes.SCENE_MAIN_MENU:
+                    _currentScene = new MainMenuScene(this);
+                    break;
+                case SceneTypes.SCENE_TERRAIN:
+                    _currentScene = new TerrainScene(this);
+                    break;
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            _currentScene = new MainMenuScene(this);
+        }
+    }
+
     protected override void OnUnload(EventArgs e)
     {
         base.OnUnload(e);
+        _currentScene.Close();
     }
 
 }

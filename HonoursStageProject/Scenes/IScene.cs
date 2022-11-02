@@ -2,9 +2,10 @@
 
 namespace HonoursStageProject.Scenes;
 
-enum SceneTypes
+public enum SceneTypes
 {
     SCENE_MAIN_MENU,
+    SCENE_TERRAIN
 }
 
 public interface IScene
