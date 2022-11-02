@@ -34,6 +34,7 @@ public class MainMenuScene : Scene
     private Shader _shader;
 
     private Vector4 buttonColour;
+    private int ButtonIndex;
 
     public MainMenuScene(SceneManager sceneManager) : base(sceneManager)
     {
@@ -108,7 +109,7 @@ public class MainMenuScene : Scene
         else
             buttonColour = Vector4.One;
     }
-
+    
     public override void Update(FrameEventArgs e)
     {
         int vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "uColour");
