@@ -1,5 +1,6 @@
 ﻿
 using OpenTK;
+using OpenTK.Graphics.ES11;
 
 namespace HonoursStageProject.Objects;
 
@@ -10,6 +11,7 @@ public abstract class Shape2D
     public Vector2 Position;
     public Vector4 Colour;
     public int Index;
+    public PrimitiveType PrimitiveType;
     
     public static bool CheckSquareIntersection(Quadrilateral2D pQuadrilateral2D, Vector2 pPosition)
     {

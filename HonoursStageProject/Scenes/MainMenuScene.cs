@@ -50,7 +50,7 @@ public sealed class MainMenuScene : Scene
         _shader.UseShader();
         
         GL.BindVertexArray(VertexManager.GetVaoAtIndex(_button.Index));
-        GL.DrawElements(PrimitiveType.Triangles, _button.Indices.Length, DrawElementsType.UnsignedInt, 0);
+        GL.DrawElements((PrimitiveType) _button.PrimitiveType, _button.Indices.Length, DrawElementsType.UnsignedInt, 0);
     }
 
     private void MouseMovement(MouseEventArgs e)

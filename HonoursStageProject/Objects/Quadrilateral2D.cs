@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using OpenTK.Graphics.ES11;
 
 namespace HonoursStageProject.Objects;
 
@@ -9,6 +10,8 @@ public class Quadrilateral2D : Shape2D
 
     public Quadrilateral2D(Vector2 pPosition, float pWidth, float pHeight, Vector4 pColour)
     {
+        PrimitiveType = PrimitiveType.Triangles;
+            
         Position = pPosition;
         Width = pWidth;
         Height = pHeight;
