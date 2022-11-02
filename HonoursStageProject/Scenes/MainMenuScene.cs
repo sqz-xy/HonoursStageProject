@@ -7,7 +7,7 @@ using OpenTK.Input;
 
 namespace HonoursStageProject.Scenes;
 
-public class MainMenuScene : Scene
+public sealed class MainMenuScene : Scene
 {
     private Shader _shader;
     private Quadrilateral2D _button;
@@ -31,8 +31,11 @@ public class MainMenuScene : Scene
         
         _shader = new Shader(@"Shaders/vs.vert", @"Shaders/fs.frag");
         
-        _button = new Quadrilateral2D(new Vector2(0.5f, 0.0f),0.2f, 0.1f, Vector4.One);
-        _button.Colour = Vector4.One;
+        _button = new Quadrilateral2D(new Vector2(0.0f, 0.0f),0.2f, 0.1f, Vector4.One)
+        {
+            Colour = Vector4.One,
+        };
+        
         _button.Index = VertexManager.BindVertexData(_button.Vertices, _button.Indices, 0, 0, 0);
         
         // Shader stuff
