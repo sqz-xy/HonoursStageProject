@@ -16,6 +16,10 @@ public class SceneManager : GameWindow
     public SceneDelegate _renderer;
     public SceneDelegate _updater;
 
+    public delegate void MouseDelegate(MouseEventArgs e);
+
+    public MouseDelegate _mouseEvent;
+
     // Stack of render delegates
     // Update delegate stays the same
     // Input manager for camera movement
@@ -60,6 +64,11 @@ public class SceneManager : GameWindow
 
         GL.Flush();
         SwapBuffers();
+    }
+
+    protected override void OnMouseMove(MouseMoveEventArgs e)
+    {
+        _mouseEvent(e);
     }
 
     protected override void OnUnload(EventArgs e)
