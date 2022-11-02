@@ -29,10 +29,10 @@ public class SceneManager : GameWindow
     {
         base.OnLoad(e);
 
-        GL.Enable(EnableCap.DepthTest);
+        //GL.Enable(EnableCap.DepthTest);
         GL.DepthMask(true);
-        GL.Enable(EnableCap.CullFace);
-        GL.CullFace(CullFaceMode.Back);
+        //GL.Enable(EnableCap.CullFace);
+        //GL.CullFace(CullFaceMode.Back);
         GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         
         _currentScene = new MainMenuScene(this);
