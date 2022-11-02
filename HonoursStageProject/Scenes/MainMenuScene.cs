@@ -54,14 +54,28 @@ public class MainMenuScene : Scene
 
         GL.BindBuffer(BufferTarget.ElementArrayBuffer, _EBO);
         GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(_triangleIndices.Length * sizeof(uint)), _triangleIndices, BufferUsageHint.StaticDraw);
+        
+        // Make sure data is buffered correctly
+        GL.GetBufferParameter(BufferTarget.ArrayBuffer, BufferParameterName.BufferSize, out int size);
+        if (_triangleVertices.Length * sizeof(float) != size)
+        {
+            throw new ApplicationException("Vertex data not loaded onto graphics card correctly");
+        }
+
+        GL.GetBufferParameter(BufferTarget.ElementArrayBuffer, BufferParameterName.BufferSize, out size);
+        if (_triangleIndices.Length * sizeof(float) != size)
+        {
+            throw new ApplicationException("Index data not loaded onto graphics card correctly");
+        }
 
         GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
         GL.EnableVertexAttribArray(0);
 
         GL.BindVertexArray(0);
         
+        // Shader stuff
         _shader.UseShader();
-
+        
     }
 
     public override void Render(FrameEventArgs e)
@@ -76,7 +90,8 @@ public class MainMenuScene : Scene
 
     public override void Update(FrameEventArgs e)
     {
-
+        int vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "uColour");
+        GL.Uniform4(vertexColorLocation, new Vector4(1.0f, 1.0f, 0.2f, 1.0f));
     }
 
     public override void Close()
