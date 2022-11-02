@@ -4,8 +4,8 @@ namespace HonoursStageProject.Scenes;
 
 public enum SceneTypes
 {
-    SCENE_MAIN_MENU,
-    SCENE_TERRAIN
+    SceneMainMenu,
+    SceneTerrain
 }
 
 public interface IScene

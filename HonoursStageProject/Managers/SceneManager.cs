@@ -9,22 +9,22 @@ namespace HonoursStageProject.Managers;
 
 public class SceneManager : GameWindow
 {
-    public static int _width = 1280, _height = 720;
+    public static int SWidth = 1280, SHeight = 720;
 
     private Scene _currentScene;
     public delegate void SceneDelegate(FrameEventArgs e);
-    public SceneDelegate _renderer;
-    public SceneDelegate _updater;
+    public SceneDelegate Renderer;
+    public SceneDelegate Updater;
 
     public delegate void MouseDelegate(MouseEventArgs e);
 
-    public MouseDelegate? _mouseEvent;
+    public MouseDelegate? MouseEvent;
 
     // Stack of render delegates
     // Update delegate stays the same
     // Input manager for camera movement
     
-    public SceneManager() : base(_width, _height, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 16))
+    public SceneManager() : base(SWidth, SHeight, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 16))
     {
 
     }
@@ -52,7 +52,7 @@ public class SceneManager : GameWindow
     protected override void OnUpdateFrame(FrameEventArgs e)
     {
         base.OnUpdateFrame(e);
-        _updater(e);
+        Updater(e);
     }
 
     protected override void OnRenderFrame(FrameEventArgs e)
@@ -60,7 +60,7 @@ public class SceneManager : GameWindow
         base.OnRenderFrame(e);
         GL.Clear(ClearBufferMask.ColorBufferBit);
         
-        _renderer(e);
+        Renderer(e);
 
         GL.Flush();
         SwapBuffers();
@@ -68,7 +68,7 @@ public class SceneManager : GameWindow
 
     protected override void OnMouseMove(MouseMoveEventArgs e)
     {
-        _mouseEvent?.Invoke(e);
+        MouseEvent?.Invoke(e);
     }
 
     public void ChangeScene(SceneTypes pSceneType)
@@ -79,10 +79,10 @@ public class SceneManager : GameWindow
         {
             switch (pSceneType)
             {
-                case SceneTypes.SCENE_MAIN_MENU:
+                case SceneTypes.SceneMainMenu:
                     _currentScene = new MainMenuScene(this);
                     break;
-                case SceneTypes.SCENE_TERRAIN:
+                case SceneTypes.SceneTerrain:
                     _currentScene = new TerrainScene(this);
                     break;
             }

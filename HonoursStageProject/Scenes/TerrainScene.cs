@@ -8,9 +8,9 @@ public class TerrainScene : Scene
 {
     public TerrainScene(SceneManager sceneManager) : base(sceneManager)
     {
-        sceneManager._renderer = Render;
-        sceneManager._updater = Update;
-        sceneManager._mouseEvent = null;
+        sceneManager.Renderer = Render;
+        sceneManager.Updater = Update;
+        sceneManager.MouseEvent = null;
         
         Initialize();
     }

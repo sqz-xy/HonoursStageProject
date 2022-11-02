@@ -4,38 +4,38 @@ namespace HonoursStageProject.Managers;
 
 static class VertexManager
 {
-    private static int[] _VBO_IDs;
-    private static  int[] _VAO_IDs;
-    private static  int[] _EBO_IDs;
+    private static int[] _vboIDs;
+    private static  int[] _vaoIDs;
+    private static  int[] _eboIDs;
 
-    private static int _VBOIndex;
-    private static int _VAOIndex;
-    private static int _EBOIndex;
+    private static int _vboIndex;
+    private static int _vaoIndex;
+    private static int _eboIndex;
     
-    public static void Initialize(int pVBOSize, int pVAOSize, int pEBOSize)
+    public static void Initialize(int pVboSize, int pVaoSize, int pEboSize)
     {
-        _VBO_IDs = new int[pVBOSize];
-        _VAO_IDs = new int[pVAOSize];
-        _EBO_IDs = new int[pEBOSize];
+        _vboIDs = new int[pVboSize];
+        _vaoIDs = new int[pVaoSize];
+        _eboIDs = new int[pEboSize];
 
-        _VBOIndex = 0;
-        _VAOIndex = 0;
-        _EBOIndex = 0;
+        _vboIndex = 0;
+        _vaoIndex = 0;
+        _eboIndex = 0;
 
         // Generates the Vertex arrays and buffers on handler initialization
-        GL.GenVertexArrays(_VAO_IDs.Length, _VAO_IDs);
-        GL.GenBuffers(_VBO_IDs.Length, _VBO_IDs);
-        GL.GenBuffers(_EBO_IDs.Length, _EBO_IDs);
+        GL.GenVertexArrays(_vaoIDs.Length, _vaoIDs);
+        GL.GenBuffers(_vboIDs.Length, _vboIDs);
+        GL.GenBuffers(_eboIDs.Length, _eboIDs);
     }
     
     /// <summary>
     /// Returns the VAO At a specified Index
     /// </summary>
-    /// <param name="pVAOIndex">The index to return</param>
+    /// <param name="pVaoIndex">The index to return</param>
     /// <returns>An integer Value</returns>
-    public static int GetVAOAtIndex(int pVAOIndex)
+    public static int GetVaoAtIndex(int pVaoIndex)
     {
-        return _VAO_IDs[pVAOIndex];
+        return _vaoIDs[pVaoIndex];
     }
 
     /// <summary>
@@ -48,16 +48,16 @@ static class VertexManager
     /// <returns>The VAO index of the bound vertices</returns>
     public static int BindVertexData(float[] pVertices, uint[] pIndices, int pPositionLocation, int pNormalLocation, int pTextureLocation)
     {
-        GL.BindVertexArray(_VAO_IDs[_VAOIndex]);
-        _VAOIndex++;
+        GL.BindVertexArray(_vaoIDs[_vaoIndex]);
+        _vaoIndex++;
         
-        GL.BindBuffer(BufferTarget.ArrayBuffer, _VBO_IDs[_VBOIndex]);
+        GL.BindBuffer(BufferTarget.ArrayBuffer, _vboIDs[_vboIndex]);
         GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(pVertices.Length * sizeof(float)), pVertices, BufferUsageHint.StaticDraw);
-        _VBOIndex++;
+        _vboIndex++;
         
-        GL.BindBuffer(BufferTarget.ElementArrayBuffer, _EBO_IDs[_EBOIndex]);
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, _eboIDs[_eboIndex]);
         GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(pIndices.Length * sizeof(uint)), pIndices, BufferUsageHint.StaticDraw);
-        _EBOIndex++;
+        _eboIndex++;
         
         // Make sure data is buffered correctly
         GL.GetBufferParameter(BufferTarget.ArrayBuffer, BufferParameterName.BufferSize, out int size);
@@ -76,7 +76,7 @@ static class VertexManager
         EnableVertexAttributes(pPositionLocation, 0, 0);
 
         GL.BindVertexArray(0);
-        return _VAOIndex - 1;
+        return _vaoIndex - 1;
     }
 
     /// <summary>
@@ -101,16 +101,16 @@ static class VertexManager
         GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
         GL.BindVertexArray(0);
-        GL.DeleteBuffers(_VBOIndex, _VBO_IDs);
-        GL.DeleteBuffers(_EBOIndex, _EBO_IDs);
-        GL.DeleteVertexArrays(_VAOIndex, _VAO_IDs);
+        GL.DeleteBuffers(_vboIndex, _vboIDs);
+        GL.DeleteBuffers(_eboIndex, _eboIDs);
+        GL.DeleteVertexArrays(_vaoIndex, _vaoIDs);
         
-        _VBOIndex = 0;
-        _VAOIndex = 0;
-        _EBOIndex = 0;
+        _vboIndex = 0;
+        _vaoIndex = 0;
+        _eboIndex = 0;
         
-        Array.Clear(_VBO_IDs);
-        Array.Clear(_EBO_IDs);
-        Array.Clear(_VAO_IDs);
+        Array.Clear(_vboIDs);
+        Array.Clear(_eboIDs);
+        Array.Clear(_vaoIDs);
     }
 }

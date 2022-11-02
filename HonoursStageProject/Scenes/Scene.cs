@@ -5,11 +5,11 @@ namespace HonoursStageProject.Scenes;
 
 public abstract class Scene : IScene
 {
-    protected SceneManager _sceneManager;
+    protected SceneManager SceneManager;
 
     public Scene(SceneManager sceneManager)
     {
-        this._sceneManager = sceneManager;
+        this.SceneManager = sceneManager;
     }
 
     public abstract void Initialize();

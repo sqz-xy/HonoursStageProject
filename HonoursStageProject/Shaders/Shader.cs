@@ -9,7 +9,7 @@ namespace HonoursStageProject.Shaders;
 public class Shader : IDisposable
 {
     public int Handle { get; set; }
-    private bool disposedValue = false;
+    private bool _disposedValue = false;
 
     public Shader(string pVertexPath, string pFragmentPath)
     {
@@ -89,12 +89,12 @@ public class Shader : IDisposable
     /// <param name="disposing"></param>
     protected virtual void Dispose(bool disposing)
     {
-        if (!disposedValue)
+        if (!_disposedValue)
         {
             GL.DeleteProgram(Handle);
 
             // Object disposed
-            disposedValue = true;
+            _disposedValue = true;
         }
     }
 
