@@ -9,26 +9,7 @@ namespace HonoursStageProject.Scenes;
 
 public class MainMenuScene : Scene
 {
-    private readonly float[] _triangleVertices =
-    {
-        0.5f,  0.5f, 0.0f, // top right
-        0.5f, -0.5f, 0.0f, // bottom right
-        -0.5f, -0.5f, 0.0f, // bottom left
-        -0.5f,  0.5f, 0.0f, // top left
-    };
-    
-    private readonly uint[] _triangleIndices =
-    {
-        // Note that indices start at 0!
-        0, 1, 3, // The first triangle will be the top-right half of the triangle
-        1, 2, 3  // Then the second will be the bottom-left half of the triangle
-    };
-    
-    private int _vbo;
-    private int _vao;
-    private int _ebo;
     private Shader _shader;
-
     private Quadrilateral2D _button;
 
     public MainMenuScene(SceneManager sceneManager) : base(sceneManager)
