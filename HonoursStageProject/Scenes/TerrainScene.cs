@@ -2,6 +2,7 @@
 using HonoursStageProject.Objects;
 using HonoursStageProject.Shaders;
 using OpenTK;
+using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 
@@ -138,8 +139,11 @@ public class TerrainScene : Scene
         Matrix4 m1 =  Matrix4.CreateTranslation(0,0,0); 
         GL.UniformMatrix4(uModelLocation, true, ref m1); 
 
-        Matrix4 m2 =  Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(45)); 
-        GL.UniformMatrix4(uModelLocation, true, ref m2); 
+        Matrix4 m2 =  Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(10)); 
+        GL.UniformMatrix4(uModelLocation, true, ref m2);
+
+        Matrix4 m3 = Matrix4.CreateScale(0.5f, 0.5f, 0.5f);
+        GL.UniformMatrix4(uModelLocation, true, ref m3); 
         
         GL.BindVertexArray(VertexManager.GetVaoAtIndex(_cubeIndex));
         GL.DrawElements((PrimitiveType) PrimitiveType.Triangles, _cubeIndices.Length, DrawElementsType.UnsignedInt, 0);
@@ -148,7 +152,7 @@ public class TerrainScene : Scene
     public override void Update(FrameEventArgs e)
     {
         int vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "uColour");
-        GL.Uniform4(vertexColorLocation, Vector4.One);
+        GL.Uniform4(vertexColorLocation, new Color4(0.5f, 0.1f, 0.1f, 0.1f));
     }
 
     private void KeyPress(KeyPressEventArgs e)
