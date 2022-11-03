@@ -84,8 +84,8 @@ public class TerrainScene : Scene
         GL.ClearColor(0.0f, 1.0f, 0.0f, 1.0f);
         GL.Enable(EnableCap.DepthTest);
         GL.DepthMask(true);
-        //GL.Enable(EnableCap.CullFace);
-        //GL.CullFace(CullFaceMode.Back);
+        GL.Enable(EnableCap.CullFace);
+        GL.CullFace(CullFaceMode.Back);
 
         VertexManager.Initialize(1, 1, 1);
         
