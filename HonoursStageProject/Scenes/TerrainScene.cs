@@ -17,6 +17,53 @@ public class TerrainScene : Scene
 
     private Quadrilateral _square;
 
+    private float[] _cubeVertices = new float[]
+    {
+        -0.2f, -0.2f, -0.2f, 
+        0.2f, -0.2f, -0.2f, 
+        -0.2f, 0.2f, -0.2f, 
+        0.2f, 0.2f, -0.2f,
+        -0.2f, -0.2f, 0.2f, 
+        0.2f, -0.2f, 0.2f,
+        -0.2f, 0.2f, 0.2f, 
+        0.2f, 0.2f, 0.2f, 
+        0.2f, -0.2f, -0.2f,
+        0.2f, -0.2f, 0.2f,
+        0.2f, 0.2f, -0.2f, 
+        0.2f, 0.2f, 0.2f,
+        -0.2f, -0.2f, -0.2f, 
+        -0.2f, -0.2f, 0.2f, 
+        -0.2f, 0.2f, -0.2f, 
+        -0.2f, 0.2f, 0.2f,
+        -0.2f, -0.2f, -0.2f, 
+        -0.2f, -0.2f, 0.2f, 
+        0.2f, -0.2f, -0.2f, 
+        0.2f, -0.2f, 0.2f, 
+        -0.2f, 0.2f, -0.2f,
+        -0.2f, 0.2f, 0.2f,
+        0.2f, 0.2f, -0.2f,
+        0.2f, 0.2f, 0.2f
+    };
+
+    private uint[] _cubeIndices = new uint[]
+    {
+        1, 0, 2,
+        1, 2, 3,
+        4, 5, 6,
+        6, 5, 7,
+        9, 8, 10,
+        9, 10, 11,
+        12, 13, 14,
+        14, 13, 15,
+        17, 16, 18,
+        17, 18, 19,
+        20, 21, 22,
+        22, 21, 23
+    };
+
+    private int _cubeIndex;
+    
+
     // Camera
     public TerrainScene(SceneManager sceneManager) : base(sceneManager)
     {
@@ -52,7 +99,8 @@ public class TerrainScene : Scene
             Colour = Vector4.One,
         };
         
-        _square.Index = VertexManager.BindVertexData(_square.Vertices, _square.Indices, 0, 0, 0);
+        //_square.Index = VertexManager.BindVertexData(_square.Vertices, _square.Indices, 0, 0, 0);
+        _cubeIndex = VertexManager.BindVertexData(_cubeVertices, _cubeIndices, 0, 0, 0);
         
         // Camera
         
@@ -93,8 +141,8 @@ public class TerrainScene : Scene
         Matrix4 m2 =  Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(45)); 
         GL.UniformMatrix4(uModelLocation, true, ref m2); 
         
-        GL.BindVertexArray(VertexManager.GetVaoAtIndex(_square.Index));
-        GL.DrawElements((PrimitiveType) PrimitiveType.Triangles, _square.Indices.Length, DrawElementsType.UnsignedInt, 0);
+        GL.BindVertexArray(VertexManager.GetVaoAtIndex(_cubeIndex));
+        GL.DrawElements((PrimitiveType) PrimitiveType.Triangles, _cubeIndices.Length, DrawElementsType.UnsignedInt, 0);
     }
 
     public override void Update(FrameEventArgs e)
