@@ -22,6 +22,9 @@ public class SceneManager : GameWindow
     public delegate void MouseClickDelegate(MouseButtonEventArgs e);
     public MouseClickDelegate? MouseClickEvent;
 
+    public delegate void KeyPressDelegate(KeyPressEventArgs e);
+    public KeyPressDelegate? KeyPressEvent;
+
     // Stack of render delegates
     // Update delegate stays the same
     // Input manager for camera movement
@@ -60,7 +63,7 @@ public class SceneManager : GameWindow
     protected override void OnRenderFrame(FrameEventArgs e)
     {
         base.OnRenderFrame(e);
-        GL.Clear(ClearBufferMask.ColorBufferBit);
+        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         
         Renderer(e);
 
@@ -76,6 +79,11 @@ public class SceneManager : GameWindow
     protected override void OnMouseDown(MouseButtonEventArgs e)
     {
         MouseClickEvent?.Invoke(e);
+    }
+
+    protected override void OnKeyPress(KeyPressEventArgs e)
+    {
+        KeyPressEvent?.Invoke(e);
     }
 
     public void ChangeScene(SceneTypes pSceneType)
