@@ -14,10 +14,16 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Shaders\fs.frag">
+      <None Update="Shaders\mainmenu.frag">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="Shaders\vs.vert">
+      <None Update="Shaders\mainmenu.vert">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Shaders\terrainscene.frag">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Shaders\terrainscene.vert">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>

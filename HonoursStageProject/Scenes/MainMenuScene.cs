@@ -10,7 +10,7 @@ namespace HonoursStageProject.Scenes;
 public sealed class MainMenuScene : Scene
 {
     private Shader _shader;
-    private Quadrilateral2D _button;
+    private Quadrilateral _button;
 
     public MainMenuScene(SceneManager sceneManager) : base(sceneManager)
     {
@@ -29,9 +29,9 @@ public sealed class MainMenuScene : Scene
         // Initialise variables
         VertexManager.Initialize(1, 1, 1);
         
-        _shader = new Shader(@"Shaders/vs.vert", @"Shaders/fs.frag");
+        _shader = new Shader(@"Shaders/mainmenu.vert", @"Shaders/mainmenu.frag");
         
-        _button = new Quadrilateral2D(new Vector2(0.0f, 0.0f),0.2f, 0.1f, Vector4.One)
+        _button = new Quadrilateral(new Vector2(0.0f, 0.0f),0.2f, 0.1f, Vector4.One)
         {
             Colour = Vector4.One,
         };
@@ -58,7 +58,7 @@ public sealed class MainMenuScene : Scene
         Vector2 mousePos = new Vector2((float) (-1.0 + 2.0 * (double) e.X / SceneManager.Width),
             (float) (1.0 - 2.0 * (double) e.Y / SceneManager.Height));
 
-        if (Shape2D.CheckSquareIntersection(_button, mousePos))
+        if (Shape.CheckSquareIntersection(_button, mousePos))
             _button.Colour = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
         else
             _button.Colour = Vector4.One;
@@ -69,7 +69,7 @@ public sealed class MainMenuScene : Scene
         Vector2 mousePos = new Vector2((float) (-1.0 + 2.0 * (double) e.X / SceneManager.Width),
             (float) (1.0 - 2.0 * (double) e.Y / SceneManager.Height));
 
-        if (Shape2D.CheckSquareIntersection(_button, mousePos))
+        if (Shape.CheckSquareIntersection(_button, mousePos))
             SceneManager.ChangeScene(SceneTypes.SceneTerrain);
     }
 
