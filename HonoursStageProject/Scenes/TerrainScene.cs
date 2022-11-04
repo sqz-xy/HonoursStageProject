@@ -87,6 +87,10 @@ public class TerrainScene : Scene
         GL.Enable(EnableCap.CullFace);
         GL.CullFace(CullFaceMode.Back);
 
+       // float[] pMeshVertices = new float[] { };
+       // uint[] pMeshIndices = new uint[] { };
+       // GenerateMesh(10, 10, 10, out pMeshVertices, out pMeshIndices);
+        
         VertexManager.Initialize(1, 1, 1);
         
         _shader = new Shader(@"Shaders/terrainscene.vert", @"Shaders/terrainscene.frag");
@@ -157,20 +161,7 @@ public class TerrainScene : Scene
 
     private void GenerateMesh(int pWidth, int pHeight, int pResolution, out float[] pMeshVertices, out uint[] pMeshIndices)
     {
-        pMeshVertices = new float[pWidth * pHeight];
-        pMeshIndices = new uint[(pWidth * pHeight) / 2];
-
-        for (int i = 0; i < pWidth; i++)
-        {
-    
-            
-            
-            for (int j = 0; j < pHeight; j++)
-            {
-
-            }
-        }
-
+        
     }
 
     private void KeyPress(KeyPressEventArgs e)
