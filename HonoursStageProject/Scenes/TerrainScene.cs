@@ -142,7 +142,7 @@ public class TerrainScene : Scene
         Matrix4 m2 =  Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(10)); 
         GL.UniformMatrix4(uModelLocation, true, ref m2);
 
-        Matrix4 m3 = Matrix4.CreateScale(0.5f, 0.5f, 0.5f);
+        Matrix4 m3 = Matrix4.CreateScale(1.0f, 1.0f, 1.0f);
         GL.UniformMatrix4(uModelLocation, true, ref m3); 
         
         GL.BindVertexArray(VertexManager.GetVaoAtIndex(_cubeIndex));
@@ -153,6 +153,24 @@ public class TerrainScene : Scene
     {
         int vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "uColour");
         GL.Uniform4(vertexColorLocation, new Color4(0.5f, 0.1f, 0.1f, 0.1f));
+    }
+
+    private void GenerateMesh(int pWidth, int pHeight, int pResolution, out float[] pMeshVertices, out uint[] pMeshIndices)
+    {
+        pMeshVertices = new float[pWidth * pHeight];
+        pMeshIndices = new uint[(pWidth * pHeight) / 2];
+
+        for (int i = 0; i < pWidth; i++)
+        {
+    
+            
+            
+            for (int j = 0; j < pHeight; j++)
+            {
+
+            }
+        }
+
     }
 
     private void KeyPress(KeyPressEventArgs e)
