@@ -161,7 +161,8 @@ public class TerrainScene : Scene
 
     private void GenerateMesh(int pWidth, int pHeight, int pResolution, out float[] pMeshVertices, out uint[] pMeshIndices)
     {
-        
+        pMeshVertices = new float[] { };
+        pMeshIndices = new uint[] { };
     }
 
     private void KeyPress(KeyPressEventArgs e)
