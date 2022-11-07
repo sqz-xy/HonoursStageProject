@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using OpenTK.Graphics.ES11;
 
 namespace HonoursStageProject.Objects;
 
@@ -15,38 +16,40 @@ public class TerrainMesh : Shape
 
     private void GenerateMesh(int pWidth, int pHeight, int pResolution)
     {
-        Vertices = new float[(pWidth * pHeight) * 3];
-        Indices = new uint[((pWidth * pHeight) * 3) / 2]; // There will always be 2 intersecting points per triangle, so half as many indices
-            
-        // Set the origin of the mesh to the top left corner of the mesh bounds
-        Vector2 origin = new Vector2(-Width, -Height);
         const int stride = 3;
-        int triangleIndex = 0;
+        int size = (pWidth * pHeight);
+        
+        Vertices = new float[size * stride];
+        Indices = new uint[size * stride]; // Can't figure out what size to make this
+
+        PrimitiveType = PrimitiveType.TriangleStrip;
+        
         int vertexPointer = 0;
         
-        for (int widthIndex = (int)origin.X; widthIndex < +origin.X; widthIndex++)
-        for (int heightIndex = (int) origin.Y; heightIndex < +origin.Y; heightIndex++)
+        for (int i = 0; i < pHeight; i++)
+        for (int j = 0; j < pWidth; j++)
         {
-            if (widthIndex % stride == 0 && heightIndex % stride == 0)
-            {
-                // Not sure on setting the x and z of the vertex, struggling to visualize it
-                // Struggling to visualise indices too
-                
-                
-                Vertices[vertexPointer * stride] = pWidth - triangleIndex; // X
-                Vertices[(vertexPointer * stride) + 1] = 0;                // Y - Height will be added later
-                Vertices[(vertexPointer * stride) + 2] = pHeight - triangleIndex; // Z
-                
-                // To add normals increase stride
-                //Vertices[vertexPointer * stride] = 0;
-                //Vertices[(vertexPointer * stride) + 3] = 1;               
-                //Vertices[(vertexPointer * stride) + 4] = 0;
-                
-                triangleIndex++;
-                vertexPointer++;
-            }
+            Vertices[vertexPointer * stride] = (-pHeight / 2.0f) + i; // X, the range of the X dimension
+            Vertices[(vertexPointer * stride) + 1] = 0;                // Y - Height will be added later
+            Vertices[(vertexPointer * stride) + 2] = (-pWidth / 2.0f) + j; // Z, the range of the Z dimension
+
+            vertexPointer++;
         }
+
+        int indicesPointer = 0;
         
-        
+        for (int i = 0; i < pHeight - 1; i++) // for each row
+            for (int j = 0; j < pWidth; j++) // for each column
+            for (int k = 0; k < 2; k++) // for each side of the strip
+            {
+                // Triangle strip vertices are ordered from top row to bottom row
+                // Alternate between row i and i + 1, j is the columns
+                // j + pWidth is current column + width, i + k is alternating between the rows
+                //int test = i + k;
+                
+                //                          // Across Columns, Across Row
+                Indices[indicesPointer] = (uint) (j + pWidth * (i + k));
+                indicesPointer++;
+            }
     }
 }

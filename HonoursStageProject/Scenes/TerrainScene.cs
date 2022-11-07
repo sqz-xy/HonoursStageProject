@@ -17,6 +17,7 @@ public class TerrainScene : Scene
     private Matrix4 _projectionMatrix;
 
     private Quadrilateral _square;
+    private TerrainMesh _terrainMesh;
 
     private float[] _cubeVertices = new float[]
     {
@@ -83,16 +84,13 @@ public class TerrainScene : Scene
     {
         GL.ClearColor(0.0f, 1.0f, 0.0f, 1.0f);
         GL.Enable(EnableCap.DepthTest);
-        GL.DepthMask(true);
         GL.Enable(EnableCap.CullFace);
-        GL.CullFace(CullFaceMode.Back);
-
-       // float[] pMeshVertices = new float[] { };
-       // uint[] pMeshIndices = new uint[] { };
-       // GenerateMesh(10, 10, 10, out pMeshVertices, out pMeshIndices);
+        
         
         VertexManager.Initialize(1, 1, 1);
-        
+
+
+        _terrainMesh = new TerrainMesh(4, 4, 1);
         _shader = new Shader(@"Shaders/terrainscene.vert", @"Shaders/terrainscene.frag");
         _modelMatrix = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(0.0f));
         _viewMatrix = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
@@ -105,7 +103,7 @@ public class TerrainScene : Scene
         };
         
         //_square.Index = VertexManager.BindVertexData(_square.Vertices, _square.Indices, 0, 0, 0);
-        _cubeIndex = VertexManager.BindVertexData(_cubeVertices, _cubeIndices, 0, 0, 0);
+        _terrainMesh.Index = VertexManager.BindVertexData(_terrainMesh.Vertices, _terrainMesh.Indices, 0, 0, 0);
         
         // Camera
         
@@ -139,24 +137,14 @@ public class TerrainScene : Scene
         
         _shader.UseShader();
         
-        int uModelLocation = GL.GetUniformLocation(_shader.Handle, "uModel"); 
-        Matrix4 m1 =  Matrix4.CreateTranslation(0,0,0); 
-        GL.UniformMatrix4(uModelLocation, true, ref m1); 
-
-        Matrix4 m2 =  Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(10)); 
-        GL.UniformMatrix4(uModelLocation, true, ref m2);
-
-        Matrix4 m3 = Matrix4.CreateScale(1.0f, 1.0f, 1.0f);
-        GL.UniformMatrix4(uModelLocation, true, ref m3); 
-        
-        GL.BindVertexArray(VertexManager.GetVaoAtIndex(_cubeIndex));
-        GL.DrawElements((PrimitiveType) PrimitiveType.Triangles, _cubeIndices.Length, DrawElementsType.UnsignedInt, 0);
+        GL.BindVertexArray(VertexManager.GetVaoAtIndex(_terrainMesh.Index));
+        GL.DrawElements((PrimitiveType) PrimitiveType.TriangleStrip, _terrainMesh.Indices.Length, DrawElementsType.UnsignedInt, 0);
     }
 
     public override void Update(FrameEventArgs e)
     {
         int vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "uColour");
-        GL.Uniform4(vertexColorLocation, new Color4(0.5f, 0.1f, 0.1f, 0.1f));
+        GL.Uniform4(vertexColorLocation, new Color4(0.0f, 0.0f, 0.5f, 1.0f));
     }
 
     private void GenerateMesh(int pWidth, int pHeight, int pResolution, out float[] pMeshVertices, out uint[] pMeshIndices)
