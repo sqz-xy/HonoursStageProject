@@ -25,12 +25,12 @@ public class TerrainMesh : Shape
         PrimitiveType = PrimitiveType.TriangleStrip;
         
         int vertexPointer = 0;
-        
+        Random rand = new Random();
         for (int i = 0; i < pHeight; i++)
         for (int j = 0; j < pWidth; j++)
         {
             Vertices[vertexPointer * stride] = (-pHeight / 2.0f) + i; // X, the range of the X dimension
-            Vertices[(vertexPointer * stride) + 1] = 0;                // Y - Height will be added later
+            Vertices[(vertexPointer * stride) + 1] = 0; //(float) rand.NextDouble();                // Y - Height will be added later
             Vertices[(vertexPointer * stride) + 2] = (-pWidth / 2.0f) + j; // Z, the range of the Z dimension
 
             vertexPointer++;
@@ -40,14 +40,14 @@ public class TerrainMesh : Shape
         
         for (int i = 0; i < pHeight - 1; i++) // for each row
             for (int j = 0; j < pWidth; j++) // for each column
-            for (int k = 0; k < 2; k++) // for each side of the strip
+            for (int k = 0; k < 2; k++) // for each side of the trianglestrip
             {
                 // Triangle strip vertices are ordered from top row to bottom row
                 // Alternate between row i and i + 1, j is the columns
                 // j + pWidth is current column + width, i + k is alternating between the rows
                 //int test = i + k;
                 
-                //                          // Across Columns, Across Row
+                //                        Across Columns * Across Row
                 Indices[indicesPointer] = (uint) (j + pWidth * (i + k));
                 indicesPointer++;
             }

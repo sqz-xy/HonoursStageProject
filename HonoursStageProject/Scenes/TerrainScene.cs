@@ -90,7 +90,7 @@ public class TerrainScene : Scene
         VertexManager.Initialize(1, 1, 1);
 
 
-        _terrainMesh = new TerrainMesh(4, 4, 1);
+        _terrainMesh = new TerrainMesh(9, 9, 1);
         _shader = new Shader(@"Shaders/terrainscene.vert", @"Shaders/terrainscene.frag");
         _modelMatrix = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(0.0f));
         _viewMatrix = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
