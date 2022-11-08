@@ -9,10 +9,10 @@ out vec4 oColour;
 
 void main()
 {
-    // Lying piece of shit
+    const float brightnessMultiplier = 1.5;
     vec4 position = vec4(aPosition, 1) * uModel * uView * uProjection;
+    vec4 colour = vec4(aPosition.y, aPosition.y, aPosition.y, 1);
     
-    oColour = vec4(0, aPosition.y, 0, 1);
-    
+    oColour = colour * brightnessMultiplier;
     gl_Position = position;
 }

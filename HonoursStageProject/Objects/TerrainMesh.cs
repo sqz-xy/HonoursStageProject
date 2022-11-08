@@ -28,10 +28,13 @@ public class TerrainMesh : Shape
         {
             // Starts top left corner, ends bottom right , -width/2 to +width/2. -Dim/2 centres the mesh on 0,0, add i to move along the dimension
             // Divide by resolution, 1 is the base res, i.e. larger res with larger dimensions == more detail
+            
+            
+            // Strange lines across terrain, maybe due to temporary noise
             vertices.Add(((-pHeight / 2.0f) + heightIndex) / pResolution);       // X, the range of the X dimension
-            vertices.Add((float) rand.NextDouble() / pResolution);               // Y - Height will be added later
-            //vertices.Add(0.2f);   
-            vertices.Add(((-pWidth / 2.0f) + widthIndex) / pResolution); // Z, the range of the Z dimension
+            vertices.Add((float) rand.NextDouble()/ pResolution);                // Y - Height will be added later
+            //vertices.Add(0.2f);                                                    // Z, the range of the Z dimension
+            vertices.Add(((-pWidth / 2.0f) + widthIndex) / pResolution);        
         }
         
         for (int heightIndex = 0; heightIndex < pHeight - 1; heightIndex++) // for each row
