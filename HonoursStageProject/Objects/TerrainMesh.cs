@@ -22,6 +22,8 @@ public class TerrainMesh : Shape
         List<uint> indices = new List<uint>();
         
         Random rand = new Random();
+
+        bool test = true;
         
         for (int heightIndex = 0; heightIndex < pHeight; heightIndex++)
         for (int widthIndex = 0; widthIndex < pWidth; widthIndex++)
@@ -33,7 +35,15 @@ public class TerrainMesh : Shape
             // Strange lines across terrain, maybe due to temporary noise
             vertices.Add(((-pHeight / 2.0f) + heightIndex) / pResolution);       // X, the range of the X dimension
             vertices.Add((float) rand.NextDouble()/ pResolution);                // Y - Height will be added later
-            //vertices.Add(0.2f);                                                    // Z, the range of the Z dimension
+            
+            /*if (test)
+                vertices.Add(0.05f);
+            else
+                vertices.Add(0.0f);
+
+            test = !test;*/
+            
+            // Z, the range of the Z dimension
             vertices.Add(((-pWidth / 2.0f) + widthIndex) / pResolution);        
         }
         
