@@ -33,7 +33,7 @@ public class TerrainMesh : Shape
             // Starts top left corner, ends bottom right , -width/2 to +width/2. -Dim/2 centres the mesh on 0,0, add i to move along the dimension
             // Divide by resolution, 1 is the base res, i.e. larger res with larger dimensions == more detail
             Vertices[vertexPointer * stride] = ((-pHeight / 2.0f) + heightIndex) / pResolution; // X, the range of the X dimension
-            Vertices[(vertexPointer * stride) + 1] = 0; //(float) rand.NextDouble();                // Y - Height will be added later
+            Vertices[(vertexPointer * stride) + 1] = 0; //(float) rand.NextDouble() / pResolution;                // Y - Height will be added later
             Vertices[(vertexPointer * stride) + 2] = ((-pWidth / 2.0f) + widthIndex) / pResolution; // Z, the range of the Z dimension
 
             vertexPointer++;
