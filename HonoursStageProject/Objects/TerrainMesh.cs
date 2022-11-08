@@ -30,6 +30,7 @@ public class TerrainMesh : Shape
             // Divide by resolution, 1 is the base res, i.e. larger res with larger dimensions == more detail
             vertices.Add(((-pHeight / 2.0f) + heightIndex) / pResolution);       // X, the range of the X dimension
             vertices.Add((float) rand.NextDouble() / pResolution);               // Y - Height will be added later
+            //vertices.Add(0.2f);   
             vertices.Add(((-pWidth / 2.0f) + widthIndex) / pResolution); // Z, the range of the Z dimension
         }
         

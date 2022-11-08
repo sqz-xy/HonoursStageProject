@@ -84,8 +84,11 @@ public class TerrainScene : Scene
     {
         //GL.ClearColor(0.0f, 1.0f, 0.0f, 1.0f);
         GL.ClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        
         GL.Enable(EnableCap.DepthTest);
         GL.Enable(EnableCap.CullFace);
+        GL.CullFace(CullFaceMode.Front); // Ask about this, show difference
+        
         // Add toggle for this
         GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
         
@@ -94,11 +97,10 @@ public class TerrainScene : Scene
 
         _terrainMesh = new TerrainMesh(9, 9, 10);
         _shader = new Shader(@"Shaders/terrainscene.vert", @"Shaders/terrainscene.frag");
-        _modelMatrix = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(180.0f)); // Changed this to see correct side of mesh
-        _viewMatrix = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
+        _modelMatrix = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(0.0f)); // Changed this to see correct side of mesh
+        _viewMatrix = Matrix4.CreateTranslation(0.0f, 10.0f, -10.0f);
         _projectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45.0f), SceneManager.Width / SceneManager.Height, 0.1f, 100.0f);
         
-           
         _square = new Quadrilateral(new Vector2(0.0f, 0.0f),0.2f, 0.1f, Vector4.One)
         {
             Colour = Vector4.One,
