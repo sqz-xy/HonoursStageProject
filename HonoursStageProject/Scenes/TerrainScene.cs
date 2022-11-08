@@ -90,7 +90,7 @@ public class TerrainScene : Scene
         GL.CullFace(CullFaceMode.Front); // Ask about this, show difference
         
         // Add toggle for this
-        GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+        GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
         
         VertexManager.Initialize(1, 1, 1);
 
