@@ -17,6 +17,7 @@ public class TerrainMesh : Shape
 
     private void GenerateMesh(int pWidth, int pHeight, int pResolution)
     {
+        // Make these arrays again
         List<float> vertices = new List<float>();
         List<uint> indices = new List<uint>();
         
