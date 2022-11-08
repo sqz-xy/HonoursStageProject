@@ -12,19 +12,14 @@ public class TerrainMesh : Shape
     public TerrainMesh(int pWidth, int pHeight, int pResolution)
     {
         GenerateMesh(pWidth, pHeight, pResolution);
+        PrimitiveType = PrimitiveType.TriangleStrip;
     }
 
     private void GenerateMesh(int pWidth, int pHeight, int pResolution)
     {
-        const int stride = 3;
-        int size = (pWidth * pHeight);
+        List<float> vertices = new List<float>();
+        List<uint> indices = new List<uint>();
         
-        Vertices = new float[size * stride];
-        Indices = new uint[size * stride]; // Can't figure out what size to make this
-
-        PrimitiveType = PrimitiveType.TriangleStrip;
-        
-        int vertexPointer = 0;
         Random rand = new Random();
         
         for (int heightIndex = 0; heightIndex < pHeight; heightIndex++)
@@ -32,14 +27,10 @@ public class TerrainMesh : Shape
         {
             // Starts top left corner, ends bottom right , -width/2 to +width/2. -Dim/2 centres the mesh on 0,0, add i to move along the dimension
             // Divide by resolution, 1 is the base res, i.e. larger res with larger dimensions == more detail
-            Vertices[vertexPointer * stride] = ((-pHeight / 2.0f) + heightIndex) / pResolution; // X, the range of the X dimension
-            Vertices[(vertexPointer * stride) + 1] = 0; //(float) rand.NextDouble() / pResolution;                // Y - Height will be added later
-            Vertices[(vertexPointer * stride) + 2] = ((-pWidth / 2.0f) + widthIndex) / pResolution; // Z, the range of the Z dimension
-
-            vertexPointer++;
+            vertices.Add(((-pHeight / 2.0f) + heightIndex) / pResolution);       // X, the range of the X dimension
+            vertices.Add((float) rand.NextDouble() / pResolution);               // Y - Height will be added later
+            vertices.Add(((-pWidth / 2.0f) + widthIndex) / pResolution); // Z, the range of the Z dimension
         }
-
-        int indicesPointer = 0;
         
         for (int heightIndex = 0; heightIndex < pHeight - 1; heightIndex++) // for each row
             for (int widthIndex = 0; widthIndex < pWidth; widthIndex++) // for each column
@@ -51,8 +42,10 @@ public class TerrainMesh : Shape
                 // int test = i + k;
                 
                 //                        Across Columns * Across Row
-                Indices[indicesPointer] = (uint) (widthIndex + pWidth * (heightIndex + sideIndex));
-                indicesPointer++;
+                indices.Add((uint) (widthIndex + pWidth * (heightIndex + sideIndex)));
             }
+
+        Vertices = vertices.ToArray();
+        Indices = indices.ToArray();
     }
 }
