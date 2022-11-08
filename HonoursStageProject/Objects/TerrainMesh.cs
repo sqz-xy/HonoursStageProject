@@ -27,23 +27,23 @@ public class TerrainMesh : Shape
         int vertexPointer = 0;
         Random rand = new Random();
         
-        for (int i = 0; i < pHeight; i++)
-        for (int j = 0; j < pWidth; j++)
+        for (int heightIndex = 0; heightIndex < pHeight; heightIndex++)
+        for (int widthIndex = 0; widthIndex < pWidth; widthIndex++)
         {
             // Starts top left corner, ends bottom right , -width/2 to +width/2. -Dim/2 centres the mesh on 0,0, add i to move along the dimension
             // Divide by resolution, 1 is the base res, i.e. larger res with larger dimensions == more detail
-            Vertices[vertexPointer * stride] = ((-pHeight / 2.0f) + i) / pResolution; // X, the range of the X dimension
+            Vertices[vertexPointer * stride] = ((-pHeight / 2.0f) + heightIndex) / pResolution; // X, the range of the X dimension
             Vertices[(vertexPointer * stride) + 1] = 0; //(float) rand.NextDouble();                // Y - Height will be added later
-            Vertices[(vertexPointer * stride) + 2] = ((-pWidth / 2.0f) + j) / pResolution; // Z, the range of the Z dimension
+            Vertices[(vertexPointer * stride) + 2] = ((-pWidth / 2.0f) + widthIndex) / pResolution; // Z, the range of the Z dimension
 
             vertexPointer++;
         }
 
         int indicesPointer = 0;
         
-        for (int i = 0; i < pHeight - 1; i++) // for each row
-            for (int j = 0; j < pWidth; j++) // for each column
-            for (int k = 0; k < 2; k++) // for each side of the trianglestrip
+        for (int heightIndex = 0; heightIndex < pHeight - 1; heightIndex++) // for each row
+            for (int widthIndex = 0; widthIndex < pWidth; widthIndex++) // for each column
+            for (int sideIndex = 0; sideIndex < 2; sideIndex++) // for each side of the trianglestrip
             {
                 // Triangle strip vertices are ordered from top row to bottom row
                 // Alternate between row i and i + 1, j is the columns
@@ -51,7 +51,7 @@ public class TerrainMesh : Shape
                 // int test = i + k;
                 
                 //                        Across Columns * Across Row
-                Indices[indicesPointer] = (uint) (j + pWidth * (i + k));
+                Indices[indicesPointer] = (uint) (widthIndex + pWidth * (heightIndex + sideIndex));
                 indicesPointer++;
             }
     }
