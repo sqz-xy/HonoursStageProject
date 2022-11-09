@@ -19,10 +19,10 @@ public class Quadrilateral : Shape
 
         Vertices = new float[]
         {
-            pWidth + pPosition.X, pHeight + pPosition.Y, 0.0f,
-            pWidth + pPosition.X, -pHeight + pPosition.Y, 0.0f, 
-            -pWidth + pPosition.X, -pHeight + pPosition.Y, 0.0f,
-            -pWidth + pPosition.X, pHeight + pPosition.Y, 0.0f
+            pWidth + pPosition.X, pHeight + pPosition.Y, 0.0f, 0, 1, 0,
+            pWidth + pPosition.X, -pHeight + pPosition.Y, 0.0f, 0, 1, 0, 
+            -pWidth + pPosition.X, -pHeight + pPosition.Y, 0.0f, 0, 1 ,0,
+            -pWidth + pPosition.X, pHeight + pPosition.Y, 0.0f, 0, 1, 0
         };
 
         Indices = new uint[]

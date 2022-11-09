@@ -36,7 +36,7 @@ public sealed class MainMenuScene : Scene
             Colour = Vector4.One,
         };
         
-        _button.Index = VertexManager.BindVertexData(_button.Vertices, _button.Indices, 0, 0, 0);
+        _button.Index = VertexManager.BindVertexData(_button.Vertices, _button.Indices, 0, 1, 2);
         
         // Shader stuff
         _shader.UseShader();

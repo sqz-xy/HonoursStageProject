@@ -73,7 +73,7 @@ static class VertexManager
         }
         
         // No normals or textures yet
-        EnableVertexAttributes(pPositionLocation, 0, 0);
+        EnableVertexAttributes(pPositionLocation, pNormalLocation, pTextureLocation);
 
         GL.BindVertexArray(0);
         return _vaoIndex - 1;
@@ -88,9 +88,11 @@ static class VertexManager
     private static void EnableVertexAttributes(int pPositionLocation, int pNormalLocation, int pTextureLocation)
     {
         GL.EnableVertexAttribArray(pPositionLocation);
-        
         //Stride is three because only vertex coords are present
-        GL.VertexAttribPointer(pPositionLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+        GL.VertexAttribPointer(pPositionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
+        
+        GL.EnableVertexAttribArray(pNormalLocation);
+        GL.VertexAttribPointer(pNormalLocation, 3, VertexAttribPointerType.Float, true, 6 * sizeof(float), 3 * sizeof(float));
     }
     
     /// <summary>
