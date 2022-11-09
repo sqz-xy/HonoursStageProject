@@ -73,7 +73,7 @@ public class Camera
     {
         // https://learnopengl.com/Getting-started/Camera
         
-        // Calculate mouse delta
+        // Calculate mouse delta, mouse change
         float mouseDeltaX = pMouseState.X - _lastMousePos.X;
         float mouseDeltaY = pMouseState.Y - _lastMousePos.Y;
         
