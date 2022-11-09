@@ -71,6 +71,8 @@ public class Camera
 
     public void RotateCamera(MouseState pMouseState)
     {
+        // https://learnopengl.com/Getting-started/Camera
+        
         // Calculate mouse delta
         float mouseDeltaX = pMouseState.X - _lastMousePos.X;
         float mouseDeltaY = pMouseState.Y - _lastMousePos.Y;
