@@ -74,9 +74,11 @@ public class TerrainScene : Scene
         
         sceneManager.Renderer = Render;
         sceneManager.Updater = Update;
-        sceneManager.MouseMoveEvent = null;
+        sceneManager.MouseMoveEvent += MouseMove;
         sceneManager.MouseClickEvent = null;
         sceneManager.KeyPressEvent += KeyPress;
+        sceneManager.CursorVisible = false;
+        sceneManager.CursorGrabbed = true;
         
         Initialize();
     }
@@ -129,7 +131,18 @@ public class TerrainScene : Scene
 
     public override void Update(FrameEventArgs e)
     {
+        _camera.RotateCamera(Mouse.GetState());
+        _camera.UpdateCamera();
         UpdateMatrices();
+    }
+
+    private void MouseMove(MouseEventArgs e)
+    {
+        if (SceneManager.Focused)
+        {
+            // Center Mouse after movement
+            Mouse.SetPosition(e.X + SceneManager.SWidth / 2f, e.Y + SceneManager.SHeight / 2f);
+        }
     }
     
     private void KeyPress(KeyPressEventArgs e)
