@@ -150,6 +150,14 @@ public class TerrainScene : Scene
         { 
             _camera.MoveCamera(Direction.BACKWARD,0.1f);
         }
+        else if (e.KeyChar == 'q')
+        {
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+        }
+        else if (e.KeyChar == 'e')
+        {
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+        }
     }
 
     public override void Close()
