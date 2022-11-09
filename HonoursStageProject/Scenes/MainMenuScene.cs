@@ -11,6 +11,7 @@ public sealed class MainMenuScene : Scene
 {
     private Shader _shader;
     private Quadrilateral _button;
+    private int _buttonTextureIndex;
 
     public MainMenuScene(SceneManager sceneManager) : base(sceneManager)
     {
@@ -28,19 +29,28 @@ public sealed class MainMenuScene : Scene
     {
         // Initialise variables
         VertexManager.Initialize(1, 1, 1);
+        TextureManager.Initialize(1);
         
         _shader = new Shader(@"Shaders/mainmenu.vert", @"Shaders/mainmenu.frag");
-        
-        _button = new Quadrilateral(new Vector2(0.0f, 0.0f),0.2f, 0.1f, Vector4.One)
-        {
-            Colour = Vector4.One,
-        };
-        
+
+        _button = new Quadrilateral(new Vector2(0.0f, 0.0f), 0.2f, 0.1f, new Vector4(0.1f, 0.1f, 0.1f, 0.0f));
+
         _button.Index = VertexManager.BindVertexData(_button.Vertices, _button.Indices, 0, 1, 2);
+        _buttonTextureIndex = TextureManager.BindTextureData("Textures/button.png");
         
         // Shader stuff
         _shader.UseShader();
         
+        UpdateMatrices();
+    }
+
+    private void UpdateMatrices()
+    {
+        int vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "uColour");
+        GL.Uniform4(vertexColorLocation, _button.Colour);
+
+        int uTexLocation1 = GL.GetUniformLocation(_shader.Handle, "uTextureSampler1");
+        GL.Uniform1(uTexLocation1, _buttonTextureIndex);
     }
 
     public override void Render(FrameEventArgs e)
@@ -61,7 +71,7 @@ public sealed class MainMenuScene : Scene
         if (Shape.CheckSquareIntersection(_button, mousePos))
             _button.Colour = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
         else
-            _button.Colour = Vector4.One;
+            _button.Colour = new Vector4(0.1f, 0.1f, 0.1f, 0.0f);
     }
 
     private void MouseClick(MouseEventArgs e)
@@ -75,12 +85,12 @@ public sealed class MainMenuScene : Scene
 
     public override void Update(FrameEventArgs e)
     {
-        int vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "uColour");
-        GL.Uniform4(vertexColorLocation, _button.Colour);
+        UpdateMatrices();
     } 
 
     public override void Close()
     {
         VertexManager.ClearData();
+        TextureManager.ClearData();
     }
 }

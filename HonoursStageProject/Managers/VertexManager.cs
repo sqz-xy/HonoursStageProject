@@ -87,12 +87,27 @@ static class VertexManager
     /// <param name="pTextureLocation">Texture location in the shader</param>
     private static void EnableVertexAttributes(int pPositionLocation, int pNormalLocation, int pTextureLocation)
     {
-        GL.EnableVertexAttribArray(pPositionLocation);
-        //Stride is three because only vertex coords are present
-        GL.VertexAttribPointer(pPositionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
-        
-        GL.EnableVertexAttribArray(pNormalLocation);
-        GL.VertexAttribPointer(pNormalLocation, 3, VertexAttribPointerType.Float, true, 6 * sizeof(float), 3 * sizeof(float));
+        // Account for textures using increased stride
+        if (pTextureLocation != -1)
+        {
+            GL.EnableVertexAttribArray(pPositionLocation);
+            GL.VertexAttribPointer(pPositionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
+
+            GL.EnableVertexAttribArray(pNormalLocation);
+            GL.VertexAttribPointer(pNormalLocation, 3, VertexAttribPointerType.Float, true, 8 * sizeof(float), 3 * sizeof(float));
+
+            GL.EnableVertexAttribArray(pTextureLocation);
+            GL.VertexAttribPointer(pTextureLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
+        }
+        // No texture coordinates available (Terrain mesh currently)
+        else
+        {
+            GL.EnableVertexAttribArray(pPositionLocation);
+            GL.VertexAttribPointer(pPositionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
+
+            GL.EnableVertexAttribArray(pNormalLocation);
+            GL.VertexAttribPointer(pNormalLocation, 3, VertexAttribPointerType.Float, true, 6 * sizeof(float), 3 * sizeof(float));
+        }    
     }
     
     /// <summary>
