@@ -13,58 +13,7 @@ public class TerrainScene : Scene
     private Shader _shader;
     
     private Matrix4 _modelMatrix;
-    private Matrix4 _viewMatrix;
-    private Matrix4 _projectionMatrix;
-
-    private Quadrilateral _square;
     private TerrainMesh _terrainMesh;
-
-    private float[] _cubeVertices = new float[]
-    {
-        -0.2f, -0.2f, -0.2f, 
-        0.2f, -0.2f, -0.2f, 
-        -0.2f, 0.2f, -0.2f, 
-        0.2f, 0.2f, -0.2f,
-        -0.2f, -0.2f, 0.2f, 
-        0.2f, -0.2f, 0.2f,
-        -0.2f, 0.2f, 0.2f, 
-        0.2f, 0.2f, 0.2f, 
-        0.2f, -0.2f, -0.2f,
-        0.2f, -0.2f, 0.2f,
-        0.2f, 0.2f, -0.2f, 
-        0.2f, 0.2f, 0.2f,
-        -0.2f, -0.2f, -0.2f, 
-        -0.2f, -0.2f, 0.2f, 
-        -0.2f, 0.2f, -0.2f, 
-        -0.2f, 0.2f, 0.2f,
-        -0.2f, -0.2f, -0.2f, 
-        -0.2f, -0.2f, 0.2f, 
-        0.2f, -0.2f, -0.2f, 
-        0.2f, -0.2f, 0.2f, 
-        -0.2f, 0.2f, -0.2f,
-        -0.2f, 0.2f, 0.2f,
-        0.2f, 0.2f, -0.2f,
-        0.2f, 0.2f, 0.2f
-    };
-
-    private uint[] _cubeIndices = new uint[]
-    {
-        1, 0, 2,
-        1, 2, 3,
-        4, 5, 6,
-        6, 5, 7,
-        9, 8, 10,
-        9, 10, 11,
-        12, 13, 14,
-        14, 13, 15,
-        17, 16, 18,
-        17, 18, 19,
-        20, 21, 22,
-        22, 21, 23
-    };
-
-    private int _cubeIndex;
-
     private int _meshTextureIndex;
     
     private Camera _camera;
@@ -88,20 +37,17 @@ public class TerrainScene : Scene
 
     public override void Initialize()
     {
-        //GL.ClearColor(0.0f, 1.0f, 0.0f, 1.0f);
         GL.ClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         
         GL.Enable(EnableCap.DepthTest);
         GL.Enable(EnableCap.CullFace);
         GL.CullFace(CullFaceMode.Front); // Ask about this, show difference
         
-        // Add toggle for this
-        GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-        
         // Camera and Shader initialization
         _camera = new Camera();
         _shader = new Shader(@"Shaders/terrainscene.vert", @"Shaders/terrainscene.frag");
 
+        // Object initialization
         VertexManager.Initialize(1, 1, 1);
         _terrainMesh = new TerrainMesh(100, 100, 10);
         _terrainMesh.Index = VertexManager.BindVertexData(_terrainMesh.Vertices, _terrainMesh.Indices, 0, 1, 2);
