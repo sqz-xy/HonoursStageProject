@@ -2,6 +2,8 @@
 
 namespace HonoursStageProject;
 
+//TODO: Refactor shader updating to the shader class
+
 public static class Program
 {
     // Main Method
