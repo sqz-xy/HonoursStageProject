@@ -42,6 +42,8 @@ public class TerrainMesh : Shape
             vertices.Add(0);
             
             // No tex coords yet
+            vertices.Add(((-pHeight / 2.0f) + heightIndex) / pResolution);       // X, the range of the X dimension
+            vertices.Add(((-pWidth / 2.0f) + widthIndex) / pResolution);         // Z, the range of the Z dimension  
         }
         
         for (int heightIndex = 0; heightIndex < pHeight - 1; heightIndex++) // for each row

@@ -64,6 +64,9 @@ public class TerrainScene : Scene
     };
 
     private int _cubeIndex;
+
+    private int _meshTextureIndex;
+    
     private Camera _camera;
     
 
@@ -98,10 +101,11 @@ public class TerrainScene : Scene
         // Camera and Shader initialization
         _camera = new Camera();
         _shader = new Shader(@"Shaders/terrainscene.vert", @"Shaders/terrainscene.frag");
-        
+
         VertexManager.Initialize(1, 1, 1);
         _terrainMesh = new TerrainMesh(100, 100, 10);
-        _terrainMesh.Index = VertexManager.BindVertexData(_terrainMesh.Vertices, _terrainMesh.Indices, 0, 1, -1);
+        _terrainMesh.Index = VertexManager.BindVertexData(_terrainMesh.Vertices, _terrainMesh.Indices, 0, 1, 2);
+        _meshTextureIndex = TextureManager.BindTextureData("Textures/button.png");
         _modelMatrix = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(0.0f)); // Changed this to see correct side of mesh
         
         GL.UseProgram(_shader.Handle);
@@ -119,6 +123,9 @@ public class TerrainScene : Scene
 
         int uProjection = GL.GetUniformLocation(_shader.Handle, "uProjection");
         GL.UniformMatrix4(uProjection, true, ref _camera.Projection);
+        
+        int uTexLocation1 = GL.GetUniformLocation(_shader.Handle, "uTextureSampler1");
+        GL.Uniform1(uTexLocation1, _meshTextureIndex);
     }
 
     public override void Render(FrameEventArgs e)
@@ -176,5 +183,6 @@ public class TerrainScene : Scene
     public override void Close()
     {
         VertexManager.ClearData();
+        TextureManager.ClearData();
     }
 }
