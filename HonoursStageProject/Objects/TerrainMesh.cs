@@ -18,15 +18,15 @@ public class TerrainMesh : Shape
     private void GenerateMesh(int pWidth, int pHeight, int pResolution)
     {
         // Make these arrays again
-        List<float> vertices = new List<float>();
-        List<uint> indices = new List<uint>();
+        var vertices = new List<float>();
+        var indices = new List<uint>();
         
-        Random rand = new Random();
+        var rand = new Random();
 
-        bool test = true;
+        var test = true;
         
-        for (int heightIndex = 0; heightIndex < pHeight; heightIndex++)
-        for (int widthIndex = 0; widthIndex < pWidth; widthIndex++)
+        for (var heightIndex = 0; heightIndex < pHeight; heightIndex++)
+        for (var widthIndex = 0; widthIndex < pWidth; widthIndex++)
         {
             // Starts top left corner, ends bottom right , -width/2 to +width/2. -Dim/2 centres the mesh on 0,0, add i to move along the dimension
             // Divide by resolution, 1 is the base res, i.e. larger res with larger dimensions == more detail
@@ -46,9 +46,9 @@ public class TerrainMesh : Shape
             vertices.Add(((-pWidth / 2.0f) + widthIndex) / pResolution);         // Z, the range of the Z dimension  
         }
         
-        for (int heightIndex = 0; heightIndex < pHeight - 1; heightIndex++) // for each row
-            for (int widthIndex = 0; widthIndex < pWidth; widthIndex++) // for each column
-            for (int sideIndex = 0; sideIndex < 2; sideIndex++) // for each side of the trianglestrip
+        for (var heightIndex = 0; heightIndex < pHeight - 1; heightIndex++) // for each row
+            for (var widthIndex = 0; widthIndex < pWidth; widthIndex++) // for each column
+            for (var sideIndex = 0; sideIndex < 2; sideIndex++) // for each side of the trianglestrip
             {
                 // Triangle strip vertices are ordered from top row to bottom row
                 // Alternate between row i and i + 1, j is the columns

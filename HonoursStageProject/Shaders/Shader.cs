@@ -13,8 +13,8 @@ public class Shader : IDisposable
 
     public Shader(string pVertexPath, string pFragmentPath)
     {
-        int vertexShader = LoadShader(pVertexPath, ShaderType.VertexShader);
-        int fragmentShader = LoadShader(pFragmentPath, ShaderType.FragmentShader);
+        var vertexShader = LoadShader(pVertexPath, ShaderType.VertexShader);
+        var fragmentShader = LoadShader(pFragmentPath, ShaderType.FragmentShader);
         
         CreateProgram(vertexShader, fragmentShader);
         DetatchShaders(vertexShader, fragmentShader);
@@ -36,9 +36,9 @@ public class Shader : IDisposable
     /// <returns></returns>
     private int LoadShader(string pFileName, ShaderType pType)
     {
-        int shader = GL.CreateShader(pType);
+        var shader = GL.CreateShader(pType);
         
-        using (StreamReader sr = new StreamReader(pFileName))
+        using (var sr = new StreamReader(pFileName))
         {
             GL.ShaderSource(shader, sr.ReadToEnd());
         }
@@ -62,10 +62,10 @@ public class Shader : IDisposable
 
         GL.LinkProgram(Handle);
 
-        GL.GetProgram(Handle, GetProgramParameterName.LinkStatus, out int success);
+        GL.GetProgram(Handle, GetProgramParameterName.LinkStatus, out var success);
         if (success == 0)
         {
-            string infoLog = GL.GetProgramInfoLog(Handle);
+            var infoLog = GL.GetProgramInfoLog(Handle);
             Console.WriteLine(infoLog);
         }
     }

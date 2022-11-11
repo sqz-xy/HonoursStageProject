@@ -19,7 +19,6 @@ public class Camera
     public Matrix4 Projection;
 
     private Vector3 _position;
-    private Vector3 _target;
     private Vector3 _up;
     private Vector3 _right;
     private Vector3 _direction;
@@ -36,9 +35,9 @@ public class Camera
     public Camera()
     {
         _position = new Vector3(0.0f, 0.5f, 0.5f);
-        _target = new Vector3(0.0f, 0.0f, 0.0f);
+        var target = new Vector3(0.0f, 0.0f, 0.0f);
         _up = new Vector3(0.0f, 1.0f,  0.0f);
-        _direction = Vector3.Normalize(_target - _position);
+        _direction = Vector3.Normalize(target - _position);
         _right = Vector3.Normalize(Vector3.Cross(_up, _direction));
             
         View = Matrix4.CreateTranslation(0, 0, -2);
@@ -74,8 +73,8 @@ public class Camera
         // https://learnopengl.com/Getting-started/Camera
         
         // Calculate mouse delta, mouse change
-        float mouseDeltaX = pMouseState.X - _lastMousePos.X;
-        float mouseDeltaY = pMouseState.Y - _lastMousePos.Y;
+        var mouseDeltaX = pMouseState.X - _lastMousePos.X;
+        var mouseDeltaY = pMouseState.Y - _lastMousePos.Y;
         
         // If mouse hasn't moved yet, grab the position
         if (!_hasMouseMoved)

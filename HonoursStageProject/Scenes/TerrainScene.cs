@@ -62,16 +62,16 @@ public sealed class TerrainScene : Scene
 
     private void UpdateMatrices()
     {
-        int uModel = GL.GetUniformLocation(_shader.Handle, "uModel");
+        var uModel = GL.GetUniformLocation(_shader.Handle, "uModel");
         GL.UniformMatrix4(uModel, true, ref _modelMatrix);
 
-        int uView = GL.GetUniformLocation(_shader.Handle, "uView");
+        var uView = GL.GetUniformLocation(_shader.Handle, "uView");
         GL.UniformMatrix4(uView, true, ref _camera.View);
 
-        int uProjection = GL.GetUniformLocation(_shader.Handle, "uProjection");
+        var uProjection = GL.GetUniformLocation(_shader.Handle, "uProjection");
         GL.UniformMatrix4(uProjection, true, ref _camera.Projection);
         
-        int uTexLocation1 = GL.GetUniformLocation(_shader.Handle, "uTextureSampler1");
+        var uTexLocation1 = GL.GetUniformLocation(_shader.Handle, "uTextureSampler1");
         GL.Uniform1(uTexLocation1, _meshTextureIndex);
     }
 

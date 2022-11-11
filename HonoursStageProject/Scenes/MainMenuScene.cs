@@ -46,10 +46,10 @@ public sealed class MainMenuScene : Scene
 
     private void UpdateMatrices()
     {
-        int vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "uColour");
+        var vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "uColour");
         GL.Uniform4(vertexColorLocation, _button.Colour);
 
-        int uTexLocation1 = GL.GetUniformLocation(_shader.Handle, "uTextureSampler1");
+        var uTexLocation1 = GL.GetUniformLocation(_shader.Handle, "uTextureSampler1");
         GL.Uniform1(uTexLocation1, _buttonTextureIndex);
     }
 
@@ -65,7 +65,7 @@ public sealed class MainMenuScene : Scene
 
     private void MouseMovement(MouseEventArgs e)
     {
-        Vector2 mousePos = new Vector2((float) (-1.0 + 2.0 * (double) e.X / SceneManager.Width),
+        var mousePos = new Vector2((float) (-1.0 + 2.0 * (double) e.X / SceneManager.Width),
             (float) (1.0 - 2.0 * (double) e.Y / SceneManager.Height));
 
         if (Shape.CheckSquareIntersection(_button, mousePos))
@@ -76,7 +76,7 @@ public sealed class MainMenuScene : Scene
 
     private void MouseClick(MouseEventArgs e)
     {
-        Vector2 mousePos = new Vector2((float) (-1.0 + 2.0 * (double) e.X / SceneManager.Width),
+        var mousePos = new Vector2((float) (-1.0 + 2.0 * (double) e.X / SceneManager.Width),
             (float) (1.0 - 2.0 * (double) e.Y / SceneManager.Height));
 
         if (Shape.CheckSquareIntersection(_button, mousePos))
