@@ -43,10 +43,9 @@ static class VertexManager
     /// </summary>
     /// <param name="pVertices">The vertices to bind</param>
     /// <param name="pIndices">The indices to bind</param>
-    /// <param name="pPositionLocation">The vertex position information from the shader</param>
-    /// <param name="pNormalLocation">The vertex normal information from the shader</param>
+    /// <param name="pIsTextured">Is the object textured?</param>
     /// <returns>The VAO index of the bound vertices</returns>
-    public static int BindVertexData(float[] pVertices, uint[] pIndices, int pPositionLocation, int pNormalLocation, int pTextureLocation)
+    public static int BindVertexData(float[] pVertices, uint[] pIndices, bool pIsTextured)
     {
         GL.BindVertexArray(_vaoIDs[_vaoIndex]);
         _vaoIndex++;
@@ -73,41 +72,38 @@ static class VertexManager
         }
         
         // No normals or textures yet
-        EnableVertexAttributes(pPositionLocation, pNormalLocation, pTextureLocation);
+        EnableVertexAttributes(pIsTextured);
 
         GL.BindVertexArray(0);
         return _vaoIndex - 1;
     }
 
     /// <summary>
-    /// Enables vertex attributes for the shapes and shaders
+    /// Enables vertex attributes for models
     /// </summary>
-    /// <param name="pPositionLocation">Position location in the shader</param>
-    /// <param name="pNormalLocation">Normal location in the shader</param>
-    /// <param name="pTextureLocation">Texture location in the shader</param>
-    private static void EnableVertexAttributes(int pPositionLocation, int pNormalLocation, int pTextureLocation)
+    /// <param name="pIsTextured">Is the object textured?</param>
+    private static void EnableVertexAttributes(bool pIsTextured)
     {
         // Account for textures using increased stride
-        if (pTextureLocation != -1)
+        if (pIsTextured)
         {
-            GL.EnableVertexAttribArray(pPositionLocation);
-            GL.VertexAttribPointer(pPositionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
+            GL.EnableVertexAttribArray(0);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
 
-            GL.EnableVertexAttribArray(pNormalLocation);
-            GL.VertexAttribPointer(pNormalLocation, 3, VertexAttribPointerType.Float, true, 8 * sizeof(float), 3 * sizeof(float));
+            GL.EnableVertexAttribArray(1);
+            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, true, 8 * sizeof(float), 3 * sizeof(float));
 
-            GL.EnableVertexAttribArray(pTextureLocation);
-            GL.VertexAttribPointer(pTextureLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
+            GL.EnableVertexAttribArray(2);
+            GL.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
+            return;
         }
-        // No texture coordinates available (Terrain mesh currently)
-        else
-        {
-            GL.EnableVertexAttribArray(pPositionLocation);
-            GL.VertexAttribPointer(pPositionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
 
-            GL.EnableVertexAttribArray(pNormalLocation);
-            GL.VertexAttribPointer(pNormalLocation, 3, VertexAttribPointerType.Float, true, 6 * sizeof(float), 3 * sizeof(float));
-        }    
+        GL.EnableVertexAttribArray(0);
+        GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
+
+        GL.EnableVertexAttribArray(1);
+        GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, true, 6 * sizeof(float), 3 * sizeof(float));
+         
     }
     
     /// <summary>

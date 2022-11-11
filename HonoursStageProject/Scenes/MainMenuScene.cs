@@ -35,7 +35,7 @@ public sealed class MainMenuScene : Scene
 
         _button = new Quadrilateral(new Vector2(0.0f, 0.0f), 0.2f, 0.1f, new Vector4(0.1f, 0.1f, 0.1f, 0.0f));
 
-        _button.Index = VertexManager.BindVertexData(_button.Vertices, _button.Indices, 0, 1, 2);
+        _button.Index = VertexManager.BindVertexData(_button.Vertices, _button.Indices, true);
         _buttonTextureIndex = TextureManager.BindTextureData("Textures/button.png");
         
         // Shader stuff

@@ -10,5 +10,5 @@ in vec2 oTexCoords;
 void main()
 {
     //FragColor = texture(uTextureSampler1, oTexCoords); //Not using textures currently
-    FragColor = oColour + (texture(uTextureSampler1, oTexCoords) / 20);
+    FragColor = oColour + texture(uTextureSampler1, oTexCoords) / 20;
 }

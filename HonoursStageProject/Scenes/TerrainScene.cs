@@ -5,10 +5,11 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
+using PrimitiveType = OpenTK.Graphics.ES11.PrimitiveType;
 
 namespace HonoursStageProject.Scenes;
 
-public class TerrainScene : Scene
+public sealed class TerrainScene : Scene
 {
     private Shader _shader;
     
@@ -50,9 +51,9 @@ public class TerrainScene : Scene
         // Object initialization
         VertexManager.Initialize(1, 1, 1);
         _terrainMesh = new TerrainMesh(100, 100, 10);
-        _terrainMesh.Index = VertexManager.BindVertexData(_terrainMesh.Vertices, _terrainMesh.Indices, 0, 1, 2);
+        _terrainMesh.Index = VertexManager.BindVertexData(_terrainMesh.Vertices, _terrainMesh.Indices, true);
         _meshTextureIndex = TextureManager.BindTextureData("Textures/button.png");
-        _modelMatrix = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(0.0f)); // Changed this to see correct side of mesh
+        _modelMatrix = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(0.0f)); 
         
         GL.UseProgram(_shader.Handle);
         
@@ -79,7 +80,7 @@ public class TerrainScene : Scene
         _shader.UseShader();
         
         GL.BindVertexArray(VertexManager.GetVaoAtIndex(_terrainMesh.Index));
-        GL.DrawElements((PrimitiveType) PrimitiveType.TriangleStrip, _terrainMesh.Indices.Length, DrawElementsType.UnsignedInt, 0);
+        GL.DrawElements((OpenTK.Graphics.OpenGL.PrimitiveType) _terrainMesh.PrimitiveType, _terrainMesh.Indices.Length, DrawElementsType.UnsignedInt, 0);
     }
 
     public override void Update(FrameEventArgs e)
