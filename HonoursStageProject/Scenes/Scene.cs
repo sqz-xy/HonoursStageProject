@@ -5,17 +5,17 @@ namespace HonoursStageProject.Scenes;
 
 public abstract class Scene : IScene
 {
-    protected SceneManager SceneManager;
+    protected readonly SceneManager SceneManager;
 
-    public Scene(SceneManager sceneManager)
+    protected Scene(SceneManager pSceneManager)
     {
-        this.SceneManager = sceneManager;
+        this.SceneManager = pSceneManager;
     }
 
     public abstract void Initialize();
-    public abstract void Render(FrameEventArgs e);
+    public abstract void Render(FrameEventArgs pE);
 
-    public abstract void Update(FrameEventArgs e);
+    public abstract void Update(FrameEventArgs pE);
 
     public abstract void Close();
 }

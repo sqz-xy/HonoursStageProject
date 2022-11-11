@@ -2,10 +2,8 @@
 using HonoursStageProject.Objects;
 using HonoursStageProject.Shaders;
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
-using PrimitiveType = OpenTK.Graphics.ES11.PrimitiveType;
 
 namespace HonoursStageProject.Scenes;
 
@@ -21,17 +19,17 @@ public sealed class TerrainScene : Scene
     
 
     // Camera
-    public TerrainScene(SceneManager sceneManager) : base(sceneManager)
+    public TerrainScene(SceneManager pSceneManager) : base(pSceneManager)
     {
         SceneManager.Title = "Terrain Scene";
         
-        sceneManager.Renderer = Render;
-        sceneManager.Updater = Update;
-        sceneManager.MouseMoveEvent += MouseMove;
-        sceneManager.MouseClickEvent = null;
-        sceneManager.KeyPressEvent += KeyPress;
-        sceneManager.CursorVisible = false;
-        sceneManager.CursorGrabbed = true;
+        pSceneManager.Renderer = Render;
+        pSceneManager.Updater = Update;
+        pSceneManager.MouseMoveEvent += MouseMove;
+        pSceneManager.MouseClickEvent = null;
+        pSceneManager.KeyPressEvent += KeyPress;
+        pSceneManager.CursorVisible = false;
+        pSceneManager.CursorGrabbed = true;
         
         Initialize();
     }
@@ -75,53 +73,53 @@ public sealed class TerrainScene : Scene
         GL.Uniform1(uTexLocation1, _meshTextureIndex);
     }
 
-    public override void Render(FrameEventArgs e)
+    public override void Render(FrameEventArgs pE)
     {
         _shader.UseShader();
         
         GL.BindVertexArray(VertexManager.GetVaoAtIndex(_terrainMesh.Index));
-        GL.DrawElements((OpenTK.Graphics.OpenGL.PrimitiveType) _terrainMesh.PrimitiveType, _terrainMesh.Indices.Length, DrawElementsType.UnsignedInt, 0);
+        GL.DrawElements((PrimitiveType) _terrainMesh.PrimitiveType, _terrainMesh.Indices.Length, DrawElementsType.UnsignedInt, 0);
     }
 
-    public override void Update(FrameEventArgs e)
+    public override void Update(FrameEventArgs pE)
     {
         _camera.RotateCamera(Mouse.GetState());
         _camera.UpdateCamera();
         UpdateMatrices();
     }
 
-    private void MouseMove(MouseEventArgs e)
+    private void MouseMove(MouseEventArgs pE)
     {
         if (SceneManager.Focused)
         {
             // Center Mouse after movement
-            Mouse.SetPosition(e.X + SceneManager.SWidth / 2f, e.Y + SceneManager.SHeight / 2f);
+            Mouse.SetPosition(pE.X + SceneManager.SWidth / 2f, pE.Y + SceneManager.SHeight / 2f);
         }
     }
     
-    private void KeyPress(KeyPressEventArgs e)
+    private void KeyPress(KeyPressEventArgs pE)
     {
-        if (e.KeyChar == 'a') 
+        if (pE.KeyChar == 'a') 
         { 
-            _camera.MoveCamera(Direction.LEFT, 0.1f);
+            _camera.MoveCamera(Direction.Left, 0.1f);
         }
-        else if (e.KeyChar == 'd') 
+        else if (pE.KeyChar == 'd') 
         { 
-            _camera.MoveCamera(Direction.RIGHT, 0.1f);
+            _camera.MoveCamera(Direction.Right, 0.1f);
         }
-        else if (e.KeyChar == 'w') 
+        else if (pE.KeyChar == 'w') 
         { 
-            _camera.MoveCamera(Direction.FORWARD,0.1f);
+            _camera.MoveCamera(Direction.Forward,0.1f);
         }
-        else if (e.KeyChar == 's') 
+        else if (pE.KeyChar == 's') 
         { 
-            _camera.MoveCamera(Direction.BACKWARD,0.1f);
+            _camera.MoveCamera(Direction.Backward,0.1f);
         }
-        else if (e.KeyChar == 'q')
+        else if (pE.KeyChar == 'q')
         {
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
         }
-        else if (e.KeyChar == 'e')
+        else if (pE.KeyChar == 'e')
         {
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
         }

@@ -1,5 +1,4 @@
-﻿using System;
-using HonoursStageProject.Scenes;
+﻿using HonoursStageProject.Scenes;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -12,17 +11,17 @@ public class SceneManager : GameWindow
     public static int SWidth = 1280, SHeight = 720;
 
     private Scene _currentScene;
-    public delegate void SceneDelegate(FrameEventArgs e);
+    public delegate void SceneDelegate(FrameEventArgs pE);
     public SceneDelegate Renderer;
     public SceneDelegate Updater;
 
-    public delegate void MouseMoveDelegate(MouseEventArgs e);
+    public delegate void MouseMoveDelegate(MouseEventArgs pE);
     public MouseMoveDelegate? MouseMoveEvent;
 
-    public delegate void MouseClickDelegate(MouseButtonEventArgs e);
+    public delegate void MouseClickDelegate(MouseButtonEventArgs pE);
     public MouseClickDelegate? MouseClickEvent;
 
-    public delegate void KeyPressDelegate(KeyPressEventArgs e);
+    public delegate void KeyPressDelegate(KeyPressEventArgs pE);
     public KeyPressDelegate? KeyPressEvent;
 
     // Stack of render delegates
@@ -34,9 +33,9 @@ public class SceneManager : GameWindow
 
     }
     
-    protected override void OnLoad(EventArgs e)
+    protected override void OnLoad(EventArgs pE)
     {
-        base.OnLoad(e);
+        base.OnLoad(pE);
 
         //GL.Enable(EnableCap.DepthTest);
         GL.DepthMask(true);
@@ -47,43 +46,43 @@ public class SceneManager : GameWindow
         _currentScene = new MainMenuScene(this);
     }
     
-    protected override void OnResize(EventArgs e)
+    protected override void OnResize(EventArgs pE)
     {
-        base.OnResize(e);
+        base.OnResize(pE);
         
         GL.Viewport(0, 0, Width, Height);
     }
 
-    protected override void OnUpdateFrame(FrameEventArgs e)
+    protected override void OnUpdateFrame(FrameEventArgs pE)
     {
-        base.OnUpdateFrame(e);
-        Updater(e);
+        base.OnUpdateFrame(pE);
+        Updater(pE);
     }
 
-    protected override void OnRenderFrame(FrameEventArgs e)
+    protected override void OnRenderFrame(FrameEventArgs pE)
     {
-        base.OnRenderFrame(e);
+        base.OnRenderFrame(pE);
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         
-        Renderer(e);
+        Renderer(pE);
 
         GL.Flush();
         SwapBuffers();
     }
 
-    protected override void OnMouseMove(MouseMoveEventArgs e)
+    protected override void OnMouseMove(MouseMoveEventArgs pE)
     {
-        MouseMoveEvent?.Invoke(e);
+        MouseMoveEvent?.Invoke(pE);
     }
 
-    protected override void OnMouseDown(MouseButtonEventArgs e)
+    protected override void OnMouseDown(MouseButtonEventArgs pE)
     {
-        MouseClickEvent?.Invoke(e);
+        MouseClickEvent?.Invoke(pE);
     }
 
-    protected override void OnKeyPress(KeyPressEventArgs e)
+    protected override void OnKeyPress(KeyPressEventArgs pE)
     {
-        KeyPressEvent?.Invoke(e);
+        KeyPressEvent?.Invoke(pE);
     }
 
     public void ChangeScene(SceneTypes pSceneType)
@@ -109,9 +108,9 @@ public class SceneManager : GameWindow
         }
     }
 
-    protected override void OnUnload(EventArgs e)
+    protected override void OnUnload(EventArgs pE)
     {
-        base.OnUnload(e);
+        base.OnUnload(pE);
         _currentScene.Close();
     }
 

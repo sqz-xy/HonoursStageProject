@@ -13,14 +13,14 @@ public sealed class MainMenuScene : Scene
     private Quadrilateral _button;
     private int _buttonTextureIndex;
 
-    public MainMenuScene(SceneManager sceneManager) : base(sceneManager)
+    public MainMenuScene(SceneManager pSceneManager) : base(pSceneManager)
     {
-        sceneManager.Title = "Main Menu";
+        pSceneManager.Title = "Main Menu";
 
-        sceneManager.Renderer = Render;
-        sceneManager.Updater = Update;
-        sceneManager.MouseMoveEvent += MouseMovement;
-        sceneManager.MouseClickEvent += MouseClick;
+        pSceneManager.Renderer = Render;
+        pSceneManager.Updater = Update;
+        pSceneManager.MouseMoveEvent += MouseMovement;
+        pSceneManager.MouseClickEvent += MouseClick;
         
         Initialize();
     }
@@ -53,7 +53,7 @@ public sealed class MainMenuScene : Scene
         GL.Uniform1(uTexLocation1, _buttonTextureIndex);
     }
 
-    public override void Render(FrameEventArgs e)
+    public override void Render(FrameEventArgs pE)
     {
         //Console.WriteLine("Rendering");
         
@@ -63,10 +63,10 @@ public sealed class MainMenuScene : Scene
         GL.DrawElements((PrimitiveType) _button.PrimitiveType, _button.Indices.Length, DrawElementsType.UnsignedInt, 0);
     }
 
-    private void MouseMovement(MouseEventArgs e)
+    private void MouseMovement(MouseEventArgs pE)
     {
-        var mousePos = new Vector2((float) (-1.0 + 2.0 * (double) e.X / SceneManager.Width),
-            (float) (1.0 - 2.0 * (double) e.Y / SceneManager.Height));
+        var mousePos = new Vector2((float) (-1.0 + 2.0 * pE.X / SceneManager.Width),
+            (float) (1.0 - 2.0 * pE.Y / SceneManager.Height));
 
         if (Shape.CheckSquareIntersection(_button, mousePos))
             _button.Colour = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
@@ -74,16 +74,16 @@ public sealed class MainMenuScene : Scene
             _button.Colour = new Vector4(0.1f, 0.1f, 0.1f, 0.0f);
     }
 
-    private void MouseClick(MouseEventArgs e)
+    private void MouseClick(MouseEventArgs pE)
     {
-        var mousePos = new Vector2((float) (-1.0 + 2.0 * (double) e.X / SceneManager.Width),
-            (float) (1.0 - 2.0 * (double) e.Y / SceneManager.Height));
+        var mousePos = new Vector2((float) (-1.0 + 2.0 * pE.X / SceneManager.Width),
+            (float) (1.0 - 2.0 * pE.Y / SceneManager.Height));
 
         if (Shape.CheckSquareIntersection(_button, mousePos))
             SceneManager.ChangeScene(SceneTypes.SceneTerrain);
     }
 
-    public override void Update(FrameEventArgs e)
+    public override void Update(FrameEventArgs pE)
     {
         UpdateMatrices();
     } 

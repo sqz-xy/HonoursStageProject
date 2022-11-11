@@ -34,11 +34,11 @@ public static class TextureManager
         public static int BindTextureData(string pFilePath)
         {
             var filepath = @pFilePath;
-            if (System.IO.File.Exists(filepath))
+            if (File.Exists(filepath))
             {            
                 var TextureBitmap = new Bitmap(filepath);
                 var TextureData = TextureBitmap.LockBits(
-                new System.Drawing.Rectangle(0, 0, TextureBitmap.Width,
+                new Rectangle(0, 0, TextureBitmap.Width,
                 TextureBitmap.Height), ImageLockMode.ReadOnly,
                 System.Drawing.Imaging.PixelFormat.Format32bppRgb);
 

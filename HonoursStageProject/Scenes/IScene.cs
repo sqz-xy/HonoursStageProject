@@ -11,7 +11,7 @@ public enum SceneTypes
 public interface IScene
 {
     void Initialize();
-    void Render(FrameEventArgs e);
-    void Update(FrameEventArgs e);
+    void Render(FrameEventArgs pE);
+    void Update(FrameEventArgs pE);
     void Close();
 }

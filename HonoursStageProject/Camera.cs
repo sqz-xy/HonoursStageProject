@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices.ObjectiveC;
-using HonoursStageProject.Managers;
+﻿using HonoursStageProject.Managers;
 using OpenTK;
 using OpenTK.Input;
 
@@ -7,10 +6,10 @@ namespace HonoursStageProject;
 
 public enum Direction
 {
-    FORWARD,
-    BACKWARD,
-    LEFT,
-    RIGHT
+    Forward,
+    Backward,
+    Left,
+    Right
 }
 
 public class Camera
@@ -53,16 +52,16 @@ public class Camera
     {
         switch (pDirection)
         {
-            case Direction.FORWARD:
+            case Direction.Forward:
                 _position += _direction * pDistance;
                 break;
-            case Direction.BACKWARD:
+            case Direction.Backward:
                 _position -= _direction * pDistance;
                 break;
-            case Direction.LEFT:
+            case Direction.Left:
                 _position += _right * pDistance;
                 break;
-            case Direction.RIGHT:
+            case Direction.Right:
                 _position -= _right * pDistance;
                 break;
         }

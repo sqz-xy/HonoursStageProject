@@ -1,15 +1,10 @@
-﻿
-using System;
-using System.IO;
-using System.Collections.Generic;
-using HonoursStageProject.Scenes;
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 namespace HonoursStageProject.Shaders;
 
-public class Shader : IDisposable
+public sealed class Shader : IDisposable
 {
-    public int Handle { get; set; }
-    private bool _disposedValue = false;
+    public int Handle { get; private set; }
+    private bool _disposedValue;
 
     public Shader(string pVertexPath, string pFragmentPath)
     {
@@ -86,8 +81,8 @@ public class Shader : IDisposable
     /// <summary>
     /// Delete the shader program once the shader is no longer needed
     /// </summary>
-    /// <param name="disposing"></param>
-    protected virtual void Dispose(bool disposing)
+    /// <param name="pDisposing"></param>
+    private void Dispose(bool pDisposing)
     {
         if (!_disposedValue)
         {
@@ -108,7 +103,7 @@ public class Shader : IDisposable
 
 
     /// <summary>
-    /// Calles the IDisposable implemented method
+    /// Calls the IDisposable implemented method
     /// </summary>
     public void Dispose()
     {
