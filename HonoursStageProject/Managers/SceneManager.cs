@@ -33,38 +33,51 @@ public class SceneManager : GameWindow
 
     }
     
-    protected override void OnLoad(EventArgs pE)
+    /// <summary>
+    /// Called when window loads
+    /// </summary>
+    /// <param name="pEventArgs">The event arguments for the OnLoad event</param>
+    protected override void OnLoad(EventArgs pEventArgs)
     {
-        base.OnLoad(pE);
-
-        //GL.Enable(EnableCap.DepthTest);
+        base.OnLoad(pEventArgs);
+        
         GL.DepthMask(true);
-        //GL.Enable(EnableCap.CullFace);
-        //GL.CullFace(CullFaceMode.Back);
         GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         
         _currentScene = new MainMenuScene(this);
     }
     
-    protected override void OnResize(EventArgs pE)
+    /// <summary>
+    /// Called when the window is resized
+    /// </summary>
+    /// <param name="pEventArgs">Event arguments for the OnResize event</param>
+    protected override void OnResize(EventArgs pEventArgs)
     {
-        base.OnResize(pE);
+        base.OnResize(pEventArgs);
         
         GL.Viewport(0, 0, Width, Height);
     }
 
-    protected override void OnUpdateFrame(FrameEventArgs pE)
+    /// <summary>
+    /// Called each frame to update logic within a scene
+    /// </summary>
+    /// <param name="pFrameEventArgs">The frame event arguments for OnUpdateFrame</param>
+    protected override void OnUpdateFrame(FrameEventArgs pFrameEventArgs)
     {
-        base.OnUpdateFrame(pE);
-        Updater(pE);
+        base.OnUpdateFrame(pFrameEventArgs);
+        Updater(pFrameEventArgs);
     }
 
-    protected override void OnRenderFrame(FrameEventArgs pE)
+    /// <summary>
+    /// Called each frame to update Rendering within a scene
+    /// </summary>
+    /// <param name="pFrameEventArgs">The frame event arguments for OnUpdateFrame</param>
+    protected override void OnRenderFrame(FrameEventArgs pFrameEventArgs)
     {
-        base.OnRenderFrame(pE);
+        base.OnRenderFrame(pFrameEventArgs);
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         
-        Renderer(pE);
+        Renderer(pFrameEventArgs);
 
         GL.Flush();
         SwapBuffers();

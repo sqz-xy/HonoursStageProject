@@ -84,6 +84,7 @@ static class VertexManager
     /// <param name="pIsTextured">Is the object textured?</param>
     private static void EnableVertexAttributes(bool pIsTextured)
     {
+        // Locations are hard coded into shader layout
         // Account for textures using increased stride
         if (pIsTextured)
         {
