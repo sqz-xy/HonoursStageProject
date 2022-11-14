@@ -7,9 +7,13 @@ using OpenTK.Input;
 
 namespace HonoursStageProject.Scenes;
 
+/// <summary>
+/// The main menu scene
+/// </summary>
 public sealed class MainMenuScene : Scene
 {
     private Shader _shader;
+    
     private Quadrilateral _button;
     private int _buttonTextureIndex;
 
@@ -24,7 +28,7 @@ public sealed class MainMenuScene : Scene
         
         Initialize();
     }
-
+    
     public override void Initialize()
     {
         // Initialise variables
@@ -41,10 +45,13 @@ public sealed class MainMenuScene : Scene
         // Shader stuff
         _shader.UseShader();
         
-        UpdateMatrices();
+        UpdateValues();
     }
 
-    private void UpdateMatrices()
+    /// <summary>
+    /// Updates shader values
+    /// </summary>
+    private void UpdateValues()
     {
         var vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "uColour");
         GL.Uniform4(vertexColorLocation, _button.Colour);
@@ -63,10 +70,14 @@ public sealed class MainMenuScene : Scene
         GL.DrawElements((PrimitiveType) _button.PrimitiveType, _button.Indices.Length, DrawElementsType.UnsignedInt, 0);
     }
 
-    private void MouseMovement(MouseEventArgs pE)
+    /// <summary>
+    /// Logic for the mouse movement, currently checks if  the mouse intersects with a button
+    /// </summary>
+    /// <param name="pMouseEventArgs">The mouse event arguments</param>
+    private void MouseMovement(MouseEventArgs pMouseEventArgs)
     {
-        var mousePos = new Vector2((float) (-1.0 + 2.0 * pE.X / SceneManager.Width),
-            (float) (1.0 - 2.0 * pE.Y / SceneManager.Height));
+        var mousePos = new Vector2((float) (-1.0 + 2.0 * pMouseEventArgs.X / SceneManager.Width),
+            (float) (1.0 - 2.0 * pMouseEventArgs.Y / SceneManager.Height));
 
         if (Shape.CheckSquareIntersection(_button, mousePos))
             _button.Colour = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
@@ -74,20 +85,24 @@ public sealed class MainMenuScene : Scene
             _button.Colour = new Vector4(0.1f, 0.1f, 0.1f, 0.0f);
     }
 
-    private void MouseClick(MouseEventArgs pE)
+    /// <summary>
+    /// Logic for the mouse clicking, checks if the button on the screen is clicked
+    /// </summary>
+    /// <param name="pMouseEventArgs">The mouse event arguments</param>
+    private void MouseClick(MouseEventArgs pMouseEventArgs)
     {
-        var mousePos = new Vector2((float) (-1.0 + 2.0 * pE.X / SceneManager.Width),
-            (float) (1.0 - 2.0 * pE.Y / SceneManager.Height));
+        var mousePos = new Vector2((float) (-1.0 + 2.0 * pMouseEventArgs.X / SceneManager.Width),
+            (float) (1.0 - 2.0 * pMouseEventArgs.Y / SceneManager.Height));
 
         if (Shape.CheckSquareIntersection(_button, mousePos))
             SceneManager.ChangeScene(SceneTypes.SceneTerrain);
     }
-
+    
     public override void Update(FrameEventArgs pE)
     {
-        UpdateMatrices();
+        UpdateValues();
     } 
-
+    
     public override void Close()
     {
         VertexManager.ClearData();

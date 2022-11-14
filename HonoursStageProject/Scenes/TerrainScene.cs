@@ -40,25 +40,25 @@ public sealed class TerrainScene : Scene
         
         GL.Enable(EnableCap.DepthTest);
         GL.Enable(EnableCap.CullFace);
-        GL.CullFace(CullFaceMode.Front); // Ask about this, show difference
+        GL.CullFace(CullFaceMode.Front); // Changed due to triangle strip
         
         // Camera and Shader initialization
         _camera = new Camera();
         _shader = new Shader(@"Shaders/terrainscene.vert", @"Shaders/terrainscene.frag");
 
-        // Object initialization
+        // Object initialization (Terrain mesh)
         VertexManager.Initialize(1, 1, 1);
         _terrainMesh = new TerrainMesh(100, 100, 10);
         _terrainMesh.Index = VertexManager.BindVertexData(_terrainMesh.Vertices, _terrainMesh.Indices, true);
         _meshTextureIndex = TextureManager.BindTextureData("Textures/button.png");
-        _modelMatrix = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(0.0f)); 
+        _modelMatrix = Matrix4.Identity; 
         
         GL.UseProgram(_shader.Handle);
         
-        UpdateMatrices();
+        UpdateValues();
     }
 
-    private void UpdateMatrices()
+    private void UpdateValues()
     {
         var uModel = GL.GetUniformLocation(_shader.Handle, "uModel");
         GL.UniformMatrix4(uModel, true, ref _modelMatrix);
@@ -85,43 +85,48 @@ public sealed class TerrainScene : Scene
     {
         _camera.RotateCamera(Mouse.GetState());
         _camera.UpdateCamera();
-        UpdateMatrices();
+        UpdateValues();
     }
 
-    private void MouseMove(MouseEventArgs pE)
+    /// <summary>
+    /// Mouse movement logic, resets the mouse to the centre of the screen on movement, used for the camera
+    /// </summary>
+    /// <param name="pMouseEventArgs">The mouse event arguments</param>
+    private void MouseMove(MouseEventArgs pMouseEventArgs)
     {
         if (SceneManager.Focused)
         {
             // Center Mouse after movement
-            Mouse.SetPosition(pE.X + SceneManager.SWidth / 2f, pE.Y + SceneManager.SHeight / 2f);
+            Mouse.SetPosition(pMouseEventArgs.X + SceneManager.SWidth / 2f, pMouseEventArgs.Y + SceneManager.SHeight / 2f);
         }
     }
     
-    private void KeyPress(KeyPressEventArgs pE)
+    /// <summary>
+    /// Basic camera movement, needs to be refactored into keyboard state
+    /// </summary>
+    /// <param name="pKeyPressEventArgs">The key press event arguments</param>
+    private void KeyPress(KeyPressEventArgs pKeyPressEventArgs)
     {
-        if (pE.KeyChar == 'a') 
-        { 
-            _camera.MoveCamera(Direction.Left, 0.1f);
-        }
-        else if (pE.KeyChar == 'd') 
-        { 
-            _camera.MoveCamera(Direction.Right, 0.1f);
-        }
-        else if (pE.KeyChar == 'w') 
-        { 
-            _camera.MoveCamera(Direction.Forward,0.1f);
-        }
-        else if (pE.KeyChar == 's') 
-        { 
-            _camera.MoveCamera(Direction.Backward,0.1f);
-        }
-        else if (pE.KeyChar == 'q')
+        switch (pKeyPressEventArgs.KeyChar)
         {
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-        }
-        else if (pE.KeyChar == 'e')
-        {
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+            case 'a':
+                _camera.MoveCamera(Direction.Left, 0.1f);
+                break;
+            case 'd':
+                _camera.MoveCamera(Direction.Right, 0.1f);
+                break;
+            case 'w':
+                _camera.MoveCamera(Direction.Forward,0.1f);
+                break;
+            case 's':
+                _camera.MoveCamera(Direction.Backward,0.1f);
+                break;
+            case 'q':
+                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+                break;
+            case 'e':
+                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+                break;
         }
     }
 

@@ -2,16 +2,39 @@
 
 namespace HonoursStageProject.Scenes;
 
+/// <summary>
+/// The types of scene, used for changing scene
+/// </summary>
 public enum SceneTypes
 {
     SceneMainMenu,
     SceneTerrain
 }
 
+/// <summary>
+/// Interface for implementing a new scene
+/// </summary>
 public interface IScene
 {
+    /// <summary>
+    /// Initialization logic for the scene goes in here
+    /// </summary>
     void Initialize();
-    void Render(FrameEventArgs pE);
-    void Update(FrameEventArgs pE);
+    
+    /// <summary>
+    /// Render logic for the scene goes in here
+    /// </summary>
+    /// <param name="pFrameEventArgs"></param>
+    void Render(FrameEventArgs pFrameEventArgs);
+    
+    /// <summary>
+    /// Update logic for the scene goes in here
+    /// </summary>
+    /// <param name="pFrameEventArgs"></param>
+    void Update(FrameEventArgs pFrameEventArgs);
+    
+    /// <summary>
+    /// Cleanup logic for the scene goes here
+    /// </summary>
     void Close();
 }

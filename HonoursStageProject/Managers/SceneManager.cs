@@ -83,21 +83,37 @@ public class SceneManager : GameWindow
         SwapBuffers();
     }
 
-    protected override void OnMouseMove(MouseMoveEventArgs pE)
+    /// <summary>
+    /// Calls the stored delegate on a mouse move event
+    /// </summary>
+    /// <param name="pMouseMoveEventArgs">The mouse movement event arguments</param>
+    protected override void OnMouseMove(MouseMoveEventArgs pMouseMoveEventArgs)
     {
-        MouseMoveEvent?.Invoke(pE);
+        MouseMoveEvent?.Invoke(pMouseMoveEventArgs);
     }
 
-    protected override void OnMouseDown(MouseButtonEventArgs pE)
+    /// <summary>
+    /// Calls the stored delegate on a mouse down event 
+    /// </summary>
+    /// <param name="pMouseButtonEventArgs">The mouse button event arguments</param>
+    protected override void OnMouseDown(MouseButtonEventArgs pMouseButtonEventArgs)
     {
-        MouseClickEvent?.Invoke(pE);
+        MouseClickEvent?.Invoke(pMouseButtonEventArgs);
     }
 
-    protected override void OnKeyPress(KeyPressEventArgs pE)
+    /// <summary>
+    /// Calls the stored delegate on a key press event
+    /// </summary>
+    /// <param name="pKeyPressEventArgs">The key press event arguments</param>
+    protected override void OnKeyPress(KeyPressEventArgs pKeyPressEventArgs)
     {
-        KeyPressEvent?.Invoke(pE);
+        KeyPressEvent?.Invoke(pKeyPressEventArgs);
     }
 
+    /// <summary>
+    /// Changes the current scene to a different scene
+    /// </summary>
+    /// <param name="pSceneType">The scene type you want to change to</param>
     public void ChangeScene(SceneTypes pSceneType)
     {
         _currentScene.Close();
@@ -121,9 +137,13 @@ public class SceneManager : GameWindow
         }
     }
 
-    protected override void OnUnload(EventArgs pE)
+    /// <summary>
+    /// The unload event, triggers when the window is closed
+    /// </summary>
+    /// <param name="pEventArgs">The event arguments</param>
+    protected override void OnUnload(EventArgs pEventArgs)
     {
-        base.OnUnload(pE);
+        base.OnUnload(pEventArgs);
         _currentScene.Close();
     }
 

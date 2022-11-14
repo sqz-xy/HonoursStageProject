@@ -11,20 +11,13 @@ public static class TextureManager
 
         private static TextureUnit _currentTextureUnit;
         private static List<string> _textureUnitAsString;
-
-        // FBOs not fully implemented
-        private static int[] _FBO_IDs;
-
+        
         public static void Initialize(int pTextureCount)
         {
             _texture_IDs = new int[pTextureCount];
             _textureIndex = 0;
             _currentTextureUnit = TextureUnit.Texture0;
             _textureUnitAsString = TextureUnitsToString();
-
-            _FBO_IDs = new int[pTextureCount];
-
-            GL.GenFramebuffers(pTextureCount, _FBO_IDs);
         }
 
         /// <summary>

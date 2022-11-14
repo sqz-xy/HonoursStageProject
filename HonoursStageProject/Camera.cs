@@ -30,9 +30,11 @@ public class Camera
     private float _sensitivity;
 
     private bool _hasMouseMoved;
-
+    
     public Camera()
     {
+        // Default camera values
+        
         _position = new Vector3(0.0f, 0.5f, 0.5f);
         var target = new Vector3(0.0f, 0.0f, 0.0f);
         _up = new Vector3(0.0f, 1.0f,  0.0f);
@@ -48,6 +50,11 @@ public class Camera
         UpdateCamera();
     }
 
+    /// <summary>
+    /// Handles camera movement
+    /// </summary>
+    /// <param name="pDirection">The direction to move</param>
+    /// <param name="pDistance">The distance to move</param>
     public void MoveCamera(Direction pDirection, float pDistance)
     {
         switch (pDirection)
@@ -67,6 +74,10 @@ public class Camera
         }
     }
 
+    /// <summary>
+    /// Handles camera rotation using mouse control
+    /// </summary>
+    /// <param name="pMouseState">The mouse state</param>
     public void RotateCamera(MouseState pMouseState)
     {
         // https://learnopengl.com/Getting-started/Camera
@@ -114,6 +125,9 @@ public class Camera
         
     }
 
+    /// <summary>
+    /// Updates the view matrix, called after a change to the components is made
+    /// </summary>
     public void UpdateCamera()
     {
         View = Matrix4.LookAt(_position, _position + _direction, _up); 

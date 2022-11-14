@@ -13,10 +13,16 @@ public abstract class Shape
     public int Index;
     public PrimitiveType PrimitiveType;
     
-    public static bool CheckSquareIntersection(Quadrilateral pQuadrilateral, Vector2 pPosition)
+    /// <summary>
+    /// Checks if a point intersects with a square
+    /// </summary>
+    /// <param name="pSquare">The square to check</param>
+    /// <param name="pPosition">The position to check</param>
+    /// <returns>A bool representing if the collision has occured</returns>
+    public static bool CheckSquareIntersection(Quadrilateral pSquare, Vector2 pPosition)
     {
-        return (pPosition.X >= -pQuadrilateral.Width + pQuadrilateral.Position.X && pPosition.X <= pQuadrilateral.Width + pQuadrilateral.Position.X) &&
-               (pPosition.Y >= -pQuadrilateral.Height + pQuadrilateral.Position.Y && pPosition.Y <= pQuadrilateral.Height + pQuadrilateral.Position.Y);
+        return (pPosition.X >= -pSquare.Width + pSquare.Position.X && pPosition.X <= pSquare.Width + pSquare.Position.X) &&
+               (pPosition.Y >= -pSquare.Height + pSquare.Position.Y && pPosition.Y <= pSquare.Height + pSquare.Position.Y);
     }
 }
 

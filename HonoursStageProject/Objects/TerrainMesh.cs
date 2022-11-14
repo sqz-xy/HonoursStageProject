@@ -11,10 +11,16 @@ public class TerrainMesh : Shape
 
     public TerrainMesh(int pWidth, int pHeight, int pResolution)
     {
-        GenerateMesh(pWidth, pHeight, pResolution);
         PrimitiveType = PrimitiveType.TriangleStrip;
+        GenerateMesh(pWidth, pHeight, pResolution);
     }
 
+    /// <summary>
+    /// Generates a terrain mesh
+    /// </summary>
+    /// <param name="pWidth">Width of the mesh</param>
+    /// <param name="pHeight">Height of the mesh</param>
+    /// <param name="pResolution">Resolution of the mesh</param>
     private void GenerateMesh(int pWidth, int pHeight, int pResolution)
     {
         // Make these arrays again
@@ -23,8 +29,6 @@ public class TerrainMesh : Shape
         
         var rand = new Random();
 
-        var test = true;
-        
         for (var heightIndex = 0; heightIndex < pHeight; heightIndex++)
         for (var widthIndex = 0; widthIndex < pWidth; widthIndex++)
         {
@@ -33,15 +37,17 @@ public class TerrainMesh : Shape
             
             
             // Strange lines across terrain, maybe due to temporary noise
+            // Vertices
             vertices.Add(((-pHeight / 2.0f) + heightIndex) / pResolution);       // X, the range of the X dimension
             vertices.Add((float) rand.NextDouble()/ pResolution);                // Y - Height will be added later
             vertices.Add(((-pWidth / 2.0f) + widthIndex) / pResolution);         // Z, the range of the Z dimension  
             
-            vertices.Add(0); // Normals
+            // Normals
+            vertices.Add(0); 
             vertices.Add(1); 
             vertices.Add(0);
             
-            // No tex coords yet
+            // Texture Coords
             vertices.Add(((-pHeight / 2.0f) + heightIndex) / pResolution);       // X, the range of the X dimension
             vertices.Add(((-pWidth / 2.0f) + widthIndex) / pResolution);         // Z, the range of the Z dimension  
         }
