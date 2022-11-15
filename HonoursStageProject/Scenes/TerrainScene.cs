@@ -48,8 +48,8 @@ public sealed class TerrainScene : Scene
 
         // Object initialization (Terrain mesh)
         VertexManager.Initialize(1, 1, 1);
-        _terrainMesh = new TerrainMesh(100, 100, 10);
-        _terrainMesh.Index = VertexManager.BindVertexData(_terrainMesh.Vertices, _terrainMesh.Indices, true);
+        _terrainMesh = new TerrainMesh( 100, 10);
+        _terrainMesh.Index = VertexManager.BindVertexData(_terrainMesh.Vertices, _terrainMesh.Indices, true); // Refactpr this to the shape
         _meshTextureIndex = TextureManager.BindTextureData("Textures/button.png");
         _modelMatrix = Matrix4.Identity; 
         
