@@ -90,7 +90,9 @@ public class TerrainMesh : Shape
         for (var heightIndex = 0; heightIndex < pHeight; heightIndex++)
             for (var widthIndex = 0; widthIndex < pWidth; widthIndex++)
             {
-
+                vertices.Add((heightIndex - pHeight / 2) * 1); // X
+                vertices.Add(0);    // Y
+                vertices.Add((widthIndex - pWidth / 2) * 1);// Z
             }
 
         Vertices = vertices.ToArray();
