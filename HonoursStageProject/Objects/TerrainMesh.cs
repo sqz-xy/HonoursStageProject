@@ -12,7 +12,7 @@ public class TerrainMesh : Shape
     public TerrainMesh(int pWidth, int pHeight, int pResolution)
     {
 
-        GenerateTriangleMesh(pWidth, pHeight, pResolution);
+        GenerateTriangleStripMesh(pWidth, pHeight, pResolution);
     }
 
     /// <summary>
@@ -36,7 +36,6 @@ public class TerrainMesh : Shape
         {
             // Starts top left corner, ends bottom right , -width/2 to +width/2. -Dim/2 centres the mesh on 0,0, add i to move along the dimension
             // Divide by resolution, 1 is the base res, i.e. larger res with larger dimensions == more detail
-            
             
             // Strange lines across terrain, maybe due to temporary noise
             // Vertices
@@ -87,12 +86,39 @@ public class TerrainMesh : Shape
         var vertices = new List<float>();
         var indices = new List<uint>();
 
+        // Generate vertices same way as before, figure out indices
+
         for (var heightIndex = 0; heightIndex < pHeight; heightIndex++)
             for (var widthIndex = 0; widthIndex < pWidth; widthIndex++)
             {
-                vertices.Add((heightIndex - pHeight / 2) * 1); // X
+                vertices.Add((heightIndex - pHeight / 2) / pResolution); // X
                 vertices.Add(0);    // Y
-                vertices.Add((widthIndex - pWidth / 2) * 1);// Z
+                vertices.Add((widthIndex - pWidth / 2) / pResolution);// Z
+
+                // Normals
+                vertices.Add(0);
+                vertices.Add(1);
+                vertices.Add(0);
+
+                // Texture Coords
+                vertices.Add((heightIndex - pHeight / 2) / pResolution);       // X, the range of the X dimension
+                vertices.Add((widthIndex - pWidth / 2) / pResolution);         // Z, the range of the Z dimension  
+            }
+
+        for (var heightIndex = 0; heightIndex < pHeight; heightIndex++)
+            for (var widthIndex = 0; widthIndex < pWidth; widthIndex++)
+            {
+                uint topLeft = (uint)((heightIndex / pResolution) + widthIndex);
+                uint topRight = topLeft + 1;
+                uint bottomLeft = (uint)(((heightIndex + 1) / pResolution) + widthIndex);
+                uint bottomRight = bottomLeft + 1;
+
+                indices.Add(topLeft);
+                indices.Add(bottomLeft);
+                indices.Add(topRight);
+                indices.Add(topRight);
+                indices.Add(bottomLeft);
+                indices.Add(bottomRight);
             }
 
         Vertices = vertices.ToArray();
