@@ -11,8 +11,8 @@ public class TerrainMesh : Shape
 
     public TerrainMesh(int pWidth, int pHeight, int pResolution)
     {
-        PrimitiveType = PrimitiveType.TriangleStrip;
-        GenerateMesh(pWidth, pHeight, pResolution);
+
+        GenerateTriangleMesh(pWidth, pHeight, pResolution);
     }
 
     /// <summary>
@@ -21,8 +21,10 @@ public class TerrainMesh : Shape
     /// <param name="pWidth">Width of the mesh</param>
     /// <param name="pHeight">Height of the mesh</param>
     /// <param name="pResolution">Resolution of the mesh</param>
-    private void GenerateMesh(int pWidth, int pHeight, int pResolution)
+    private void GenerateTriangleStripMesh(int pWidth, int pHeight, int pResolution)
     {
+        PrimitiveType = PrimitiveType.TriangleStrip;
+
         // Make these arrays again
         var vertices = new List<float>();
         var indices = new List<uint>();
@@ -63,6 +65,32 @@ public class TerrainMesh : Shape
                 
                 //                        Across Columns * Across Row
                 indices.Add((uint) (widthIndex + pWidth * (heightIndex + sideIndex)));
+            }
+
+        Vertices = vertices.ToArray();
+        Indices = indices.ToArray();
+    }
+
+    /// <summary>
+    /// Generates a terrain mesh
+    /// </summary>
+    /// <param name="pWidth">Width of the mesh</param>
+    /// <param name="pHeight">Height of the mesh</param>
+    /// <param name="pResolution">Resolution of the mesh</param>
+    private void GenerateTriangleMesh(int pWidth, int pHeight, int pResolution)
+    {
+        PrimitiveType = PrimitiveType.Triangles;
+
+        //https://stackoverflow.com/questions/48614373/how-to-generate-a-plane-using-gl-triangles
+
+        // Make these arrays again
+        var vertices = new List<float>();
+        var indices = new List<uint>();
+
+        for (var heightIndex = 0; heightIndex < pHeight; heightIndex++)
+            for (var widthIndex = 0; widthIndex < pWidth; widthIndex++)
+            {
+
             }
 
         Vertices = vertices.ToArray();
