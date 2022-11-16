@@ -130,8 +130,10 @@ public class TerrainMesh : Object
         Vertices = vertices.ToArray();
     }
     
-    public override void Render()
+    public override void Render(int pShaderHandle)
     {
+        Update(pShaderHandle);
+        
         GL.BindVertexArray(VertexManager.GetVaoAtIndex(BufferIndex));
         GL.DrawElements((OpenTK.Graphics.OpenGL.PrimitiveType) PrimitiveType, Indices.Length, DrawElementsType.UnsignedInt, 0);
     }

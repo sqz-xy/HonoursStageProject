@@ -2,7 +2,7 @@
 
 public interface IObject
 {
-    void Render();
+    void Render(int pShaderHandle);
 
     void Update(int pShaderHandle);
 }

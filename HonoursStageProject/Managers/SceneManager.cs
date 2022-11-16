@@ -118,8 +118,8 @@ public class SceneManager : GameWindow
     {
         _currentScene.Close();
 
-        try
-        {
+        //try
+        //{
             switch (pSceneType)
             {
                 case SceneTypes.SceneMainMenu:
@@ -129,12 +129,12 @@ public class SceneManager : GameWindow
                     _currentScene = new TerrainScene(this);
                     break;
             }
-        }
-        catch (Exception e)
+        //}
+        /*catch (Exception e)
         {
             Console.WriteLine(e.Message);
             _currentScene = new MainMenuScene(this);
-        }
+        }*/
     }
 
     /// <summary>

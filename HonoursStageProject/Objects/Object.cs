@@ -14,7 +14,7 @@ public abstract class Object : IObject
     public int TextureIndex;
     public PrimitiveType PrimitiveType;
     
-    public abstract void Render();
+    public abstract void Render(int pShaderHandle);
 
     public abstract void Update(int pShaderHandle);
 

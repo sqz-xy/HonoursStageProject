@@ -47,8 +47,10 @@ public sealed class TerrainScene : Scene
 
         // Object initialization (Terrain mesh)
         VertexManager.Initialize(2, 2, 2);
-        _terrainMesh = new TerrainMesh(new Vector3(1.5f, 0, 0.0f), 20, 10);
-        _terrainMesh2 = new TerrainMesh(new Vector3(-5, 0, 0), 5, 10);
+        TextureManager.Initialize(2);
+        
+        _terrainMesh = new TerrainMesh(new Vector3(1.5f, 0, -0.5f), 20, 10);
+        _terrainMesh2 = new TerrainMesh(new Vector3(-1.5f, 0, 0.5f), 20, 10);
         
         GL.UseProgram(_shader.Handle);
     }
@@ -57,14 +59,12 @@ public sealed class TerrainScene : Scene
     public override void Render(FrameEventArgs pE)
     {
         _shader.UseShader();
-        _terrainMesh.Render();
-        _terrainMesh2.Render();
+        _terrainMesh.Render(_shader.Handle);
+        _terrainMesh2.Render(_shader.Handle);
     }
 
     public override void Update(FrameEventArgs pE)
     {
-        _terrainMesh.Update(_shader.Handle);
-        _terrainMesh2.Update(_shader.Handle);
         _camera.RotateCamera(Mouse.GetState());
         _camera.UpdateCamera(_shader.Handle);
     }

@@ -44,12 +44,12 @@ public sealed class MainMenuScene : Scene
         //Console.WriteLine("Rendering");
         
         _shader.UseShader();
-        _button.Render();
+        _button.Render(_shader.Handle);
     }
     
     public override void Update(FrameEventArgs pE)
     {
-      _button.Update(_shader.Handle);
+     
     } 
     
     /// <summary>
