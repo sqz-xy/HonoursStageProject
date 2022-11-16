@@ -14,9 +14,7 @@ namespace HonoursStageProject.Scenes;
 public sealed class MainMenuScene : Scene
 {
     private Shader _shader;
-    
     private Quadrilateral _button;
-    private int _buttonTextureIndex;
 
     public MainMenuScene(SceneManager pSceneManager) : base(pSceneManager)
     {
@@ -32,7 +30,7 @@ public sealed class MainMenuScene : Scene
     
     public override void Initialize()
     {
-        // Initialise variables
+        // Initialise variables, Initialize based on number of objects/shaders
         VertexManager.Initialize(1, 1, 1);
         TextureManager.Initialize(1);
         

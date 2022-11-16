@@ -38,9 +38,7 @@ public class Quadrilateral : Object
         BufferIndex = VertexManager.BindVertexData(Vertices, Indices, true);
         TextureIndex = TextureManager.BindTextureData("Textures/button.png");
     }
-
     
-
     public sealed override void Render()
     {
         GL.BindVertexArray(VertexManager.GetVaoAtIndex(BufferIndex));
