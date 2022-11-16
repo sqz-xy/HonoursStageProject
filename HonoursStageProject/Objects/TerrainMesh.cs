@@ -14,7 +14,7 @@ public class TerrainMesh : Object
 {
     public TerrainMesh(Vector3 pPosition, int pSize, int pResolution)
     {
-        GenerateTriangleStripMesh(pSize, pResolution);
+        GenerateTriangleMesh(pSize, pResolution);
 
         Position = pPosition;
         BaseColour = Vector4.One;
@@ -60,8 +60,8 @@ public class TerrainMesh : Object
             vertices.Add(((-pSize / 2.0f) + widthIndex) / pResolution);         // Z, the range of the Z dimension  
         }
         
-        for (var heightIndex = 0; heightIndex < pSize - 1; heightIndex++) // for each row
-            for (var widthIndex = 0; widthIndex < pSize; widthIndex++) // for each column
+        for (var heightIndex = 0; heightIndex - 1 < pSize; heightIndex++) // for each row
+            for (var widthIndex = 0; widthIndex - 1 < pSize; widthIndex++) // for each column
             for (var sideIndex = 0; sideIndex < 2; sideIndex++) // for each side of the trianglestrip
             {
                 // Triangle strip vertices are ordered from top row to bottom row
@@ -99,7 +99,7 @@ public class TerrainMesh : Object
         {
            
             vertices.Add(((-pSize / 2.0f) + heightIndex) / pResolution);       // X, the range of the X dimension
-            vertices.Add(0);         // Y - Height will be added later
+            vertices.Add((float) rand.NextDouble()/ pResolution);                // Y - Height will be added later
             vertices.Add(((-pSize / 2.0f) + widthIndex) / pResolution);         // Z, the range of the Z dimension  
             
             // Normals
@@ -113,9 +113,10 @@ public class TerrainMesh : Object
         }
 
         // Indices bug with extra lines
-        
-        for (var heightIndex = 0; heightIndex - 1 < pSize; heightIndex++)
-        for (var widthIndex = 0; widthIndex - 1 < pSize; widthIndex++)
+        // Dividing this fixes it by reducing the number of loops, because less indices per vertex, so repeated values
+
+        for (var heightIndex = 0; heightIndex - 1 < pSize / 1.11; heightIndex++)
+        for (var widthIndex = 0; widthIndex - 1 < pSize / 1.11; widthIndex++)
         {
             indices.Add((uint) ((uint) pSize * heightIndex + widthIndex)); // Top left corner
             indices.Add((uint) ((uint) ((uint) pSize * heightIndex + widthIndex) + pSize)); // Bottom left corner
