@@ -11,10 +11,8 @@ public sealed class TerrainScene : Scene
 {
     private Shader _shader;
     
-    private Matrix4 _modelMatrix;
     private TerrainMesh _terrainMesh;
-    private int _meshTextureIndex;
-    
+
     private Camera _camera;
     
 
@@ -48,44 +46,23 @@ public sealed class TerrainScene : Scene
 
         // Object initialization (Terrain mesh)
         VertexManager.Initialize(1, 1, 1);
-        _terrainMesh = new TerrainMesh( 100, 10);
-        _terrainMesh.Index = VertexManager.BindVertexData(_terrainMesh.Vertices, _terrainMesh.Indices, true); // Refactpr this to the shape
-        _meshTextureIndex = TextureManager.BindTextureData("Textures/button.png");
-        _modelMatrix = Matrix4.Identity; 
+        _terrainMesh = new TerrainMesh(new Vector3(0, 0, 0), 100, 10);
         
         GL.UseProgram(_shader.Handle);
-        
-        UpdateValues();
     }
-
-    private void UpdateValues()
-    {
-        var uModel = GL.GetUniformLocation(_shader.Handle, "uModel");
-        GL.UniformMatrix4(uModel, true, ref _modelMatrix);
-
-        var uView = GL.GetUniformLocation(_shader.Handle, "uView");
-        GL.UniformMatrix4(uView, true, ref _camera.View);
-
-        var uProjection = GL.GetUniformLocation(_shader.Handle, "uProjection");
-        GL.UniformMatrix4(uProjection, true, ref _camera.Projection);
-        
-        var uTexLocation1 = GL.GetUniformLocation(_shader.Handle, "uTextureSampler1");
-        GL.Uniform1(uTexLocation1, _meshTextureIndex);
-    }
+    
 
     public override void Render(FrameEventArgs pE)
     {
         _shader.UseShader();
-        
-        GL.BindVertexArray(VertexManager.GetVaoAtIndex(_terrainMesh.Index));
-        GL.DrawElements((PrimitiveType) _terrainMesh.PrimitiveType, _terrainMesh.Indices.Length, DrawElementsType.UnsignedInt, 0);
+        _terrainMesh.Render();
     }
 
     public override void Update(FrameEventArgs pE)
     {
+        _terrainMesh.Update(_shader.Handle);
         _camera.RotateCamera(Mouse.GetState());
-        _camera.UpdateCamera();
-        UpdateValues();
+        _camera.UpdateCamera(_shader.Handle);
     }
 
     /// <summary>

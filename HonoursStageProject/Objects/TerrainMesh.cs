@@ -1,15 +1,26 @@
-﻿using System.Drawing.Printing;
+﻿using System.Drawing.Drawing2D;
+using HonoursStageProject.Managers;
+using HonoursStageProject.Objects;
+using HonoursStageProject.Shaders;
 using OpenTK;
-using OpenTK.Graphics.ES11;
+using OpenTK.Graphics.OpenGL;
+using OpenTK.Input;
+using PrimitiveType = OpenTK.Graphics.ES11.PrimitiveType;
+
 
 namespace HonoursStageProject.Objects;
 
-public class TerrainMesh : Shape
+public class TerrainMesh : Object
 {
-    public TerrainMesh(int pSize, int pResolution)
+    public TerrainMesh(Vector3 pPosition, int pSize, int pResolution)
     {
+        GenerateTriangleStripMesh(pSize, pResolution);
 
-        GenerateTriangleMesh(pSize, pResolution);
+        Position = pPosition;
+        BaseColour = Vector4.One;
+
+        BufferIndex = VertexManager.BindVertexData(Vertices, Indices, true); 
+        TextureIndex = TextureManager.BindTextureData("Textures/button.png");
     }
 
     /// <summary>
@@ -117,5 +128,24 @@ public class TerrainMesh : Shape
 
         Indices = indices.ToArray();
         Vertices = vertices.ToArray();
+    }
+    
+    public override void Render()
+    {
+        GL.BindVertexArray(VertexManager.GetVaoAtIndex(BufferIndex));
+        GL.DrawElements((OpenTK.Graphics.OpenGL.PrimitiveType) PrimitiveType, Indices.Length, DrawElementsType.UnsignedInt, 0);
+    }
+
+    public override void Update(int pShaderHandle)
+    {
+        var uModel = GL.GetUniformLocation(pShaderHandle, "uModel");
+        var translation = Matrix4.CreateTranslation(Position);
+        GL.UniformMatrix4(uModel, true, ref translation);
+        
+        var vertexColorLocation = GL.GetUniformLocation(pShaderHandle, "uColour");
+        GL.Uniform4(vertexColorLocation, BaseColour);
+
+        var uTextureSamplerLocation = GL.GetUniformLocation(pShaderHandle, "uTextureSampler1");
+        GL.Uniform1(uTextureSamplerLocation, TextureIndex);
     }
 }

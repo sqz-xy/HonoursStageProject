@@ -1,5 +1,6 @@
 ﻿using HonoursStageProject.Managers;
 using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 
 namespace HonoursStageProject;
@@ -46,8 +47,6 @@ public class Camera
 
         _sensitivity = 0.05f;
         _hasMouseMoved = false;
-        
-        UpdateCamera();
     }
 
     /// <summary>
@@ -128,8 +127,14 @@ public class Camera
     /// <summary>
     /// Updates the view matrix, called after a change to the components is made
     /// </summary>
-    public void UpdateCamera()
+    public void UpdateCamera(int pShaderHandle)
     {
         View = Matrix4.LookAt(_position, _position + _direction, _up); 
+        
+        var uView = GL.GetUniformLocation(pShaderHandle, "uView");
+        GL.UniformMatrix4(uView, true, ref View);
+
+        var uProjection = GL.GetUniformLocation(pShaderHandle, "uProjection");
+        GL.UniformMatrix4(uProjection, true, ref Projection);
     }
 }

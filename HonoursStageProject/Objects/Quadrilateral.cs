@@ -1,21 +1,25 @@
-﻿using OpenTK;
-using OpenTK.Graphics.ES11;
+﻿using HonoursStageProject.Managers;
+using HonoursStageProject.Objects;
+using HonoursStageProject.Shaders;
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
+using OpenTK.Input;
 
 namespace HonoursStageProject.Objects;
 
-public class Quadrilateral : Shape
+public class Quadrilateral : Object
 {
     public float Width;
     public float Height;
 
-    public Quadrilateral(Vector2 pPosition, float pWidth, float pHeight, Vector4 pColour)
+    public Quadrilateral(Vector3 pPosition, float pWidth, float pHeight, Vector4 pBaseColour)
     {
-        PrimitiveType = PrimitiveType.Triangles;
+        PrimitiveType = OpenTK.Graphics.ES11.PrimitiveType.Triangles;
             
         Position = pPosition;
         Width = pWidth;
         Height = pHeight;
-        Colour = pColour;
+        BaseColour = pBaseColour;
 
         Vertices = new float[]
         {
@@ -30,6 +34,30 @@ public class Quadrilateral : Shape
             0, 1, 3, 
             1, 2, 3
         };
+        
+        BufferIndex = VertexManager.BindVertexData(Vertices, Indices, true);
+        TextureIndex = TextureManager.BindTextureData("Textures/button.png");
     }
+
     
+
+    public sealed override void Render()
+    {
+        GL.BindVertexArray(VertexManager.GetVaoAtIndex(BufferIndex));
+        GL.DrawElements((PrimitiveType) PrimitiveType, Indices.Length, DrawElementsType.UnsignedInt, 0);
+    }
+
+    public override void Update(int pShaderHandle)
+    {
+        var uModel = GL.GetUniformLocation(pShaderHandle, "uModel");
+        var translation = Matrix4.CreateTranslation(Position);
+        GL.UniformMatrix4(uModel, true, ref translation);
+        
+        var vertexColorLocation = GL.GetUniformLocation(pShaderHandle, "uColour");
+        GL.Uniform4(vertexColorLocation, BaseColour);
+
+        var uTextureSamplerLocation = GL.GetUniformLocation(pShaderHandle, "uTextureSampler1");
+        GL.Uniform1(uTextureSamplerLocation, TextureIndex);
+
+    }
 }

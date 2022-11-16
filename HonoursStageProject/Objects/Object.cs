@@ -4,15 +4,20 @@ using OpenTK.Graphics.ES11;
 
 namespace HonoursStageProject.Objects;
 
-public abstract class Shape
+public abstract class Object : IObject
 {
     public float[] Vertices;
     public uint[] Indices;
-    public Vector2 Position;
-    public Vector4 Colour;
-    public int Index;
+    public Vector3 Position;
+    public Vector4 BaseColour;
+    public int BufferIndex;
+    public int TextureIndex;
     public PrimitiveType PrimitiveType;
     
+    public abstract void Render();
+
+    public abstract void Update(int pShaderHandle);
+
     /// <summary>
     /// Checks if a point intersects with a square
     /// </summary>
@@ -24,5 +29,6 @@ public abstract class Shape
         return (pPosition.X >= -pSquare.Width + pSquare.Position.X && pPosition.X <= pSquare.Width + pSquare.Position.X) &&
                (pPosition.Y >= -pSquare.Height + pSquare.Position.Y && pPosition.Y <= pSquare.Height + pSquare.Position.Y);
     }
+    
 }
 
