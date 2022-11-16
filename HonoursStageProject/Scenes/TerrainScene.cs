@@ -49,8 +49,8 @@ public sealed class TerrainScene : Scene
         VertexManager.Initialize(2, 2, 2);
         TextureManager.Initialize(2); 
         
-        _terrainMesh = new TerrainMesh(new Vector3(1.0f, 0, 0.0f), 21, 10);
-        _terrainMesh2 = new TerrainMesh(new Vector3(-1.0f, 0, 0.0f), 21, 10);
+        _terrainMesh = new TerrainMesh(new Vector3(1.0f, 0, 0.0f), 20, 10);
+        _terrainMesh2 = new TerrainMesh(new Vector3(-1.0f, 0, 0.0f), 20, 10);
         
         GL.UseProgram(_shader.Handle);
     }

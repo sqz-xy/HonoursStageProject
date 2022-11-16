@@ -85,7 +85,15 @@ public class TerrainMesh : Object
     private void GenerateTriangleMesh(int pSize, int pResolution)
     {
         PrimitiveType = PrimitiveType.Triangles;
-
+        
+        // Size 20
+        // 3200 Vertices per square
+        // 1444 Triangles per square 
+        
+        // Size 40
+        // 12800 Vertices (4x increase)
+        // 5184 Triangles per square (36x increase)
+        
         // https://www.youtube.com/watch?v=DJk-aTmrAlQ
         
         // Make these arrays again
@@ -115,8 +123,8 @@ public class TerrainMesh : Object
         // Indices bug with extra lines
         // Dividing this fixes it by reducing the number of loops, because less indices per vertex, so repeated values
 
-        for (var heightIndex = 0; heightIndex - 1 < pSize / 1.11; heightIndex++)
-        for (var widthIndex = 0; widthIndex - 1 < pSize / 1.11; widthIndex++)
+        for (var heightIndex = 0; heightIndex - 1 < pSize / 1.15; heightIndex++)
+        for (var widthIndex = 0; widthIndex - 1 < pSize / 1.15; widthIndex++)
         {
             indices.Add((uint) ((uint) pSize * heightIndex + widthIndex)); // Top left corner
             indices.Add((uint) ((uint) ((uint) pSize * heightIndex + widthIndex) + pSize)); // Bottom left corner
