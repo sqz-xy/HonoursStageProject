@@ -138,6 +138,11 @@ public class TerrainMesh : Object
         Indices = indices.ToArray();
         Vertices = vertices.ToArray();
     }
+
+    public void AddHeightData(float[,] pHeightData)
+    {
+        
+    }
     
     public override void Render(int pShaderHandle)
     {

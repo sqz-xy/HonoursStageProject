@@ -1,4 +1,5 @@
-﻿using HonoursStageProject.Managers;
+﻿using HonoursStageProject.Algorithms;
+using HonoursStageProject.Managers;
 using HonoursStageProject.Objects;
 using HonoursStageProject.Shaders;
 using OpenTK;
@@ -15,6 +16,8 @@ public sealed class TerrainScene : Scene
     private TerrainMesh _terrainMesh2;
 
     private Camera _camera;
+
+    private Algorithm _diamondSquare;
     
 
     // Camera
@@ -51,6 +54,10 @@ public sealed class TerrainScene : Scene
         
         _terrainMesh = new TerrainMesh(new Vector3(1.0f, 0, 0.0f), 20, 10);
         _terrainMesh2 = new TerrainMesh(new Vector3(-1.0f, 0, 0.0f), 20, 10);
+        
+        // Algorithm Initialization
+        //_diamondSquare = new DiamondSquare(20);
+        //_terrainMesh.AddHeightData(_diamondSquare.GenerateData(10, 10, 10)); 
         
         GL.UseProgram(_shader.Handle);
     }

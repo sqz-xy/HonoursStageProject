@@ -2,5 +2,6 @@
 
 public interface IAlgorithm
 {
-    public float[] GenerateData();
+    public float[,] GenerateData(int pSeed, float pRoughness, float pFalloff);
+    
 }
