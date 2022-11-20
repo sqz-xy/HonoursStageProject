@@ -43,7 +43,7 @@ public class Camera
         _right = Vector3.Normalize(Vector3.Cross(_up, _direction));
             
         View = Matrix4.CreateTranslation(0, 0, -2);
-        Projection = Matrix4.CreatePerspectiveFieldOfView(1, (float)SceneManager.SWidth / SceneManager.SHeight, 0.5f, 5);
+        Projection = Matrix4.CreatePerspectiveFieldOfView(1, (float)SceneManager.SWidth / SceneManager.SHeight, 0.1f, 100);
 
         _sensitivity = 0.05f;
         _hasMouseMoved = false;

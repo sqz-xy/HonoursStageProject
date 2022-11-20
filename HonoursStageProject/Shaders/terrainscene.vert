@@ -16,7 +16,7 @@ void main()
     
     const float brightnessMultiplier = 1.5;
     vec4 position = vec4(aPosition, 1) * uModel * uView * uProjection;
-    vec4 colour = vec4(aPosition.y, aPosition.y, aPosition.y, 1);
+    vec4 colour = vec4(aPosition.y, aPosition.y, aPosition.y, 1) / 10;
     
     oColour = colour * brightnessMultiplier;
     gl_Position = position;

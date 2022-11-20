@@ -8,50 +8,86 @@ public class DiamondSquare : Algorithm
     {
     }
     
-    /*def diamond_square(width, height):
-      # Set up the array of z-values
-      let A = a width*height 2D array of 0s
-      pre-seed four corners of A with a value
-
-      let step_size = width - 1
-      let r = a random number within a range
-
-      # Main loop
-      while step_size > 1:
-        loop over A
-          do diamond_step for each square in A 
-
-        loop over A
-          do square_step for each diamond in A
-
-        step_size /= 2
-        reduce random range for r
-
-    def diamond_step(x, y, step_size, r):
-      # Note: this assumes x, y is top-left of square
-      # but you can implement it how you like
-      let avg = average of square corners step_size apart
-      A[x + step_size/2][y + step_size/2] = avg + r
-
-    def square_step(x, y, step_size, r):
-      # Note: x, y here are the middle of a diamond
-      let avg = average of four corners of diamond 
-      A[x][y] = avg + r */
+    /* https://craftofcoding.wordpress.com/tag/diamond-square-algorithm/ */
 
 
     public override float[,] GenerateData(int pSeed, float pRoughness, float pFalloff)
     {
-      Random rnd = new Random(pSeed);
-      int size = _size;
-      float[,] heightData = new float[size + 1, size + 1];
+        // Initialize random
+        Random rnd = new Random();
+        int randomRange = 10;
+        
+        // Initialize grid
+        int size = _size;
+        float[,] heightData = new float[size + 1, size + 1];
 
-      heightData[0, 0] = (float) rnd.NextDouble();
-      heightData[0, size] = (float) rnd.NextDouble();
-      heightData[size, 0] = (float) rnd.NextDouble();
-      heightData[size, size] = (float) rnd.NextDouble();
+        // Seed initial values
+        heightData[0, 0] = rnd.Next(randomRange);
+        heightData[0, size - 1] = rnd.Next(randomRange);
+        heightData[size - 1, 0] = rnd.Next(randomRange);
+        heightData[size - 1, size - 1] = rnd.Next(randomRange);
 
-      
-      return heightData;
+        int stepSize = size - 1;
+
+        // Main Loop
+        while (stepSize > 1)
+        {
+            SquareStep(ref heightData, stepSize, randomRange);
+            
+            DiamondStep(ref heightData, stepSize, randomRange);
+            
+            stepSize /= 2;
+            randomRange /= 2;
+        }
+        return heightData;
     }
+
+    private void SquareStep(ref float[,] pHeightData, int pStepSize, int pRandomRange)
+    {
+        Random rnd = new Random();
+        int half = pStepSize / 2;
+        float bottom = 0, left = 0, top = 0, right = 0;
+        
+        for (int heightIndex = 0; heightIndex < pHeightData.GetLength(0); heightIndex += half)
+        for (int widthIndex = (heightIndex + half) % pStepSize; widthIndex < pHeightData.GetLength(1); widthIndex += half)
+        {
+            try
+            {
+                 bottom = pHeightData[heightIndex + half, widthIndex];
+                 left = pHeightData[heightIndex, widthIndex - half];
+                 top = pHeightData[heightIndex - half, widthIndex];
+                 right = pHeightData[heightIndex, widthIndex + half];
+                 
+                 float average = (bottom + left + top + right) / 4;
+                 average += rnd.Next(pRandomRange);
+                 pHeightData[heightIndex, widthIndex] = average;
+            }
+            catch (Exception e) {} // If out of bounds, ignore
+        }
+    }
+    
+    private void DiamondStep(ref float[,] pHeightData, int pStepSize, int pRandomRange)
+    {
+        Random rnd = new Random();
+        float bottomRight = 0, bottomLeft = 0, topLeft = 0, topRight = 0;
+        
+        for (int columnIndex = 0; columnIndex < pHeightData.GetLength(0); columnIndex += pStepSize)
+        for (int rowIndex = 0; rowIndex < pHeightData.GetLength(1); rowIndex += pStepSize)
+        {
+            try
+            {
+                bottomRight = pHeightData[rowIndex + pStepSize, columnIndex + pStepSize];
+                bottomLeft = pHeightData[rowIndex + pStepSize, columnIndex];
+                topLeft = pHeightData[rowIndex, columnIndex];
+                topRight = pHeightData[rowIndex, columnIndex + pStepSize];
+                
+                float average = (bottomRight + bottomLeft + topLeft + topRight) / 4;
+                average += rnd.Next(pRandomRange);
+                pHeightData[columnIndex + pStepSize / 2, rowIndex + pStepSize / 2] = average;
+            }
+            catch (Exception e) { }
+        }
+    }
+
 
 }

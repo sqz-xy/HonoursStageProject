@@ -12,8 +12,11 @@ namespace HonoursStageProject.Objects;
 
 public class TerrainMesh : Object
 {
+    public int Size { get; }
+
     public TerrainMesh(Vector3 pPosition, int pSize, int pResolution)
     {
+        Size = pSize;
         GenerateTriangleMesh(pSize, pResolution);
 
         Position = pPosition;
@@ -86,14 +89,12 @@ public class TerrainMesh : Object
     {
         PrimitiveType = PrimitiveType.Triangles;
         
+        // Will initialize an initial grid of chunks first,
+        // then work on generating new ones
+        
         // Size 20
-        // 3200 Vertices per square
-        // 1444 Triangles per square 
-        
-        // Size 40
-        // 12800 Vertices (4x increase)
-        // 5184 Triangles per square (36x increase)
-        
+        // 3200 / 8 = 40 Vertices per mesh
+
         // https://www.youtube.com/watch?v=DJk-aTmrAlQ
         
         // Make these arrays again
@@ -141,7 +142,14 @@ public class TerrainMesh : Object
 
     public void AddHeightData(float[,] pHeightData)
     {
-        
+        int stride = 8;
+        int yPointer = 1;
+        for (int i = 0; i < pHeightData.GetLength(0) - 1; i++)
+        for (int j = 0; j < pHeightData.GetLength(0) - 1; j++)
+        {
+            Vertices[yPointer] = pHeightData[i, j];
+            yPointer += stride;
+        }
     }
     
     public override void Render(int pShaderHandle)
