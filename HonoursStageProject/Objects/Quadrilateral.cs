@@ -41,6 +41,8 @@ public class Quadrilateral : Object
     
     public sealed override void Render(int pShaderHandle)
     {
+        Update(pShaderHandle);
+
         GL.BindVertexArray(VertexManager.GetVaoAtIndex(BufferIndex));
         GL.DrawElements((PrimitiveType) PrimitiveType, Indices.Length, DrawElementsType.UnsignedInt, 0);
     }
