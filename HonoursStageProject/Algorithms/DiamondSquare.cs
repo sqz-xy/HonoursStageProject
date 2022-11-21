@@ -36,40 +36,18 @@ public class DiamondSquare : Algorithm
             
             DiamondStep(ref heightData, stepSize, randomRange);
             
-            stepSize /= 2;
-            randomRange /= 2;
+            stepSize /= 2; // Half the step size for the next iteration
+            randomRange /= 2; // Lower the random range
         }
         return heightData;
     }
-
+    
     private void SquareStep(ref float[,] pHeightData, int pStepSize, int pRandomRange)
     {
         Random rnd = new Random();
-        int half = pStepSize / 2;
-        float bottom = 0, left = 0, top = 0, right = 0;
-        
-        for (int heightIndex = 0; heightIndex < pHeightData.GetLength(0); heightIndex += half)
-        for (int widthIndex = (heightIndex + half) % pStepSize; widthIndex < pHeightData.GetLength(1); widthIndex += half)
-        {
-            try
-            {
-                 bottom = pHeightData[heightIndex + half, widthIndex];
-                 left = pHeightData[heightIndex, widthIndex - half];
-                 top = pHeightData[heightIndex - half, widthIndex];
-                 right = pHeightData[heightIndex, widthIndex + half];
-                 
-                 float average = (bottom + left + top + right) / 4;
-                 average += rnd.Next(pRandomRange);
-                 pHeightData[heightIndex, widthIndex] = average;
-            }
-            catch (Exception e) {} // If out of bounds, ignore
-        }
-    }
-    
-    private void DiamondStep(ref float[,] pHeightData, int pStepSize, int pRandomRange)
-    {
-        Random rnd = new Random();
         float bottomRight = 0, bottomLeft = 0, topLeft = 0, topRight = 0;
+        
+        // Step = distance between points
         
         for (int columnIndex = 0; columnIndex < pHeightData.GetLength(0); columnIndex += pStepSize)
         for (int rowIndex = 0; rowIndex < pHeightData.GetLength(1); rowIndex += pStepSize)
@@ -88,6 +66,18 @@ public class DiamondSquare : Algorithm
             catch (Exception e) { }
         }
     }
+
+    private void DiamondStep(ref float[,] pHeightData, int pStepSize, int pRandomRange)
+    {
+        Random rnd = new Random();
+        float bottom = 0, left = 0, top = 0, right = 0;
+        
+        // for
+        //   for 
+        
+    }
+    
+
 
 
 }
