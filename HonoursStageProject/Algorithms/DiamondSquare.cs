@@ -22,9 +22,11 @@ public class DiamondSquare : Algorithm
         
         // Initialize grid
 
-        Size = 2;
+        // Size has to be odd
+        var size = Size;
         
-        var size = (int)Math.Pow(2, Size) + 1;
+        if (size % 2 == 0)
+            size++;
 
         var heightData = new float[size, size];
 
