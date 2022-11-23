@@ -11,6 +11,7 @@ public class DiamondSquare : Algorithm
     /* https://craftofcoding.wordpress.com/tag/diamond-square-algorithm/ */
     /* https://yonatankra.com/how-to-create-terrain-and-heightmaps-using-the-diamond-square-algorithm-in-javascript/ */
     /* https://asyncdrink.com/blog/diamond-square-algorithm */
+    /* https://medium.com/@nickobrien/diamond-square-algorithm-explanation-and-c-implementation-5efa891e486f */
 
 
     public override float[,] GenerateData(int pSeed, float pRoughness, float pFalloff)
