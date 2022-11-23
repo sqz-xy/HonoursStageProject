@@ -7,7 +7,6 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using PrimitiveType = OpenTK.Graphics.ES11.PrimitiveType;
 
-
 namespace HonoursStageProject.Objects;
 
 public class TerrainMesh : Object
@@ -142,10 +141,10 @@ public class TerrainMesh : Object
 
     public void AddHeightData(float[,] pHeightData)
     {
-        int stride = 8;
-        int yPointer = 1;
-        for (int i = 0; i < pHeightData.GetLength(0) - 1; i++)
-        for (int j = 0; j < pHeightData.GetLength(0) - 1; j++)
+        var stride = 8;
+        var yPointer = 1;
+        for (var i = 0; i < pHeightData.GetLength(0) - 1; i++)
+        for (var j = 0; j < pHeightData.GetLength(0) - 1; j++)
         {
             Vertices[yPointer] = pHeightData[i, j];
             yPointer += stride;

@@ -36,7 +36,7 @@ public class Camera
     {
         // Default camera values
         
-        _position = new Vector3(0.0f, 0.5f, 0.5f);
+        _position = new Vector3(0.0f, 1.5f, 0.5f);
         var target = new Vector3(0.0f, 0.0f, 0.0f);
         _up = new Vector3(0.0f, 1.0f,  0.0f);
         _direction = Vector3.Normalize(target - _position);

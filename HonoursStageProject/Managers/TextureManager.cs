@@ -7,14 +7,14 @@ namespace HonoursStageProject.Managers;
 public static class TextureManager
 {
         private static int _textureIndex;
-        private static int[] _texture_IDs;
+        private static int[] _textureIDs;
 
         private static TextureUnit _currentTextureUnit;
         private static List<string> _textureUnitAsString;
         
         public static void Initialize(int pTextureCount)
         {
-            _texture_IDs = new int[pTextureCount];
+            _textureIDs = new int[pTextureCount];
             _textureIndex = 0;
             _currentTextureUnit = TextureUnit.Texture0;
             _textureUnitAsString = TextureUnitsToString();
@@ -29,26 +29,26 @@ public static class TextureManager
             var filepath = @pFilePath;
             if (File.Exists(filepath))
             {            
-                var TextureBitmap = new Bitmap(filepath);
-                var TextureData = TextureBitmap.LockBits(
-                new Rectangle(0, 0, TextureBitmap.Width,
-                TextureBitmap.Height), ImageLockMode.ReadOnly,
+                var textureBitmap = new Bitmap(filepath);
+                var textureData = textureBitmap.LockBits(
+                new Rectangle(0, 0, textureBitmap.Width,
+                textureBitmap.Height), ImageLockMode.ReadOnly,
                 System.Drawing.Imaging.PixelFormat.Format32bppRgb);
 
                 GL.ActiveTexture(_currentTextureUnit);
-                GL.GenTextures(1, out _texture_IDs[_textureIndex]);
-                GL.BindTexture(TextureTarget.Texture2D, _texture_IDs[_textureIndex]);
+                GL.GenTextures(1, out _textureIDs[_textureIndex]);
+                GL.BindTexture(TextureTarget.Texture2D, _textureIDs[_textureIndex]);
   
                 GL.TexImage2D(TextureTarget.Texture2D,
-                0, PixelInternalFormat.Rgba, TextureData.Width, TextureData.Height,
+                0, PixelInternalFormat.Rgba, textureData.Width, textureData.Height,
                 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra,
-                PixelType.UnsignedByte, TextureData.Scan0);
+                PixelType.UnsignedByte, textureData.Scan0);
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
                 (int)TextureMinFilter.Linear);
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
                 (int)TextureMagFilter.Linear);
-                TextureBitmap.UnlockBits(TextureData);
-                TextureBitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                textureBitmap.UnlockBits(textureData);
+                textureBitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
 
                 _textureIndex++;
                 IncrementTextureUnit();
@@ -91,8 +91,8 @@ public static class TextureManager
         public static void ClearData()
         {
             _textureIndex = 0;
-            Array.Clear(_texture_IDs);
-            GL.DeleteTextures(_textureIndex, _texture_IDs);
+            Array.Clear(_textureIDs);
+            GL.DeleteTextures(_textureIndex, _textureIDs);
             _currentTextureUnit = TextureUnit.Texture0;
             _textureUnitAsString = TextureUnitsToString();
         }
