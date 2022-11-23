@@ -10,37 +10,37 @@ public class DiamondSquare : Algorithm
     
     /* https://craftofcoding.wordpress.com/tag/diamond-square-algorithm/ */
     /* https://yonatankra.com/how-to-create-terrain-and-heightmaps-using-the-diamond-square-algorithm-in-javascript/ */
+    /* https://asyncdrink.com/blog/diamond-square-algorithm */
 
 
     public override float[,] GenerateData(int pSeed, float pRoughness, float pFalloff)
     {
         // Initialize random
         var rnd = new Random();
-        float randomRange = 2;
+        float randomRange = 100;
         
         // Initialize grid
-        var size = Size;
 
-        size = 4; // Going above 5 causes crash
+        Size = 2;
         
-        var heightData = new float[size + 1, size + 1];
+        var size = (int)Math.Pow(2, Size) + 1;
+
+        var heightData = new float[size, size];
 
         // Seed initial values
         heightData[0, 0] = NextFloat(rnd, randomRange);
-        heightData[0, size] = NextFloat(rnd, randomRange);
-        heightData[size, 0] = NextFloat(rnd, randomRange);
-        heightData[size, size] = NextFloat(rnd, randomRange);
+        heightData[0, size - 1] = NextFloat(rnd, randomRange);
+        heightData[size - 1, 0] = NextFloat(rnd, randomRange);
+        heightData[size - 1 , size - 1] = NextFloat(rnd, randomRange);
 
-        var step = size / 2;
+        var step = size - 1;
 
-        for (var i = 0; i < size / 2; i++)
+        while (step > 1)
         {
             SquareStep(step, size, ref heightData, rnd, randomRange);
-
-            DiamondStep(step, size, ref heightData, rnd, randomRange);
             
             step /= 2;
-            randomRange *= pFalloff;
+            randomRange /= 2;
         }
         
 #if  DEBUG
@@ -51,41 +51,25 @@ public class DiamondSquare : Algorithm
 
     private void SquareStep(int pStep, int pSize, ref float[,] pHeightData, Random pRnd, float pRandomRange)
     {
-        for (var x = pStep; x < pSize; x += 2 * pStep)
-        for (var y = pStep; y < pSize; y += 2 * pStep)
+        float bottomRight = 0, bottomLeft = 0, topLeft = 0, topRight = 0;
+        int halfStep = pStep / 2;
+        
+        for (int i = 0; i < pStep; i += pStep)
+        for (int j = 0; j < pStep; j += pStep)
         {
-            var topLeft = pHeightData[x - pStep, y - pStep];
-            var topRight = pHeightData[x - pStep, y + pStep];
-            var bottomleft = pHeightData[x + pStep, y - pStep];
-            var bottomRight = pHeightData[x + pStep, y + pStep];
+            topLeft = pHeightData[0, 0];
+            topRight = pHeightData[0, pStep];
+            bottomLeft = pHeightData[pStep, 0];
+            bottomRight = pHeightData[pStep, pStep];
 
-            pHeightData[x, y] = (topLeft + topRight + bottomleft + bottomRight) / 4 + NextFloat(pRnd, pRandomRange);
+            float avg = (topLeft + topRight + bottomLeft + bottomRight) / 4;
+            pHeightData[halfStep, halfStep] = avg + NextFloat(pRnd, pRandomRange);
         }
     }
 
     private void DiamondStep(int pStep, int pSize, ref float[,] pHeightData, Random pRnd, float pRandomRange)
     {
-        // Loop through the diagonals
-        for (int x = 0; x < pSize + 1; x += pStep)
-        for (int y = ((x / pStep) % 2 == 0 ? pStep : 0); y < pSize + 1; y += pStep * 2)
-        {
-            float top = 0, bottom = 0, left = 0, right = 0;
 
-            // Handle out of bounds, if its out of bounds, leave it as 0
-            if (x - pStep >= 0)
-                left = pHeightData[x - pStep, y];
-
-            if (x + pStep < pSize)
-                right = pHeightData[x + pStep, y];
-
-            if (y - pStep >= 0)
-                bottom = pHeightData[x, y - pStep];
-
-            if (y + pStep < pSize)
-                top = pHeightData[x, y + pStep];
-
-            pHeightData[x, y] = (top + bottom + left + right) / 4 + NextFloat(pRnd, pRandomRange);
-        }
     }
     
     private void PrintData(float[,] pHeightData)
@@ -95,7 +79,7 @@ public class DiamondSquare : Algorithm
             Console.Write("\n\n");
             for (var j = 0; j < pHeightData.GetLength(1); j++)
             {
-                Console.Write($"{pHeightData[i, j]}  ");
+                Console.Write($"{(int)pHeightData[i, j]}  ");
             }
         }
     }

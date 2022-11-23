@@ -52,11 +52,11 @@ public sealed class TerrainScene : Scene
         VertexManager.Initialize(2, 2, 2);
         TextureManager.Initialize(2); 
         
-        _terrainMesh = new TerrainMesh(new Vector3(1.0f, 0, 0.0f), 16, 1);
+        _terrainMesh = new TerrainMesh(new Vector3(1.0f, 0, 0.0f), 17, 1);
         _terrainMesh2 = new TerrainMesh(new Vector3(-1.0f, 0, 0.0f), 20, 10);
         
         // Algorithm Initialization
-        _diamondSquare = new DiamondSquare(_terrainMesh.Size);
+        _diamondSquare = new DiamondSquare(_terrainMesh.Size / 4);
         _diamondSquare.GenerateData(10, 10, 1);
         //_terrainMesh.AddHeightData(_diamondSquare.GenerateData(10, 10, 10)); 
         
