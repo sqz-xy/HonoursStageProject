@@ -1,4 +1,5 @@
-﻿using OpenTK.Platform.Windows;
+﻿using OpenTK.Graphics.OpenGL;
+using OpenTK.Platform.Windows;
 
 namespace HonoursStageProject.Algorithms;
 
@@ -18,32 +19,67 @@ public class DiamondSquare : Algorithm
     {
         // Initialize random
         var rnd = new Random();
-        float randomRange = 100;
+        float randomRange = 128;
         
         // Initialize grid
 
-        // Size has to be odd
-        var size = Size;
+        Size = 4;
         
-        if (size % 2 == 0)
-            size++;
+        // Size has to be odd
+        var heightMapWidth = Size;
+        
+        if (heightMapWidth % 2 == 0)
+            heightMapWidth++;
 
-        var heightData = new float[size, size];
+        var heightData = new float[heightMapWidth, heightMapWidth];
 
         // Seed initial values
         heightData[0, 0] = NextFloat(rnd, randomRange);
-        heightData[0, size - 1] = NextFloat(rnd, randomRange);
-        heightData[size - 1, 0] = NextFloat(rnd, randomRange);
-        heightData[size - 1 , size - 1] = NextFloat(rnd, randomRange);
+        heightData[0, heightMapWidth - 1] = NextFloat(rnd, randomRange);
+        heightData[heightMapWidth - 1, 0] = NextFloat(rnd, randomRange);
+        heightData[heightMapWidth - 1 , heightMapWidth - 1] = NextFloat(rnd, randomRange);
 
-        var step = size - 1;
+        var tileWidth = heightMapWidth - 1;
 
-        while (step > 1)
+        while (tileWidth > 1)
         {
-            SquareStep(step, size, ref heightData, rnd, randomRange);
+            //SquareStep(step, size, ref heightData, rnd, randomRange);
+
+            var halfSide = tileWidth / 2;
             
-            step /= 2;
-            randomRange /= 2;
+            float bottomRight = 0, bottomLeft = 0, topLeft = 0, topRight = 0;
+            for (var x = 0; x < heightMapWidth - 1; x += tileWidth)
+            for (var y = 0; y < heightMapWidth - 1; y += tileWidth)
+            {
+                topLeft = heightData[x, y];
+                topRight = heightData[x + tileWidth, y];
+                bottomLeft = heightData[x, y + tileWidth];
+                bottomRight = heightData[x + tileWidth, y + tileWidth];
+                
+                var avg = (topLeft + topRight + bottomLeft + bottomRight) / 4;
+                heightData[x + halfSide, y + halfSide] = avg + NextFloat(rnd, randomRange);
+            }
+            
+            float top = 0, bottom = 0, left = 0, right = 0;
+            for (var x = 0; x < heightMapWidth - 1; x += halfSide)
+            for (var y = (x + halfSide) % heightMapWidth; y < heightMapWidth - 1; y += tileWidth)
+            {
+                top = heightData[(x - halfSide + heightMapWidth - 1) % (heightMapWidth - 1), y];
+                bottom = heightData[(x + halfSide) % (heightMapWidth - 1), y];
+                left = heightData[x, (y + halfSide) % (heightMapWidth - 1)];
+                right = heightData[x, (y - halfSide + heightMapWidth - 1) % (heightMapWidth - 1)];
+                
+                var avg = (top + bottom + left + right) / 4;
+                heightData[x, y] = avg + NextFloat(rnd, randomRange);
+
+                if (x == 0)
+                    heightData[heightMapWidth - 1, y] = avg;
+                if (y == 0)
+                    heightData[x, heightMapWidth - 1] = avg;
+            }
+            
+            randomRange = Math.Max(randomRange / 2, 1);
+            tileWidth /= 2;
         }
         
 #if  DEBUG
