@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform.Windows;
 
 namespace HonoursStageProject.Algorithms;
@@ -20,95 +21,77 @@ public class DiamondSquare : Algorithm
         // Initialize random
         var rnd = new Random();
         float randomRange = 128;
+
+        Size = 16;
         
         // Initialize grid
-
-        Size = 4;
-        
         // Size has to be odd
-        var heightMapWidth = Size;
+        var size = Size;
         
-        if (heightMapWidth % 2 == 0)
-            heightMapWidth++;
+        if (size % 2 == 0)
+            size++;
 
-        var heightData = new float[heightMapWidth, heightMapWidth];
+        var heightData = new float[size, size];
 
         // Seed initial values
         heightData[0, 0] = NextFloat(rnd, randomRange);
-        heightData[0, heightMapWidth - 1] = NextFloat(rnd, randomRange);
-        heightData[heightMapWidth - 1, 0] = NextFloat(rnd, randomRange);
-        heightData[heightMapWidth - 1 , heightMapWidth - 1] = NextFloat(rnd, randomRange);
+        heightData[0, size - 1] = NextFloat(rnd, randomRange);
+        heightData[size - 1, 0] = NextFloat(rnd, randomRange);
+        heightData[size - 1 , size - 1] = NextFloat(rnd, randomRange);
 
-        var tileWidth = heightMapWidth - 1;
+        var step = size - 1;
 
-        while (tileWidth > 1)
+        while (step > 1)
         {
-            //SquareStep(step, size, ref heightData, rnd, randomRange);
-
-            var halfSide = tileWidth / 2;
+            var halfStep = step / 2;
             
             float bottomRight = 0, bottomLeft = 0, topLeft = 0, topRight = 0;
-            for (var x = 0; x < heightMapWidth - 1; x += tileWidth)
-            for (var y = 0; y < heightMapWidth - 1; y += tileWidth)
+            
+            // Diamond Step, Loop through a square using the step to get to corners, seed the middle value [halfstep, halfstep]
+            for (var x = 0; x < size - 1; x += step)
+            for (var y = 0; y < size - 1; y += step)
             {
                 topLeft = heightData[x, y];
-                topRight = heightData[x + tileWidth, y];
-                bottomLeft = heightData[x, y + tileWidth];
-                bottomRight = heightData[x + tileWidth, y + tileWidth];
+                topRight = heightData[x + step, y];
+                bottomLeft = heightData[x, y + step];
+                bottomRight = heightData[x + step, y + step];
                 
+                // Average of four points plus a random displacement
                 var avg = (topLeft + topRight + bottomLeft + bottomRight) / 4;
-                heightData[x + halfSide, y + halfSide] = avg + NextFloat(rnd, randomRange);
+                heightData[x + halfStep, y + halfStep] = avg + NextFloat(rnd, randomRange);
             }
             
+            
             float top = 0, bottom = 0, left = 0, right = 0;
-            for (var x = 0; x < heightMapWidth - 1; x += halfSide)
-            for (var y = (x + halfSide) % heightMapWidth; y < heightMapWidth - 1; y += tileWidth)
+            
+            // Square Step, Loop though a diamond shape using the step and halfstep to get the horizontals and verticals, then seed the edges
+            for (var x = 0; x < size - 1; x += halfStep)
+            for (var y = (x + halfStep) % step; y < size - 1; y += step)
             {
-                top = heightData[(x - halfSide + heightMapWidth - 1) % (heightMapWidth - 1), y];
-                bottom = heightData[(x + halfSide) % (heightMapWidth - 1), y];
-                left = heightData[x, (y + halfSide) % (heightMapWidth - 1)];
-                right = heightData[x, (y - halfSide + heightMapWidth - 1) % (heightMapWidth - 1)];
+                top = heightData[(x - halfStep + size - 1) % (size - 1), y];
+                bottom = heightData[(x + halfStep) % (size - 1), y];
+                left = heightData[x, (y + halfStep) % (size - 1)];
+                right = heightData[x, (y - halfStep + size - 1) % (size - 1)];
                 
+                // Average of four points plus a random displacement
                 var avg = (top + bottom + left + right) / 4;
                 heightData[x, y] = avg + NextFloat(rnd, randomRange);
 
                 if (x == 0)
-                    heightData[heightMapWidth - 1, y] = avg;
+                    heightData[size - 1, y] = avg;
                 if (y == 0)
-                    heightData[x, heightMapWidth - 1] = avg;
+                    heightData[x, size - 1] = avg;
             }
             
+            // Reduces the random range and half the step
             randomRange = Math.Max(randomRange / 2, 1);
-            tileWidth /= 2;
+            step /= 2;
         }
         
 #if  DEBUG
         PrintData(heightData);
 #endif
-        return heightData;
-    }
-
-    private void SquareStep(int pStep, int pSize, ref float[,] pHeightData, Random pRnd, float pRandomRange)
-    {
-        float bottomRight = 0, bottomLeft = 0, topLeft = 0, topRight = 0;
-        int halfStep = pStep / 2;
-        
-        for (int i = 0; i < pStep; i += pStep)
-        for (int j = 0; j < pStep; j += pStep)
-        {
-            topLeft = pHeightData[0, 0];
-            topRight = pHeightData[0, pStep];
-            bottomLeft = pHeightData[pStep, 0];
-            bottomRight = pHeightData[pStep, pStep];
-
-            float avg = (topLeft + topRight + bottomLeft + bottomRight) / 4;
-            pHeightData[halfStep, halfStep] = avg + NextFloat(pRnd, pRandomRange);
-        }
-    }
-
-    private void DiamondStep(int pStep, int pSize, ref float[,] pHeightData, Random pRnd, float pRandomRange)
-    {
-
+        return Normalise(heightData);
     }
     
     private void PrintData(float[,] pHeightData)
@@ -121,6 +104,11 @@ public class DiamondSquare : Algorithm
                 Console.Write($"{(int)pHeightData[i, j]}  ");
             }
         }
+    }
+
+    private float[,] Normalise(float[,] pHeightData)
+    {
+        return pHeightData;
     }
     
 
