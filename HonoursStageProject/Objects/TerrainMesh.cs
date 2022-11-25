@@ -15,7 +15,11 @@ public class TerrainMesh : Object
 
     public TerrainMesh(Vector3 pPosition, int pSize, int pResolution)
     {
-        Size = pSize;
+        if (pSize % 2 == 0)
+            pSize++;
+
+        Size = pSize;  
+        
         GenerateTriangleMesh(pSize, pResolution);
 
         Position = pPosition;

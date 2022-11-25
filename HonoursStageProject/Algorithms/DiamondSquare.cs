@@ -8,6 +8,10 @@ public class DiamondSquare : Algorithm
 {
     public DiamondSquare(int pSize) : base(pSize)
     {
+        if (pSize % 2 == 0)
+            pSize++;
+
+        Size = pSize;   
     }
     
     /* https://craftofcoding.wordpress.com/tag/diamond-square-algorithm/ */
@@ -30,12 +34,11 @@ public class DiamondSquare : Algorithm
         
         // Initialize random
         var rnd = new Random();
+        //float randomRange = 1.5f;
         float randomRange = 128;
         
         // Initialize Grid, Size has to be odd
-        if (Size % 2 == 0)
-            Size++;
-
+        
         Data = new float[Size, Size];
 
         // Seed initial values
@@ -50,6 +53,7 @@ public class DiamondSquare : Algorithm
 #if  DEBUG
         PrintData(Data);
 #endif
+        //return Data;
         return Normalise(Data);
     }
 
