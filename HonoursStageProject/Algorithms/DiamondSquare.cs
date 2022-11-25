@@ -14,10 +14,14 @@ public class DiamondSquare : Algorithm
     /* https://yonatankra.com/how-to-create-terrain-and-heightmaps-using-the-diamond-square-algorithm-in-javascript/ */
     /* https://asyncdrink.com/blog/diamond-square-algorithm */
     /* https://medium.com/@nickobrien/diamond-square-algorithm-explanation-and-c-implementation-5efa891e486f */
+    /* https://learn.64bitdragon.com/articles/computer-science/procedural-generation/the-diamond-square-algorithm Fixed my final issue using this*/
 
 
     public override float[,] GenerateData(int pSeed, float pRoughness, float pFalloff)
     {
+        
+        // Utilize roughness 
+        
         // Initialize random
         var rnd = new Random();
         float randomRange = 128;
@@ -108,6 +112,16 @@ public class DiamondSquare : Algorithm
 
     private float[,] Normalise(float[,] pHeightData)
     {
+        float max = pHeightData.Cast<float>().Max();
+        float min = pHeightData.Cast<float>().Min();
+        
+        for (var i = 0; i < pHeightData.GetLength(0); i++)
+        {
+            for (var j = 0; j < pHeightData.GetLength(1); j++)
+            {
+                pHeightData[i, j] = (pHeightData[i, j] - min) / (max - min);
+            }
+        }
         return pHeightData;
     }
     

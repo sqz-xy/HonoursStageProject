@@ -58,7 +58,7 @@ public sealed class TerrainScene : Scene
         // Algorithm Initialization
         _diamondSquare = new DiamondSquare(_terrainMesh.Size / 4);
         _diamondSquare.GenerateData(10, 10, 1);
-        //_terrainMesh.AddHeightData(_diamondSquare.GenerateData(10, 10, 10)); 
+        _terrainMesh.AddHeightData(_diamondSquare.GenerateData(10, 10, 10)); 
         
         GL.UseProgram(_shader.Handle);
     }
