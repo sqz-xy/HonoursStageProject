@@ -31,6 +31,8 @@ public class DiamondSquare : Algorithm
     public override float[,] GenerateData(int pSeed, float pRoughness, float pFalloff)
     {
         // Utilize roughness, and add a seed check
+        // Fix high size crash
+        // Allow meshes to seed adjacent meshes
         
         // Initialize random
         var rnd = new Random(pSeed);
