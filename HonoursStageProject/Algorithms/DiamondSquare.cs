@@ -33,7 +33,7 @@ public class DiamondSquare : Algorithm
         // Utilize roughness, and add a seed check
         
         // Initialize random
-        var rnd = new Random();
+        var rnd = new Random(pSeed);
         //float randomRange = 1.5f;
         float randomRange = 128;
         

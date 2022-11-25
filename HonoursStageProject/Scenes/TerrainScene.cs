@@ -52,15 +52,17 @@ public sealed class TerrainScene : Scene
         VertexManager.Initialize(2, 2, 2);
         TextureManager.Initialize(2);
 
-        _terrainMesh = new TerrainMesh(new Vector3(1.0f, 0, 0.0f), 16, 1);
-        //_terrainMesh2 = new TerrainMesh(new Vector3(-1.0f, 0, 0.0f), 20, 10);
+        _terrainMesh = new TerrainMesh(new Vector3(0.0f, 0, 0.0f), 16, 1);
+        _terrainMesh2 = new TerrainMesh(new Vector3(-16.0f, 0, 0.0f), 16, 1);
 
         // Algorithm Initialization
         _diamondSquare = new DiamondSquare(_terrainMesh.Size);
         _terrainMesh.AddHeightData(_diamondSquare.GenerateData(10, 10, 10)); 
+        _terrainMesh2.AddHeightData(_diamondSquare.GenerateData(11, 10, 10)); 
         
         // Buffer Data
         _terrainMesh.BufferData();
+        _terrainMesh2.BufferData();
         
         GL.UseProgram(_shader.Handle);
     }
@@ -70,7 +72,7 @@ public sealed class TerrainScene : Scene
     {
         _shader.UseShader();
         _terrainMesh.Render(_shader.Handle);
-        //_terrainMesh2.Render(_shader.Handle);
+        _terrainMesh2.Render(_shader.Handle);
     }
 
     public override void Update(FrameEventArgs pE)
