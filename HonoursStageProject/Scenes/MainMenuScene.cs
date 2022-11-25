@@ -37,6 +37,7 @@ public sealed class MainMenuScene : Scene
         _shader = new Shader(@"Shaders/mainmenu.vert", @"Shaders/mainmenu.frag");
 
         _button = new Quadrilateral(new Vector3(0.0f, 0.25f, 0.0f), 0.2f, 0.1f, new Vector4(0.1f, 0.1f, 0.1f, 0.0f));
+        _button.BufferData();
     }
     
     public override void Render(FrameEventArgs pE)

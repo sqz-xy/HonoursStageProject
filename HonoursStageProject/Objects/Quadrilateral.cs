@@ -34,11 +34,14 @@ public class Quadrilateral : Object
             0, 1, 3, 
             1, 2, 3
         };
-        
+    }
+
+    public override void BufferData()
+    {
         BufferIndex = VertexManager.BindVertexData(Vertices, Indices, true);
         TextureIndex = TextureManager.BindTextureData("Textures/button.png");
     }
-    
+
     public sealed override void Render(int pShaderHandle)
     {
         Update(pShaderHandle);
