@@ -54,11 +54,17 @@ public sealed class TerrainScene : Scene
 
         _terrainMesh = new TerrainMesh(new Vector3(0.0f, 0, 0.0f), 16, 1);
         _terrainMesh2 = new TerrainMesh(new Vector3(-16.0f, 0, 0.0f), 16, 1);
+        
+        // Testing
+        // If the size is greater than 25 or less than 64 it breaks??? also bug with data application
+        //_diamondSquare = new DiamondSquare(64);
+        //_diamondSquare.GenerateData(11, 10, 10);
 
         // Algorithm Initialization
         _diamondSquare = new DiamondSquare(_terrainMesh.Size);
         _terrainMesh.AddHeightData(_diamondSquare.GenerateData(10, 10, 10)); 
         _terrainMesh2.AddHeightData(_diamondSquare.GenerateData(11, 10, 10)); 
+        
         
         // Buffer Data
         _terrainMesh.BufferData();
