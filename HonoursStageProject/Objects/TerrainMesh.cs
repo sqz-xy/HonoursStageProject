@@ -13,14 +13,14 @@ public class TerrainMesh : Object
 {
     public int Size { get; }
 
-    public TerrainMesh(Vector3 pPosition, int pSize, int pResolution)
+    public TerrainMesh(Vector3 pPosition, int pSize, float pScale)
     {
         if (pSize % 2 == 0)
             pSize++;
 
         Size = pSize;  
         
-        GenerateTriangleMesh(pSize, pResolution);
+        GenerateTriangleMesh(pSize, pScale);
 
         Position = pPosition;
         BaseColour = Vector4.One;
@@ -32,13 +32,39 @@ public class TerrainMesh : Object
         BufferIndex = VertexManager.BindVertexData(Vertices, Indices, true);
         TextureIndex = TextureManager.BindTextureData("Textures/button.png");
     }
+    
+    /// <summary>
+    /// Generates the vertices for the mesh
+    /// </summary>
+    /// <param name="pSize">Size of the mesh</param>
+    /// <param name="pScale">Resolution of the mesh</param>
+    /// <param name="pVertices">Mesh Vertices</param>
+    private static void GenerateVertices(int pSize, float pScale, List<float> pVertices)
+    {
+        for (var heightIndex = 0; heightIndex < pSize; heightIndex++)
+        for (var widthIndex = 0; widthIndex < pSize; widthIndex++)
+        {
+            pVertices.Add(((-pSize / 2.0f) + heightIndex) * pScale); // X, the range of the X dimension
+            pVertices.Add(0); // Y - Height will be added later
+            pVertices.Add(((-pSize / 2.0f) + widthIndex) * pScale); // Z, the range of the Z dimension  
+
+            // Normals
+            pVertices.Add(0);
+            pVertices.Add(1);
+            pVertices.Add(0);
+
+            // Texture Coords
+            pVertices.Add(((-pSize / 2.0f) + heightIndex) * pScale); // X, the range of the X dimension
+            pVertices.Add(((-pSize / 2.0f) + widthIndex) * pScale); // Z, the range of the Z dimension  
+        }
+    }
 
     /// <summary>
     /// Generates a terrain mesh
     /// </summary>
     /// <param name="pSize">Width of the mesh</param>
-    /// <param name="pResolution">Resolution of the mesh</param>
-    private void GenerateTriangleStripMesh(int pSize, int pResolution)
+    /// <param name="pScale">Resolution of the mesh</param>
+    private void GenerateTriangleStripMesh(int pSize, float pScale)
     {
         PrimitiveType = PrimitiveType.TriangleStrip;
 
@@ -48,7 +74,7 @@ public class TerrainMesh : Object
         
         var rand = new Random();
 
-        GenerateVertices(pSize, pResolution, vertices);
+        GenerateVertices(pSize, pScale, vertices);
         
         for (var heightIndex = 0; heightIndex - 1 < pSize; heightIndex++) // for each row
             for (var widthIndex = 0; widthIndex - 1 < pSize; widthIndex++) // for each column
@@ -71,8 +97,8 @@ public class TerrainMesh : Object
     /// Generates a terrain mesh
     /// </summary>
     /// <param name="pSize">Height of the mesh</param>
-    /// <param name="pResolution">Resolution of the mesh</param>
-    private void GenerateTriangleMesh(int pSize, int pResolution)
+    /// <param name="pScale">Resolution of the mesh</param>
+    private void GenerateTriangleMesh(int pSize, float pScale)
     {
         PrimitiveType = PrimitiveType.Triangles;
         
@@ -90,7 +116,7 @@ public class TerrainMesh : Object
         
         var rand = new Random();
         
-        GenerateVertices(pSize, pResolution, vertices);
+        GenerateVertices(pSize, pScale, vertices);
 
         // Indices bug with extra lines
         // Dividing this fixes it by reducing the number of loops, because less indices per vertex, so repeated values
@@ -111,32 +137,7 @@ public class TerrainMesh : Object
         Vertices = vertices.ToArray();
     }
 
-    /// <summary>
-    /// Generates the vertices for the mesh
-    /// </summary>
-    /// <param name="pSize">Size of the mesh</param>
-    /// <param name="pResolution">Resolution of the mesh</param>
-    /// <param name="pVertices">Mesh Vertices</param>
-    private static void GenerateVertices(int pSize, int pResolution, List<float> pVertices)
-    {
-        for (var heightIndex = 0; heightIndex < pSize; heightIndex++)
-        for (var widthIndex = 0; widthIndex < pSize; widthIndex++)
-        {
-            pVertices.Add(((-pSize / 2.0f) + heightIndex) / pResolution); // X, the range of the X dimension
-            pVertices.Add(0); // Y - Height will be added later
-            pVertices.Add(((-pSize / 2.0f) + widthIndex) / pResolution); // Z, the range of the Z dimension  
-
-            // Normals
-            pVertices.Add(0);
-            pVertices.Add(1);
-            pVertices.Add(0);
-
-            // Texture Coords
-            pVertices.Add(((-pSize / 2.0f) + heightIndex) / pResolution); // X, the range of the X dimension
-            pVertices.Add(((-pSize / 2.0f) + widthIndex) / pResolution); // Z, the range of the Z dimension  
-        }
-    }
-
+    
     public void AddHeightData(float[,] pHeightData)
     {
         var stride = 8;

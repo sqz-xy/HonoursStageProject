@@ -14,6 +14,7 @@ public sealed class TerrainScene : Scene
     
     private TerrainMesh _terrainMesh;
     private TerrainMesh _terrainMesh2;
+    private TerrainMesh _terrainMesh3;
 
     private Camera _camera;
 
@@ -49,11 +50,12 @@ public sealed class TerrainScene : Scene
         _shader = new Shader(@"Shaders/terrainscene.vert", @"Shaders/terrainscene.frag");
 
         // Object initialization (Terrain mesh)
-        VertexManager.Initialize(2, 2, 2);
-        TextureManager.Initialize(2);
+        VertexManager.Initialize(3, 3, 3);
+        TextureManager.Initialize(3);
 
         _terrainMesh = new TerrainMesh(new Vector3(0.0f, 0, 0.0f), 65, 1);
-        _terrainMesh2 = new TerrainMesh(new Vector3(-16.0f, 2, 0.0f), 16, 1);
+        _terrainMesh2 = new TerrainMesh(new Vector3(0.0f, 2, 0.0f), 16, 1);
+        _terrainMesh3 = new TerrainMesh(new Vector3(-16.0f, 2, 0.0f), 32, 0.5f);
         
         // TODO: Fix bug "If the size is greater than 25 or less than 64 it breaks???"
 
@@ -64,10 +66,14 @@ public sealed class TerrainScene : Scene
         _diamondSquare = new DiamondSquare(_terrainMesh2.Size);
         _terrainMesh2.AddHeightData(_diamondSquare.GenerateData(11, 10, 10)); 
         
+        _diamondSquare = new DiamondSquare(_terrainMesh3.Size);
+        _terrainMesh3.AddHeightData(_diamondSquare.GenerateData(11, 10, 10)); 
+        
         
         // Buffer Data
         _terrainMesh.BufferData();
         _terrainMesh2.BufferData();
+        _terrainMesh3.BufferData();
         
         GL.UseProgram(_shader.Handle);
     }
@@ -76,8 +82,9 @@ public sealed class TerrainScene : Scene
     public override void Render(FrameEventArgs pE)
     {
         _shader.UseShader();
-        _terrainMesh.Render(_shader.Handle);
+        //_terrainMesh.Render(_shader.Handle);
         _terrainMesh2.Render(_shader.Handle);
+        _terrainMesh3.Render(_shader.Handle);
     }
 
     public override void Update(FrameEventArgs pE)
