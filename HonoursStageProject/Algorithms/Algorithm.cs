@@ -10,7 +10,7 @@ public abstract class Algorithm : IAlgorithm
         Size = pSize;
     }
     
-    public abstract float[,] GenerateData(int pSeed, float pRoughness, float pFalloff);
+    public abstract float[,] GenerateData(int pSeed, float pScale, float pFalloff);
     
     /// <summary>
     /// Prints stored data to the console
@@ -53,6 +53,11 @@ public abstract class Algorithm : IAlgorithm
     public static float NextFloat(Random pRandom, float pMax)
     {
         return (float)(pMax * 2.0f * (pRandom.NextDouble() - 0.5f));
+    }
+
+    public static float NextFloat(Random pRandom, float pMin, float pMax)
+    {
+        return (float) Math.Floor(pRandom.NextDouble() * (pMax - pMin + 1) + pMin);
     }
     
 }

@@ -53,21 +53,23 @@ public sealed class TerrainScene : Scene
         VertexManager.Initialize(3, 3, 3);
         TextureManager.Initialize(3);
 
-        _terrainMesh = new TerrainMesh(new Vector3(0.0f, 0, 0.0f), 65, 1);
-        _terrainMesh2 = new TerrainMesh(new Vector3(0.0f, 2, 0.0f), 16, 1);
-        _terrainMesh3 = new TerrainMesh(new Vector3(-16.0f, 2, 0.0f), 32, 0.5f);
+        _terrainMesh = new TerrainMesh(new Vector3(0.0f,-10, 0.0f), 200, 1);
+        
+        // terrain mesh 2 is a 1 Metre scale, terrain mesh 3 is a 0.5 Metre scale with double the size
+        _terrainMesh2 = new TerrainMesh(new Vector3(0.0f, 2, -10.0f), 32, 1);
+        _terrainMesh3 = new TerrainMesh(new Vector3(-32.0f, 2, -10.0f), 64, 0.5f);
         
         // TODO: Fix bug "If the size is greater than 25 or less than 64 it breaks???"
 
         // Algorithm Initialization
         _diamondSquare = new DiamondSquare(_terrainMesh.Size);
-        _terrainMesh.AddHeightData(_diamondSquare.GenerateData(10, 10, 10)); 
+        _terrainMesh.AddHeightData(_diamondSquare.GenerateData(10, 1, 0.2f)); 
         
         _diamondSquare = new DiamondSquare(_terrainMesh2.Size);
-        _terrainMesh2.AddHeightData(_diamondSquare.GenerateData(11, 10, 10)); 
+        _terrainMesh2.AddHeightData(_diamondSquare.GenerateData(12, 1, 0.2f)); 
         
         _diamondSquare = new DiamondSquare(_terrainMesh3.Size);
-        _terrainMesh3.AddHeightData(_diamondSquare.GenerateData(11, 10, 10)); 
+        _terrainMesh3.AddHeightData(_diamondSquare.GenerateData(12, 0.5f, 0.2f)); 
         
         
         // Buffer Data
@@ -82,7 +84,7 @@ public sealed class TerrainScene : Scene
     public override void Render(FrameEventArgs pE)
     {
         _shader.UseShader();
-        //_terrainMesh.Render(_shader.Handle);
+        _terrainMesh.Render(_shader.Handle);
         _terrainMesh2.Render(_shader.Handle);
         _terrainMesh3.Render(_shader.Handle);
     }
@@ -133,8 +135,7 @@ public sealed class TerrainScene : Scene
                 GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
                 break;
             case 'f':
-                _diamondSquare.GenerateData(10, 10, 1);
-                _terrainMesh.AddHeightData(_diamondSquare.GenerateData(10, 10, 10)); 
+                SceneManager.Exit();
                 break;
         }
     }

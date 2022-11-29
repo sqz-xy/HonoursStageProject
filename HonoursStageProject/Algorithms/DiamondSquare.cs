@@ -25,10 +25,10 @@ public class DiamondSquare : Algorithm
     /// Generates the data for the algorithm
     /// </summary>
     /// <param name="pSeed">The random seed</param>
-    /// <param name="pRoughness">The terrain roughness</param>
+    /// <param name="pScale">The terrain roughness</param>
     /// <param name="pFalloff">The falloff of the roughness</param>
     /// <returns>A 2D array of height values</returns>
-    public override float[,] GenerateData(int pSeed, float pRoughness, float pFalloff)
+    public override float[,] GenerateData(int pSeed, float pScale, float pFalloff)
     {
         // Utilize roughness, and add a seed check
         // Fix high size crash
@@ -36,27 +36,27 @@ public class DiamondSquare : Algorithm
         
         // Initialize random
         var rnd = new Random(pSeed);
-        //float randomRange = 1.5f;
-        float randomRange = 128;
+        float randomRange = 1.0f;
+        //float randomRange = 1;
         
         // Initialize Grid, Size has to be odd
         
         Data = new float[Size, Size];
 
         // Seed initial values
-        Data[0, 0] = NextFloat(rnd, randomRange);
-        Data[0, Size - 1] = NextFloat(rnd, randomRange);
-        Data[Size - 1, 0] = NextFloat(rnd, randomRange);
-        Data[Size - 1 , Size - 1] = NextFloat(rnd, randomRange);
+        Data[0, 0] = (NextFloat(rnd, -randomRange, randomRange));
+        Data[0, Size - 1] = (NextFloat(rnd, -randomRange, randomRange));
+        Data[Size - 1, 0] = (NextFloat(rnd, -randomRange, randomRange));
+        Data[Size - 1, Size - 1] = (NextFloat(rnd, -randomRange, randomRange));
 
         // Run Algorithm
-        DiamondSquareAlgorithm(rnd, randomRange);
+        DiamondSquareAlgorithm(rnd, randomRange, pFalloff, pScale);
 
 #if  DEBUG
         //PrintData(Data);
 #endif
-        //return Data;
-        return Normalise(Data);
+        return Data;
+        //return Normalise(Data);
     }
 
     /// <summary>
@@ -64,7 +64,8 @@ public class DiamondSquare : Algorithm
     /// </summary>
     /// <param name="pRnd">The random instance</param>
     /// <param name="pRandomRange">The random range</param>
-    private void DiamondSquareAlgorithm(Random pRnd, float pRandomRange)
+    /// <param name="pFalloff">Random falloff</param>
+    private void DiamondSquareAlgorithm(Random pRnd, float pRandomRange, float pFalloff, float pScale)
     {
         var step = Size - 1;
 
@@ -78,6 +79,11 @@ public class DiamondSquare : Algorithm
             for (var x = 0; x < Size - 1; x += step)
             for (var y = 0; y < Size - 1; y += step)
             {
+                
+                // Working on crash fix
+                if (x + step >= Size || y + step >= Size)
+                    continue;
+                
                 topLeft = Data[x, y];
                 topRight = Data[x + step, y];
                 bottomLeft = Data[x, y + step];
@@ -85,7 +91,8 @@ public class DiamondSquare : Algorithm
 
                 // Average of four points plus a random displacement
                 var avg = (topLeft + topRight + bottomLeft + bottomRight) / 4;
-                Data[x + halfStep, y + halfStep] = avg + NextFloat(pRnd, pRandomRange);
+                Data[x + halfStep, y + halfStep] = avg + (float)(pRnd.NextDouble() * 2 - 1) * pFalloff * pScale;
+                
             }
 
 
@@ -102,7 +109,7 @@ public class DiamondSquare : Algorithm
 
                 // Average of four points plus a random displacement
                 var avg = (top + bottom + left + right) / 4;
-                Data[x, y] = avg + NextFloat(pRnd, pRandomRange);
+                Data[x, y] = avg + (float)(pRnd.NextDouble() * 2 - 1) * pFalloff * pScale;
 
                 if (x == 0)
                     Data[Size - 1, y] = avg;
@@ -111,7 +118,7 @@ public class DiamondSquare : Algorithm
             }
 
             // Reduces the random range and half the step
-            pRandomRange = Math.Max(pRandomRange / 2, 1);
+            pRandomRange /= Math.Max(pRandomRange / 2, 1);
             step /= 2;
         }
     }
