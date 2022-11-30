@@ -16,6 +16,8 @@ public abstract class Object : IObject
 
     public abstract void BufferData();
     
+    public abstract void BufferData(int pBufferTarget);
+    
     public abstract void Render(int pShaderHandle);
 
     public abstract void Update(int pShaderHandle);
@@ -31,7 +33,5 @@ public abstract class Object : IObject
         return (pPosition.X >= -pSquare.Width + pSquare.Position.X && pPosition.X <= pSquare.Width + pSquare.Position.X) &&
                (pPosition.Y >= -pSquare.Height + pSquare.Position.Y && pPosition.Y <= pSquare.Height + pSquare.Position.Y);
     }
-
-    public abstract void BufferData(int pBufferTarget);
 }
 

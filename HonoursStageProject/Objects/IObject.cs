@@ -3,6 +3,8 @@
 public interface IObject
 {
     void BufferData();
+
+    void BufferData(int pBufferTarget);
     
     void Render(int pShaderHandle);
 
