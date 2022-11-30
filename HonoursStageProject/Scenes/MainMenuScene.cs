@@ -6,6 +6,8 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using Object = HonoursStageProject.Objects.Object;
 
+// Not using imgui
+
 namespace HonoursStageProject.Scenes;
 
 /// <summary>
