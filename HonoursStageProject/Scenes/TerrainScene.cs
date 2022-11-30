@@ -148,9 +148,10 @@ public sealed class TerrainScene : Scene
                 SceneManager.Exit();
                 break;
             case 'z':
-                // Limit is bufferSize
+                // Limit is bufferSize, Make a mesh, IMGUI configurable
                 VertexManager.RemoveBuffer(_terrainMesh.BufferIndex);
                 _meshes.Remove(_terrainMesh);
+                _terrainMesh = new TerrainMesh(new Vector3(0.0f, 2, 0.0f), 32, 1);
                 _diamondSquare = new DiamondSquare(_terrainMesh.Size);
                 _terrainMesh.AddHeightData(_diamondSquare.GenerateData(rnd.Next(), 1, 0.5f)); 
                 _meshes.Add(_terrainMesh);
