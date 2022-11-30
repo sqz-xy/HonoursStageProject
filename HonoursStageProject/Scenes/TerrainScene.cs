@@ -5,6 +5,7 @@ using HonoursStageProject.Shaders;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
+using Object = HonoursStageProject.Objects.Object;
 
 namespace HonoursStageProject.Scenes;
 
@@ -19,7 +20,11 @@ public sealed class TerrainScene : Scene
     private Camera _camera;
 
     private Algorithm _diamondSquare;
-    
+
+    private List<TerrainMesh> _meshes;
+
+    private int _textureIndex;
+
 
     // Camera
     public TerrainScene(SceneManager pSceneManager) : base(pSceneManager)
@@ -33,12 +38,16 @@ public sealed class TerrainScene : Scene
         pSceneManager.KeyPressEvent += KeyPress;
         pSceneManager.CursorVisible = false;
         pSceneManager.CursorGrabbed = true;
+
+        _meshes = new List<TerrainMesh>();
         
         Initialize();
     }
 
     public override void Initialize()
     {
+        Random rnd = new Random();
+        
         GL.ClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         
         GL.Enable(EnableCap.DepthTest);
@@ -49,34 +58,32 @@ public sealed class TerrainScene : Scene
         _camera = new Camera();
         _shader = new Shader(@"Shaders/terrainscene.vert", @"Shaders/terrainscene.frag");
 
-        // Object initialization (Terrain mesh)
-        VertexManager.Initialize(3, 3, 3);
-        TextureManager.Initialize(3);
-
-        _terrainMesh = new TerrainMesh(new Vector3(16.0f,2, 0.0f), 16, 1);
+        // Texture Initialization
+        _textureIndex = TextureManager.BindTextureData("Textures/button.png");
         
-        // terrain mesh 2 is a 1 Metre scale, terrain mesh 3 is a 0.5 Metre scale with double the size
-        _terrainMesh2 = new TerrainMesh(new Vector3(0.0f, 2, 0.0f), 16, 1);
-        _terrainMesh3 = new TerrainMesh(new Vector3(-16.0f, 2, -0.0f), 32, 0.5f);
+        // Object initialization (Terrain mesh) Buffer size cannot be modified during runtime
+        VertexManager.Initialize(10000);
+        TextureManager.Initialize(1);
+
+        _meshes.Add(new TerrainMesh(new Vector3(16.0f,2, 0.0f), 16, 1));
+        _meshes.Add(new TerrainMesh(new Vector3(0.0f, 2, 0.0f), 16, 1));
+        _meshes.Add(new TerrainMesh(new Vector3(-16.0f, 2, -0.0f), 32, 0.5f));
+        
+        // Testing
+        _terrainMesh = _meshes[1];
         
         // TODO: Fix bug "If the size is greater than 25 or less than 64 it breaks???"
+        
+        // Initialize mesh values
+        foreach (var mesh in _meshes)
+        {
+            var terrainMesh = (TerrainMesh) mesh;
+            _diamondSquare = new DiamondSquare(terrainMesh.Size);
+            terrainMesh.AddHeightData(_diamondSquare.GenerateData(rnd.Next(), terrainMesh.Scale, 0.5f)); 
+            terrainMesh.TextureIndex = _textureIndex;
+            terrainMesh.BufferData();
+        }
 
-        // Algorithm Initialization
-        _diamondSquare = new DiamondSquare(_terrainMesh.Size);
-        _terrainMesh.AddHeightData(_diamondSquare.GenerateData(12, 1, 1f)); 
-        
-        _diamondSquare = new DiamondSquare(_terrainMesh2.Size);
-        _terrainMesh2.AddHeightData(_diamondSquare.GenerateData(12, 1, 0.5f)); 
-        
-        _diamondSquare = new DiamondSquare(_terrainMesh3.Size);
-        _terrainMesh3.AddHeightData(_diamondSquare.GenerateData(12, 0.5f, 0.5f)); 
-        
-        
-        // Buffer Data
-        _terrainMesh.BufferData();
-        _terrainMesh2.BufferData();
-        _terrainMesh3.BufferData();
-        
         GL.UseProgram(_shader.Handle);
     }
     
@@ -84,9 +91,11 @@ public sealed class TerrainScene : Scene
     public override void Render(FrameEventArgs pE)
     {
         _shader.UseShader();
-        _terrainMesh.Render(_shader.Handle);
-        _terrainMesh2.Render(_shader.Handle);
-        _terrainMesh3.Render(_shader.Handle);
+
+        foreach (var mesh in _meshes)
+        {
+            mesh.Render(_shader.Handle);
+        }
     }
 
     public override void Update(FrameEventArgs pE)
@@ -114,6 +123,7 @@ public sealed class TerrainScene : Scene
     /// <param name="pKeyPressEventArgs">The key press event arguments</param>
     private void KeyPress(KeyPressEventArgs pKeyPressEventArgs)
     {
+        Random rnd = new Random();
         switch (pKeyPressEventArgs.KeyChar)
         {
             case 'a':
@@ -136,6 +146,15 @@ public sealed class TerrainScene : Scene
                 break;
             case 'f':
                 SceneManager.Exit();
+                break;
+            case 'z':
+                // Limit is bufferSize
+                VertexManager.RemoveBuffer(_terrainMesh.BufferIndex);
+                _meshes.Remove(_terrainMesh);
+                _diamondSquare = new DiamondSquare(_terrainMesh.Size);
+                _terrainMesh.AddHeightData(_diamondSquare.GenerateData(rnd.Next(), 1, 0.5f)); 
+                _meshes.Add(_terrainMesh);
+                _terrainMesh.BufferData();
                 break;
         }
     }

@@ -31,7 +31,7 @@ public sealed class MainMenuScene : Scene
     public override void Initialize()
     {
         // Initialise variables, Initialize based on number of objects/shaders
-        VertexManager.Initialize(1, 1, 1);
+        VertexManager.Initialize(1);
         TextureManager.Initialize(1);
         
         _shader = new Shader(@"Shaders/mainmenu.vert", @"Shaders/mainmenu.frag");

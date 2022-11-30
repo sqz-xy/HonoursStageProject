@@ -11,12 +11,16 @@ static class VertexManager
     private static int _vboIndex;
     private static int _vaoIndex;
     private static int _eboIndex;
+
+    private static int _bufferSize;
     
-    public static void Initialize(int pVboSize, int pVaoSize, int pEboSize)
+    public static void Initialize(int pBufferSize)
     {
-        _vboIDs = new int[pVboSize];
-        _vaoIDs = new int[pVaoSize];
-        _eboIDs = new int[pEboSize];
+        _bufferSize = pBufferSize;
+        
+        _vboIDs = new int[pBufferSize];
+        _vaoIDs = new int[pBufferSize];
+        _eboIDs = new int[pBufferSize];
 
         _vboIndex = 0;
         _vaoIndex = 0;
@@ -126,5 +130,10 @@ static class VertexManager
         Array.Clear(_vboIDs);
         Array.Clear(_eboIDs);
         Array.Clear(_vaoIDs);
+    }
+
+    public static void RemoveBuffer(int pBufferTarget)
+    {
+        GL.DeleteBuffer(pBufferTarget);
     }
 }

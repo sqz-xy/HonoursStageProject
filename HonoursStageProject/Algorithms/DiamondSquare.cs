@@ -30,6 +30,7 @@ public class DiamondSquare : Algorithm
     /// <returns>A 2D array of height values</returns>
     public override float[,] GenerateData(int pSeed, float pScale, float pFalloff)
     {
+        Data = null;
         // Utilize roughness, and add a seed check
         // Fix high size crash
         // Allow meshes to seed adjacent meshes

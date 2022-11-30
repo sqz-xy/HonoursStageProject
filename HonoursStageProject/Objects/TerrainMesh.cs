@@ -12,13 +12,15 @@ namespace HonoursStageProject.Objects;
 public class TerrainMesh : Object
 {
     public int Size { get; }
+    public float Scale { get; }
 
     public TerrainMesh(Vector3 pPosition, int pSize, float pScale)
     {
         if (pSize % 2 == 0)
             pSize++;
 
-        Size = pSize;  
+        Size = pSize;
+        Scale = pScale;
         
         GenerateTriangleMesh(pSize, pScale);
 
@@ -30,7 +32,7 @@ public class TerrainMesh : Object
     public override void BufferData()
     {
         BufferIndex = VertexManager.BindVertexData(Vertices, Indices, true);
-        TextureIndex = TextureManager.BindTextureData("Textures/button.png");
+        //TextureIndex = TextureManager.BindTextureData("Textures/button.png");
     }
     
     /// <summary>
