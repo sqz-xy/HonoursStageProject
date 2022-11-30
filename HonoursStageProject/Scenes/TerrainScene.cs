@@ -62,15 +62,16 @@ public sealed class TerrainScene : Scene
         _textureIndex = TextureManager.BindTextureData("Textures/button.png");
         
         // Object initialization (Terrain mesh) Buffer size cannot be modified during runtime
-        VertexManager.Initialize(3);
+        VertexManager.Initialize(4);
         TextureManager.Initialize(1);
-
-        _meshes.Add(new TerrainMesh(new Vector3(16.0f,2, 0.0f), 16, 1));
+        
         _meshes.Add(new TerrainMesh(new Vector3(0.0f, 2, 0.0f), 16, 1));
+        _meshes.Add(new TerrainMesh(new Vector3(16.0f,2, 0.0f), 16, 1));
         _meshes.Add(new TerrainMesh(new Vector3(-16.0f, 2, -0.0f), 32, 0.5f));
+        _meshes.Add(new TerrainMesh(new Vector3(32.0f,2, 0.0f), 16, 1));
         
         // Testing
-        _terrainMesh = _meshes[1];
+        _terrainMesh = _meshes[0];
         
         // TODO: Fix bug "If the size is greater than 25 or less than 64 it breaks???"
         
