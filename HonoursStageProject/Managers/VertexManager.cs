@@ -52,16 +52,14 @@ static class VertexManager
     public static int BindVertexData(float[] pVertices, uint[] pIndices, bool pIsTextured)
     {
         GL.BindVertexArray(_vaoIDs[_vaoIndex]);
-        _vaoIndex++;
-        
-        GL.BindBuffer(BufferTarget.ArrayBuffer, _vboIDs[_vboIndex]);
+
+        GL.BindBuffer(BufferTarget.ArrayBuffer, _vboIDs[_vaoIndex]);
         GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(pVertices.Length * sizeof(float)), pVertices, BufferUsageHint.StaticDraw);
-        _vboIndex++;
-        
-        GL.BindBuffer(BufferTarget.ElementArrayBuffer, _eboIDs[_eboIndex]);
+
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, _eboIDs[_vaoIndex]);
         GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(pIndices.Length * sizeof(uint)), pIndices, BufferUsageHint.StaticDraw);
-        _eboIndex++;
-        
+
+        _vaoIndex++;
         // Make sure data is buffered correctly
         GL.GetBufferParameter(BufferTarget.ArrayBuffer, BufferParameterName.BufferSize, out int size);
         if (pVertices.Length * sizeof(float) != size)
@@ -80,6 +78,43 @@ static class VertexManager
 
         GL.BindVertexArray(0);
         return _vaoIndex - 1;
+    }
+
+    /// <summary>
+    /// Binds and Buffers data to a passed in buffer
+    /// </summary>
+    /// <param name="pVertices">The vertices to bind</param>
+    /// <param name="pIndices">The indices to bind</param>
+    /// <param name="pIsTextured">Is the object textured?</param>
+    /// <param name="pBufferTarget">The buffer target</param>
+    /// <returns>The VAO index of the bound vertices</returns>
+    public static int BindVertexData(float[] pVertices, uint[] pIndices, bool pIsTextured, int pBufferTarget)
+    {
+        GL.BindVertexArray(_vaoIDs[pBufferTarget]);
+
+        GL.BindBuffer(BufferTarget.ArrayBuffer, _vboIDs[pBufferTarget]);
+        GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(pVertices.Length * sizeof(float)), pVertices, BufferUsageHint.StaticDraw);
+
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, _eboIDs[pBufferTarget]);
+        GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(pIndices.Length * sizeof(uint)), pIndices, BufferUsageHint.StaticDraw);
+        // Make sure data is buffered correctly
+        GL.GetBufferParameter(BufferTarget.ArrayBuffer, BufferParameterName.BufferSize, out int size);
+        if (pVertices.Length * sizeof(float) != size)
+        {
+            throw new ApplicationException("Vertex data not loaded onto graphics card correctly");
+        }
+
+        GL.GetBufferParameter(BufferTarget.ElementArrayBuffer, BufferParameterName.BufferSize, out size);
+        if (pIndices.Length * sizeof(float) != size)
+        {
+            throw new ApplicationException("Index data not loaded onto graphics card correctly");
+        }
+        
+        // No normals or textures yet
+        EnableVertexAttributes(pIsTextured);
+
+        GL.BindVertexArray(0);
+        return pBufferTarget;
     }
 
     /// <summary>

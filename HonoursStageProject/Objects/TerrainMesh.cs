@@ -35,6 +35,12 @@ public class TerrainMesh : Object
         //TextureIndex = TextureManager.BindTextureData("Textures/button.png");
     }
     
+    public override void BufferData(int pBufferTarget)
+    {
+        BufferIndex = VertexManager.BindVertexData(Vertices, Indices, true, pBufferTarget);
+        //TextureIndex = TextureManager.BindTextureData("Textures/button.png");
+    }
+    
     /// <summary>
     /// Generates the vertices for the mesh
     /// </summary>

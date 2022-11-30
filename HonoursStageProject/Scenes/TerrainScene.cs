@@ -62,7 +62,7 @@ public sealed class TerrainScene : Scene
         _textureIndex = TextureManager.BindTextureData("Textures/button.png");
         
         // Object initialization (Terrain mesh) Buffer size cannot be modified during runtime
-        VertexManager.Initialize(10000);
+        VertexManager.Initialize(3);
         TextureManager.Initialize(1);
 
         _meshes.Add(new TerrainMesh(new Vector3(16.0f,2, 0.0f), 16, 1));
@@ -149,13 +149,12 @@ public sealed class TerrainScene : Scene
                 break;
             case 'z':
                 // Limit is bufferSize, Make a mesh, IMGUI configurable
-                VertexManager.RemoveBuffer(_terrainMesh.BufferIndex);
                 _meshes.Remove(_terrainMesh);
-                _terrainMesh = new TerrainMesh(new Vector3(0.0f, 2, 0.0f), 32, 1);
+                _terrainMesh = new TerrainMesh(new Vector3(0.0f, 2, 0.0f), 16, 1);
                 _diamondSquare = new DiamondSquare(_terrainMesh.Size);
                 _terrainMesh.AddHeightData(_diamondSquare.GenerateData(rnd.Next(), 1, 0.5f)); 
                 _meshes.Add(_terrainMesh);
-                _terrainMesh.BufferData();
+                _terrainMesh.BufferData(_terrainMesh.BufferIndex);
                 break;
         }
     }
