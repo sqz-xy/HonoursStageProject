@@ -12,6 +12,8 @@ public abstract class Algorithm : IAlgorithm
     
     public abstract float[,] GenerateData(int pSeed, float pScale, float pFalloff);
     
+    public abstract float[,] GenerateData(int pSeed, float pScale, float pFalloff, float[,] pPreSeed);
+    
     /// <summary>
     /// Prints stored data to the console
     /// </summary>

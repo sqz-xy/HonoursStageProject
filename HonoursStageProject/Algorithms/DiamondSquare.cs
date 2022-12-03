@@ -59,6 +59,34 @@ public class DiamondSquare : Algorithm
         return Data;
         //return Normalise(Data);
     }
+    
+    
+    /// <summary>
+    /// Generates the data for the algorithm
+    /// </summary>
+    /// <param name="pSeed">The random seed</param>
+    /// <param name="pScale">The terrain roughness</param>
+    /// <param name="pFalloff">The falloff of the roughness</param>
+    /// <returns>A 2D array of height values</returns>
+    public override float[,] GenerateData(int pSeed, float pScale, float pFalloff, float[,] pPreSeed)
+    {
+        Data = null;
+
+        // Initialize random
+        var rnd = new Random(pSeed);
+        float randomRange = 1.0f;
+        
+        Data = pPreSeed;
+        
+        // Run Algorithm
+        DiamondSquareAlgorithm(rnd, randomRange, pFalloff, pScale);
+
+#if  DEBUG
+        //PrintData(Data);
+#endif
+        return Data;
+        //return Normalise(Data);
+    }
 
     /// <summary>
     /// The diamond square algorithm
@@ -80,7 +108,9 @@ public class DiamondSquare : Algorithm
             for (var x = 0; x < Size - 1; x += step)
             for (var y = 0; y < Size - 1; y += step)
             {
-                
+                if (Data[x + halfStep, y + halfStep] != 0)
+                    continue;
+
                 // Working on crash fix
                 if (x + step >= Size || y + step >= Size)
                     continue;
@@ -103,6 +133,9 @@ public class DiamondSquare : Algorithm
             for (var x = 0; x < Size - 1; x += halfStep)
             for (var y = (x + halfStep) % step; y < Size - 1; y += step)
             {
+                if (Data[x, y] != 0)
+                    continue;
+                
                 top = Data[(x - halfStep + Size - 1) % (Size - 1), y];
                 bottom = Data[(x + halfStep) % (Size - 1), y];
                 left = Data[x, (y + halfStep) % (Size - 1)];

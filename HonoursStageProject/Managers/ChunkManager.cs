@@ -1,4 +1,6 @@
-﻿using HonoursStageProject.Objects;
+﻿using System.ComponentModel;
+using HonoursStageProject.Algorithms;
+using HonoursStageProject.Objects;
 using OpenTK;
 
 namespace HonoursStageProject.Managers;
@@ -7,6 +9,7 @@ public class ChunkManager
 {
     private List<TerrainMesh> _renderableChunks;
     private List<TerrainMesh> _unRenderableChunks;
+    private TerrainMesh _sourceChunk;
     private int _textureIndex;
     
     // Texture Initialization
@@ -37,10 +40,24 @@ public class ChunkManager
             xPos += pChunkSize * pMapScale;
         }
 
+        _sourceChunk = _renderableChunks[0];
+
+        GenChunkHeightData();
+        
         foreach (var chunk in _renderableChunks)
         {
            chunk.BufferData();
         }
+    }
+
+    private void GenChunkHeightData()
+    {
+        var ds = new DiamondSquare(_sourceChunk.Size);
+        var heightData = ds.GenerateData(1, _sourceChunk.Scale, 0.5f);
+        
+        _sourceChunk.AddHeightData(heightData);
+        
+        
     }
 
     public void RenderMap(int pShaderHandle)
