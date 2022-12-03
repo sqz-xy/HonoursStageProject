@@ -84,7 +84,7 @@ public sealed class TerrainScene : Scene
             _diamondSquare = new DiamondSquare(terrainMesh.Size);
             terrainMesh.AddHeightData(_diamondSquare.GenerateData(rnd.Next(), terrainMesh.Scale, 0.5f)); 
             terrainMesh.TextureIndex = _textureIndex;
-            //terrainMesh.BufferData();
+            terrainMesh.BufferData();
         }
         
         // Chunk Manager, putting this before the other meshes causes a crash?
@@ -103,7 +103,7 @@ public sealed class TerrainScene : Scene
 
         foreach (var mesh in _meshes)
         {
-          // mesh.Render(_shader.Handle);
+           mesh.Render(_shader.Handle);
         }
         
         _chunkManager.RenderMap(_shader.Handle);
