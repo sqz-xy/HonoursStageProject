@@ -25,6 +25,8 @@ public sealed class TerrainScene : Scene
 
     private int _textureIndex;
 
+    private ChunkManager _chunkManager;
+
 
     // Camera
     public TerrainScene(SceneManager pSceneManager) : base(pSceneManager)
@@ -62,8 +64,8 @@ public sealed class TerrainScene : Scene
         _textureIndex = TextureManager.BindTextureData("Textures/button.png");
         
         // Object initialization (Terrain mesh) Buffer size cannot be modified during runtime
-        VertexManager.Initialize(4);
-        TextureManager.Initialize(1);
+        VertexManager.Initialize(1000);
+        TextureManager.Initialize(2);
         
         _meshes.Add(new TerrainMesh(new Vector3(0.0f, 2, 0.0f), 16, 1));
         _meshes.Add(new TerrainMesh(new Vector3(16.0f,2, 0.0f), 16, 1));
@@ -84,6 +86,11 @@ public sealed class TerrainScene : Scene
             terrainMesh.TextureIndex = _textureIndex;
             terrainMesh.BufferData();
         }
+        
+        // Chunk Manager, putting this before the other meshes causes a crash?
+        
+        _chunkManager = new ChunkManager();
+        _chunkManager.GenerateMap(3, 32, 0.5f);
 
         GL.UseProgram(_shader.Handle);
     }
@@ -95,8 +102,10 @@ public sealed class TerrainScene : Scene
 
         foreach (var mesh in _meshes)
         {
-            mesh.Render(_shader.Handle);
+           mesh.Render(_shader.Handle);
         }
+        
+        _chunkManager.RenderMap(_shader.Handle);
     }
 
     public override void Update(FrameEventArgs pE)

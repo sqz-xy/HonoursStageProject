@@ -97,6 +97,7 @@ static class VertexManager
 
         GL.BindBuffer(BufferTarget.ElementArrayBuffer, _eboIDs[pBufferTarget]);
         GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(pIndices.Length * sizeof(uint)), pIndices, BufferUsageHint.StaticDraw);
+        
         // Make sure data is buffered correctly
         GL.GetBufferParameter(BufferTarget.ArrayBuffer, BufferParameterName.BufferSize, out int size);
         if (pVertices.Length * sizeof(float) != size)
