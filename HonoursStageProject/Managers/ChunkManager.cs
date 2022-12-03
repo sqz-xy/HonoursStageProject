@@ -55,6 +55,11 @@ public class ChunkManager
 
     private void GenChunkHeightData(int pMapSize)
     {
+        /* Chunk hold reference to adjacents
+         * Populate data array with the edges of adjacents
+         * Then run the algorithm
+         */
+        
         var ds = new DiamondSquare(_sourceChunk.Size);
         var heightData = ds.GenerateData(1, _sourceChunk.Scale, 0.5f);
         _sourceChunk.AddHeightData(heightData);
