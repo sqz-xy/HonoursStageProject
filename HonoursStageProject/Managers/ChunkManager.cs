@@ -10,10 +10,17 @@ public class ChunkManager
 {
     private List<Chunk> _renderableChunks;
     private List<Chunk> _unRenderableChunks;
-    private List<Chunk> _chunks;
     private Chunk _sourceChunk;
     private int _textureIndex;
     private Chunk[,] _chunkGrid;
+    private Vector2[] _directions = 
+    {
+        // Clockwise, Can add diagonals if needed
+        new Vector2(0, -1), // UP
+        new Vector2(1, 0),  // RIGHT
+        new Vector2(0, 1),  // DOWN
+        new Vector2(-1, 0)  // LEFT
+    };
     
     // Texture Initialization
     
@@ -22,7 +29,6 @@ public class ChunkManager
     {
         _renderableChunks = new();
         _unRenderableChunks = new();
-        _chunks = new();
         _textureIndex = TextureManager.BindTextureData("Textures/button.png");
     }
 
@@ -30,14 +36,44 @@ public class ChunkManager
     {
         _chunkGrid = new Chunk[pMapSize, pMapSize];
         
+        // Populate the grid of chunks
         for (int i = 0; i < pMapSize; i++)
         for (int j = 0; j < pMapSize; j++)
         {
-            _chunkGrid[i, j] = new Chunk(new Vector3(pChunkSize * i, -2, pChunkSize * j), pChunkSize, pMapScale);
+            _chunkGrid[i, j] = new Chunk(new Vector3(pChunkSize * i, -2, pChunkSize * j), pChunkSize, pMapScale)
+            {
+                TextureIndex = _textureIndex
+            };
+        }
+        
+        // Similar to what I did in advanced programming for the letter grid
+        // Construct linked grid
+        for (int i = 0; i < pMapSize; i++)
+        for (int j = 0; j < pMapSize; j++)
+        {
+            // Assign current node
+            var currentChunk = _chunkGrid[i, j];
+
+            for (int y = 0; y < _directions.Length; y++)
+            {
+                // Add the direction offset to the current array position
+                var xOffset = i + (int)_directions[y].X;
+                var yOffset = j + (int)_directions[y].Y;
+
+                // Bounds checking
+                if (xOffset >= pMapSize || yOffset >= pMapSize || xOffset < 0 || yOffset < 0)
+                {
+                    currentChunk.Adjacents[y] = null;
+                    continue;
+                }
+
+                currentChunk.Adjacents[y] = _chunkGrid[xOffset, yOffset];
+            }
         }
         
         _sourceChunk = _chunkGrid[0, 0];
 
+        // This now needs to use the adjacents to populate the height data
         GenChunkHeightData(pMapSize);
         
         foreach (var chunk in _chunkGrid)
@@ -52,7 +88,6 @@ public class ChunkManager
         /* Chunk hold reference to adjacents
          * Populate data array with the edges of adjacents
          * Then run the algorithm
-         * 2D array of chunks, linked grid, currentNode, head, loop through directions, if the index is outside of the 2d array set it to null, don't need to do diagonals, yet??
          */
         
         var ds = new DiamondSquare(_sourceChunk.Size);
@@ -73,5 +108,16 @@ public class ChunkManager
             // Can't be multithreaded because the binding indexes increment
             chunk.Render(pShaderHandle);
         }
+        
+        // Adjacent testing
+        
+        /*
+        _sourceChunk.Render(pShaderHandle);
+        foreach (var chunk in _sourceChunk.Adjacents)
+        {
+            if (chunk != null) 
+                chunk.Render(pShaderHandle);
+        }
+        */
     }
 }
