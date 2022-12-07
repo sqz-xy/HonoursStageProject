@@ -13,6 +13,7 @@ public class ChunkManager
     private List<Chunk> _chunks;
     private Chunk _sourceChunk;
     private int _textureIndex;
+    private Chunk[,] _chunkGrid;
     
     // Texture Initialization
     
@@ -27,29 +28,19 @@ public class ChunkManager
 
     public void GenerateMap(int pMapSize, int pChunkSize, float pMapScale)
     {
-        float xPos = -pMapSize / 2, zPos = pMapSize;
-
-        for (int i = 0; i < pMapSize * pMapSize; i++)
+        _chunkGrid = new Chunk[pMapSize, pMapSize];
+        
+        for (int i = 0; i < pMapSize; i++)
+        for (int j = 0; j < pMapSize; j++)
         {
-            if (i % pMapSize == 0 && i != 0)
-            {
-                zPos += pChunkSize * pMapScale;
-                xPos = -pMapSize / 2;
-            }
-            
-            var chunk = new Chunk(new Vector3(xPos, -2, zPos), pChunkSize, pMapScale)
-            {
-                TextureIndex = _textureIndex
-            };
-            _chunks.Add(chunk);
-            xPos += pChunkSize * pMapScale;
+            _chunkGrid[i, j] = new Chunk(new Vector3(pChunkSize * i, -2, pChunkSize * j), pChunkSize, pMapScale);
         }
-
-        _sourceChunk = _chunks[0];
+        
+        _sourceChunk = _chunkGrid[0, 0];
 
         GenChunkHeightData(pMapSize);
         
-        foreach (var chunk in _chunks)
+        foreach (var chunk in _chunkGrid)
         {
             // Can't be multithreaded because the binding indexes increment
             chunk.BufferData();
@@ -61,6 +52,7 @@ public class ChunkManager
         /* Chunk hold reference to adjacents
          * Populate data array with the edges of adjacents
          * Then run the algorithm
+         * 2D array of chunks, linked grid, currentNode, head, loop through directions, if the index is outside of the 2d array set it to null, don't need to do diagonals, yet??
          */
         
         var ds = new DiamondSquare(_sourceChunk.Size);
@@ -76,8 +68,9 @@ public class ChunkManager
     
     public void RenderMap(int pShaderHandle)
     {
-        foreach (var chunk in _chunks)
+        foreach (var chunk in _chunkGrid)
         {
+            // Can't be multithreaded because the binding indexes increment
             chunk.Render(pShaderHandle);
         }
     }
