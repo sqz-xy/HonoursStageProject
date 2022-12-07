@@ -1,4 +1,7 @@
-﻿namespace HonoursStageProject.Objects;
+﻿using OpenTK;
+using OpenTK.Graphics.OpenGL;
+
+namespace HonoursStageProject.Objects;
 
 public interface IObject
 {

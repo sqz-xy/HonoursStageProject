@@ -91,7 +91,7 @@ public sealed class TerrainScene : Scene
         // Need to fix scaling chunk boundry issue
         
         _chunkManager = new ChunkManager();
-        _chunkManager.GenerateMap(3, 16, 1);
+        _chunkManager.GenerateMap(3, 16, 1.0f);
 
         GL.UseProgram(_shader.Handle);
     }

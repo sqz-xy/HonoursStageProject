@@ -8,10 +8,10 @@ namespace HonoursStageProject.Managers;
 
 public class ChunkManager
 {
-    private List<TerrainMesh> _renderableChunks;
-    private List<TerrainMesh> _unRenderableChunks;
-    private List<TerrainMesh> _chunks;
-    private TerrainMesh _sourceChunk;
+    private List<Chunk> _renderableChunks;
+    private List<Chunk> _unRenderableChunks;
+    private List<Chunk> _chunks;
+    private Chunk _sourceChunk;
     private int _textureIndex;
     
     // Texture Initialization
@@ -37,8 +37,10 @@ public class ChunkManager
                 xPos = -pMapSize / 2;
             }
             
-            TerrainMesh chunk = new TerrainMesh(new Vector3(xPos, -2, zPos), pChunkSize, pMapScale);
-            chunk.TextureIndex = _textureIndex;
+            var chunk = new Chunk(new Vector3(xPos, -2, zPos), pChunkSize, pMapScale)
+            {
+                TextureIndex = _textureIndex
+            };
             _chunks.Add(chunk);
             xPos += pChunkSize * pMapScale;
         }
@@ -49,7 +51,8 @@ public class ChunkManager
         
         foreach (var chunk in _chunks)
         {
-           chunk.BufferData();
+            // Can't be multithreaded because the binding indexes increment
+            chunk.BufferData();
         }
     }
 
@@ -74,6 +77,8 @@ public class ChunkManager
     public void RenderMap(int pShaderHandle)
     {
         foreach (var chunk in _chunks)
+        {
             chunk.Render(pShaderHandle);
+        }
     }
 }
