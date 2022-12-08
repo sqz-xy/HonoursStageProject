@@ -91,7 +91,7 @@ public sealed class TerrainScene : Scene
         // Need to fix scaling chunk boundry issue
         
         _chunkManager = new ChunkManager();
-        _chunkManager.GenerateMap(3, 16, 1.0f);
+        _chunkManager.GenerateMap(9, 16, 1.0f);
 
         GL.UseProgram(_shader.Handle);
     }
@@ -138,16 +138,16 @@ public sealed class TerrainScene : Scene
         switch (pKeyPressEventArgs.KeyChar)
         {
             case 'a':
-                _camera.MoveCamera(Direction.Left, 0.1f);
+                _camera.MoveCamera(Direction.Left, 0.3f);
                 break;
             case 'd':
-                _camera.MoveCamera(Direction.Right, 0.1f);
+                _camera.MoveCamera(Direction.Right, 0.3f);
                 break;
             case 'w':
-                _camera.MoveCamera(Direction.Forward,0.1f);
+                _camera.MoveCamera(Direction.Forward,0.3f);
                 break;
             case 's':
-                _camera.MoveCamera(Direction.Backward,0.1f);
+                _camera.MoveCamera(Direction.Backward,0.3f);
                 break;
             case 'q':
                 GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);

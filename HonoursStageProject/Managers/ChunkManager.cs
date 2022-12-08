@@ -34,13 +34,20 @@ public class ChunkManager
 
     public void GenerateMap(int pMapSize, int pChunkSize, float pMapScale)
     {
+        // Populate the grid of chunks
         _chunkGrid = new Chunk[pMapSize, pMapSize];
         
-        // Populate the grid of chunks
+        // is used to make sure the chunks are centred correctly
+        int centreOffset = pChunkSize / 2; 
+        
         for (int i = 0; i < pMapSize; i++)
         for (int j = 0; j < pMapSize; j++)
         {
-            _chunkGrid[i, j] = new Chunk(new Vector3(pChunkSize * i, -2, pChunkSize * j), pChunkSize, pMapScale)
+            // Make sure the chunks are offset correctly so the middle of the chunk map is 0,0
+            var xOffset = -(pMapSize * pChunkSize) / 2;
+            var yOffset = -(pMapSize * pChunkSize) / 2;
+            
+            _chunkGrid[i, j] = new Chunk(new Vector3(xOffset + (i * pChunkSize) + centreOffset, -2, yOffset + (j * pChunkSize) + centreOffset), pChunkSize, pMapScale)
             {
                 TextureIndex = _textureIndex
             };
@@ -57,8 +64,8 @@ public class ChunkManager
             for (int y = 0; y < _directions.Length; y++)
             {
                 // Add the direction offset to the current array position
-                var xOffset = i + (int)_directions[y].X;
-                var yOffset = j + (int)_directions[y].Y;
+                 var xOffset = i + (int)_directions[y].X;
+                 var yOffset = j + (int)_directions[y].Y;
 
                 // Bounds checking
                 if (xOffset >= pMapSize || yOffset >= pMapSize || xOffset < 0 || yOffset < 0)
@@ -91,13 +98,9 @@ public class ChunkManager
          */
         
         var ds = new DiamondSquare(_sourceChunk.Size);
-        var heightData = ds.GenerateData(1, _sourceChunk.Scale, 0.5f);
+        var heightData = ds.GenerateData(2, _sourceChunk.Scale, 0.5f);
         _sourceChunk.AddHeightData(heightData);
-
-        for (int i = 1; i < (pMapSize * pMapSize) - 1; i++)
-        {
-            // Previous method wont work because ill have to populate it with multiple sides
-        }
+        
     }
     
     
@@ -111,13 +114,21 @@ public class ChunkManager
         
         // Adjacent testing
         
-        /*
+        
         _sourceChunk.Render(pShaderHandle);
         foreach (var chunk in _sourceChunk.Adjacents)
         {
-            if (chunk != null) 
-                chunk.Render(pShaderHandle);
+            //if (chunk != null) 
+                //chunk.Render(pShaderHandle);
         }
-        */
+        
+        var test2 = _sourceChunk.Adjacents[2];
+        foreach (var chunk in test2.Adjacents)
+        {
+            //if (chunk != null) 
+            //chunk.Render(pShaderHandle);
+        }
+
+        
     }
 }
