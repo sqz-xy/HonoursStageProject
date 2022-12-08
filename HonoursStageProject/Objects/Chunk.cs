@@ -14,8 +14,10 @@ public class Chunk : Object
     public int Size { get; }
     public float Scale { get; }
     public Chunk[] Adjacents { get; set; }
+    
+    public Vector2 GridPos { get; }
 
-    public Chunk(Vector3 pPosition, int pSize, float pScale)
+    public Chunk(Vector3 pPosition, int pSize, float pScale, Vector2 pGridPos)
     {
         // For diamond square
         if (pSize % 2 == 0)
@@ -24,6 +26,7 @@ public class Chunk : Object
         Size = pSize;
         Scale = pScale;
         Adjacents = new Chunk[4];
+        GridPos = pGridPos;
 
         GenerateTriangleMesh(pSize, pScale);
 

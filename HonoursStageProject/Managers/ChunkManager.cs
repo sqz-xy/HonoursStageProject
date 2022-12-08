@@ -47,7 +47,7 @@ public class ChunkManager
             var xOffset = -(pMapSize * pChunkSize) / 2;
             var yOffset = -(pMapSize * pChunkSize) / 2;
             
-            _chunkGrid[i, j] = new Chunk(new Vector3(xOffset + (i * pChunkSize) + centreOffset, -2, yOffset + (j * pChunkSize) + centreOffset), pChunkSize, pMapScale)
+            _chunkGrid[i, j] = new Chunk(new Vector3(xOffset + (i * pChunkSize) + centreOffset, -2, yOffset + (j * pChunkSize) + centreOffset), pChunkSize, pMapScale, new Vector2(i, j))
             {
                 TextureIndex = _textureIndex
             };
@@ -97,10 +97,27 @@ public class ChunkManager
          * Then run the algorithm
          */
         
+        // Seed source chunk
         var ds = new DiamondSquare(_sourceChunk.Size);
         var heightData = ds.GenerateData(2, _sourceChunk.Scale, 0.5f);
         _sourceChunk.AddHeightData(heightData);
         
+        // Traverse the linked grid
+        var downNode = _sourceChunk;
+
+        while (downNode != null)
+        {
+            var rightNode = downNode;
+
+            while (rightNode != null)
+            {
+                Console.Write(rightNode.GridPos);
+                rightNode = rightNode.Adjacents[1];
+            }
+            Console.WriteLine();
+            downNode = downNode.Adjacents[2];
+        }
+
     }
     
     
