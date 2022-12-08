@@ -13,8 +13,7 @@ public class Chunk : Object
 {
     public int Size { get; }
     public float Scale { get; }
-    public Chunk[] Adjacents { get; set; }
-    
+    public Chunk[] Adjacents { get; }
     public Vector2 GridPos { get; }
 
     public Chunk(Vector3 pPosition, int pSize, float pScale, Vector2 pGridPos)

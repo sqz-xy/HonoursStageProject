@@ -53,7 +53,6 @@ public class ChunkManager
             };
         }
         
-        // Similar to what I did in advanced programming for the letter grid
         // Construct linked grid
         for (int i = 0; i < pMapSize; i++)
         for (int j = 0; j < pMapSize; j++)
@@ -83,6 +82,7 @@ public class ChunkManager
         // This now needs to use the adjacents to populate the height data
         GenChunkHeightData(pMapSize);
         
+        // Buffer the chunk data
         foreach (var chunk in _chunkGrid)
         {
             // Can't be multithreaded because the binding indexes increment
@@ -111,6 +111,7 @@ public class ChunkManager
 
             while (rightNode != null)
             {
+                // Loop through adjacents, create an empty 2d array of chunksize and populate the sides with edge values of adjacents
                 Console.Write(rightNode.GridPos);
                 rightNode = rightNode.Adjacents[1];
             }
