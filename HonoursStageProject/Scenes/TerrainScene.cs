@@ -48,7 +48,7 @@ public sealed class TerrainScene : Scene
 
     public override void Initialize()
     {
-        Random rnd = new Random();
+        var rnd = new Random();
         
         GL.ClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         
@@ -134,7 +134,7 @@ public sealed class TerrainScene : Scene
     /// <param name="pKeyPressEventArgs">The key press event arguments</param>
     private void KeyPress(KeyPressEventArgs pKeyPressEventArgs)
     {
-        Random rnd = new Random();
+        var rnd = new Random();
         switch (pKeyPressEventArgs.KeyChar)
         {
             case 'a':

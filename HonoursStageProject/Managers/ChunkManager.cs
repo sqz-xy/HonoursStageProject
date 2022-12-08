@@ -4,6 +4,8 @@ using HonoursStageProject.Algorithms;
 using HonoursStageProject.Objects;
 using OpenTK;
 
+// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+
 namespace HonoursStageProject.Managers;
 
 public class ChunkManager
@@ -38,29 +40,30 @@ public class ChunkManager
         _chunkGrid = new Chunk[pMapSize, pMapSize];
         
         // is used to make sure the chunks are centred correctly
-        int centreOffset = pChunkSize / 2; 
+        var centreOffset = pChunkSize / 2; 
         
-        for (int i = 0; i < pMapSize; i++)
-        for (int j = 0; j < pMapSize; j++)
+        for (var i = 0; i < pMapSize; i++)
+        for (var j = 0; j < pMapSize; j++)
         {
             // Make sure the chunks are offset correctly so the middle of the chunk map is 0,0
             var xOffset = -(pMapSize * pChunkSize) / 2;
             var yOffset = -(pMapSize * pChunkSize) / 2;
-            
-            _chunkGrid[i, j] = new Chunk(new Vector3(xOffset + (i * pChunkSize) + centreOffset, -2, yOffset + (j * pChunkSize) + centreOffset), pChunkSize, pMapScale, new Vector2(i, j))
-            {
-                TextureIndex = _textureIndex
-            };
+
+            _chunkGrid[i, j] =
+                new Chunk(
+                    new Vector3(xOffset + (i * pChunkSize) + centreOffset, -2, yOffset + (j * pChunkSize) + centreOffset),
+                    pChunkSize, pMapScale, 
+                    new Vector2(i, j), _textureIndex);
         }
         
         // Construct linked grid
-        for (int i = 0; i < pMapSize; i++)
-        for (int j = 0; j < pMapSize; j++)
+        for (var i = 0; i < pMapSize; i++)
+        for (var j = 0; j < pMapSize; j++)
         {
             // Assign current node
             var currentChunk = _chunkGrid[i, j];
 
-            for (int y = 0; y < _directions.Length; y++)
+            for (var y = 0; y < _directions.Length; y++)
             {
                 // Add the direction offset to the current array position
                  var xOffset = i + (int)_directions[y].X;

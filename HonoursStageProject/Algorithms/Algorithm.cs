@@ -39,8 +39,8 @@ public abstract class Algorithm : IAlgorithm
     {
         // Change this to normalize between different values
         
-        float max = pHeightData.Cast<float>().Max();
-        float min = pHeightData.Cast<float>().Min();
+        var max = pHeightData.Cast<float>().Max();
+        var min = pHeightData.Cast<float>().Min();
         
         for (var i = 0; i < pHeightData.GetLength(0); i++)
         {

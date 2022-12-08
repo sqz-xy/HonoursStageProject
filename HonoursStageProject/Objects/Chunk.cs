@@ -16,7 +16,7 @@ public class Chunk : Object
     public Chunk[] Adjacents { get; }
     public Vector2 GridPos { get; }
 
-    public Chunk(Vector3 pPosition, int pSize, float pScale, Vector2 pGridPos)
+    public Chunk(Vector3 pPosition, int pSize, float pScale, Vector2 pGridPos, int pTextureIndex)
     {
         // For diamond square
         if (pSize % 2 == 0)
@@ -26,11 +26,11 @@ public class Chunk : Object
         Scale = pScale;
         Adjacents = new Chunk[4];
         GridPos = pGridPos;
-
-        GenerateTriangleMesh(pSize, pScale);
-
+        TextureIndex = pTextureIndex;
         Position = pPosition;
         BaseColour = Vector4.One;
+        
+        GenerateTriangleMesh(pSize, pScale);
     }
 
     // Buffers the Data to the GPU

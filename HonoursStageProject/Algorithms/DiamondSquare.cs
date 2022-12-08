@@ -37,7 +37,7 @@ public class DiamondSquare : Algorithm
         
         // Initialize random
         var rnd = new Random(pSeed);
-        float randomRange = 1.0f;
+        var randomRange = 1.0f;
         //float randomRange = 1;
         
         // Initialize Grid, Size has to be odd
@@ -74,7 +74,7 @@ public class DiamondSquare : Algorithm
 
         // Initialize random
         var rnd = new Random(pSeed);
-        float randomRange = 1.0f;
+        var randomRange = 1.0f;
         
         Data = pPreSeed;
         
