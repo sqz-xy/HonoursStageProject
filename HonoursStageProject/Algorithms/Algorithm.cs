@@ -25,9 +25,10 @@ public abstract class Algorithm : IAlgorithm
             Console.Write("\n\n");
             for (var j = 0; j < pHeightData.GetLength(1); j++)
             {
-                Console.Write($"{(int)pHeightData[i, j]}  ");
+                Console.Write($"{pHeightData[i, j]}  ");
             }
         }
+        Console.WriteLine(" // NEW CHUNK // ");
     }
 
     /// <summary>

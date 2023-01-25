@@ -59,14 +59,15 @@ public class DiamondSquare : Algorithm
         return Data;
         //return Normalise(Data);
     }
-    
-    
+
+
     /// <summary>
     /// Generates the data for the algorithm
     /// </summary>
     /// <param name="pSeed">The random seed</param>
     /// <param name="pScale">The terrain roughness</param>
     /// <param name="pFalloff">The falloff of the roughness</param>
+    /// <param name="pPreSeed">Seeded Data</param>
     /// <returns>A 2D array of height values</returns>
     public override float[,] GenerateData(int pSeed, float pScale, float pFalloff, float[,] pPreSeed)
     {
@@ -77,6 +78,8 @@ public class DiamondSquare : Algorithm
         var randomRange = 1.0f;
         
         Data = pPreSeed;
+        
+        //PrintData(pPreSeed);
         
         // Run Algorithm
         DiamondSquareAlgorithm(rnd, randomRange, pFalloff, pScale);
@@ -110,7 +113,7 @@ public class DiamondSquare : Algorithm
             {
                 if (Data[x + halfStep, y + halfStep] != 0)
                     continue;
-
+                
                 // Working on crash fix
                 if (x + step >= Size || y + step >= Size)
                     continue;
@@ -123,10 +126,8 @@ public class DiamondSquare : Algorithm
                 // Average of four points plus a random displacement
                 var avg = (topLeft + topRight + bottomLeft + bottomRight) / 4;
                 Data[x + halfStep, y + halfStep] = avg + (float)(pRnd.NextDouble() * 2 - 1) * pFalloff * pScale;
-                
             }
-
-
+            
             float top = 0, bottom = 0, left = 0, right = 0;
 
             // Square Step, Loop though a diamond shape using the step and halfstep to get the horizontals and verticals, then seed the edges

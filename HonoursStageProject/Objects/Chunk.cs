@@ -15,6 +15,7 @@ public class Chunk : Object
     public float Scale { get; }
     public Chunk[] Adjacents { get; }
     public Vector2 GridPos { get; }
+    public float[,] HeightData { get; set; }
 
     public Chunk(Vector3 pPosition, int pSize, float pScale, Vector2 pGridPos, int pTextureIndex)
     {
@@ -29,6 +30,7 @@ public class Chunk : Object
         TextureIndex = pTextureIndex;
         Position = pPosition;
         BaseColour = Vector4.One;
+        HeightData = new float[pSize, pSize];
         
         GenerateTriangleMesh(pSize, pScale);
     }
@@ -120,6 +122,7 @@ public class Chunk : Object
     
     public void AddHeightData(float[,] pHeightData)
     {
+        HeightData = pHeightData;
         var stride = 8;
         var yPointer = 1;
         

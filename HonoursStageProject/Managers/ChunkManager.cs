@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.Threading.Tasks.Dataflow;
-using HonoursStageProject.Algorithms;
+﻿using HonoursStageProject.Algorithms;
 using HonoursStageProject.Objects;
 using OpenTK;
 
@@ -40,7 +38,7 @@ public class ChunkManager
         _chunkGrid = new Chunk[pMapSize, pMapSize];
         
         // is used to make sure the chunks are centred correctly
-        var centreOffset = pChunkSize / 2; 
+        var centreOffset = (pChunkSize / 2); 
         
         for (var i = 0; i < pMapSize; i++)
         for (var j = 0; j < pMapSize; j++)
@@ -102,7 +100,7 @@ public class ChunkManager
         
         // Seed source chunk
         var ds = new DiamondSquare(_sourceChunk.Size);
-        var heightData = ds.GenerateData(2, _sourceChunk.Scale, 0.5f);
+        float[,] heightData = ds.GenerateData(2, _sourceChunk.Scale, 0.5f);
         _sourceChunk.AddHeightData(heightData);
         
         // Traverse the linked grid
@@ -114,19 +112,49 @@ public class ChunkManager
 
             while (rightNode != null)
             {
-                // Loop through adjacents, create an empty 2d array of chunksize and populate the sides with edge values of adjacents
-
-                for (int i = 0; i < rightNode.Adjacents.Length; i++)
+                // Loop through adjacents, create an empty 2d array of chunksize and populate the sides with edge values of adjacents (Clockwise) 
+                // Fix Corners by taking an avg and make sure the terrain stitches together properly.
+                // Fix terrain stitching not working correctly
+                float[,] heightValues = new float[rightNode.HeightData.GetLength(0), rightNode.HeightData.GetLength(1)];
+                float[] row, col;
+                
+                if (rightNode != _sourceChunk)
                 {
-                    // index into adjacents here
+                    for (int i = 0; i < rightNode.Adjacents.Length; i++)
+                    {
+                        switch (i)
+                        {
+                            case 0: // UP
+                                if (rightNode.Adjacents[0] == null) {break;}
+                                row = GetRow(rightNode.Adjacents[0].HeightData, 0);
+                                SetRow(heightValues, 0, row);
+                                break;
+                            case 1: // RIGHT
+                                if (rightNode.Adjacents[1] == null) {break;}
+                                col = GetCol(rightNode.Adjacents[1].HeightData, heightValues.GetLength(1) - 1);
+                                SetCol(heightValues, heightValues.GetLength(1) - 1, col);
+                                break;
+                            case 2: // DOWN
+                                if (rightNode.Adjacents[2] == null) {break;}
+                                row = GetRow(rightNode.Adjacents[2].HeightData, heightValues.GetLength(0) - 1);
+                                SetRow(heightValues, heightValues.GetLength(0) - 1, row);
+                                break;
+                            case 3: // LEFT
+                                if (rightNode.Adjacents[3] == null) {break;}
+                                col = GetCol(rightNode.Adjacents[3].HeightData, 0);
+                                SetCol(heightValues, 0, col);
+                                break;
+                        }
+                    }
+                    
+                    Random rnd = new Random();
+                    //heightData = ds.GenerateData(2, rightNode.Scale, 0.5f, heightValues);
+                    heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues);
+                    rightNode.AddHeightData(heightData);
                 }
                 
-                // Grab the adjacents here
-                
-                Console.Write(rightNode.GridPos);
                 rightNode = rightNode.Adjacents[1];
             }
-            Console.WriteLine();
             downNode = downNode.Adjacents[2];
         }
 
@@ -140,24 +168,49 @@ public class ChunkManager
             // Can't be multithreaded because the binding indexes increment
             chunk.Render(pShaderHandle);
         }
-        
-        // Adjacent testing
-        
-        
-        _sourceChunk.Render(pShaderHandle);
-        foreach (var chunk in _sourceChunk.Adjacents)
-        {
-            //if (chunk != null) 
-                //chunk.Render(pShaderHandle);
-        }
-        
-        var test2 = _sourceChunk.Adjacents[2];
-        foreach (var chunk in test2.Adjacents)
-        {
-            //if (chunk != null) 
-            //chunk.Render(pShaderHandle);
-        }
-
-        
     }
+    
+   
+    private float[] GetRow(float[,] pMatrix, int pRow)
+    {
+        var rowLength = pMatrix.GetLength(1);
+        var rowVector = new float[rowLength];
+
+        for (var i = 0; i < rowLength; i++)
+        {
+            rowVector[i] = pMatrix[pRow, i];
+        }
+    
+
+        return rowVector;
+    }
+    
+    private void SetRow(float[,] pMatrix, int pRow, float[] pRowValues)
+    {
+        var rowLength = pMatrix.GetLength(1);
+
+        for (var i = 0; i < rowLength; i++)
+            pMatrix[pRow, i] = pRowValues[i];
+    }
+    
+    private float[] GetCol(float[,] pMatrix, int pCol)
+    {
+        var colLength = pMatrix.GetLength(0);
+        var colVector = new float[colLength];
+
+        for (var i = 0; i < colLength; i++)
+            colVector[i] = pMatrix[i, pCol];
+
+        return colVector;
+    }
+    
+    private void SetCol(float[,] pMatrix, int pCol, float[] pColValues)
+    {
+        var colLength = pMatrix.GetLength(0);
+
+        for (var i = 0; i < colLength; i++)
+            pMatrix[i, pCol] = pColValues[i];
+    }
+    
+    
 }

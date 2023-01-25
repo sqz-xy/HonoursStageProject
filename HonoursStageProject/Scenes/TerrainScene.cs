@@ -106,7 +106,7 @@ public sealed class TerrainScene : Scene
 
         foreach (var mesh in _meshes)
         {
-           mesh.Render(_shader.Handle);
+           //mesh.Render(_shader.Handle); // COMMENTED OUT FOR TESTING
         }
         
         _chunkManager.RenderMap(_shader.Handle);
