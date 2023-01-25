@@ -115,6 +115,14 @@ public class ChunkManager
             while (rightNode != null)
             {
                 // Loop through adjacents, create an empty 2d array of chunksize and populate the sides with edge values of adjacents
+
+                for (int i = 0; i < rightNode.Adjacents.Length; i++)
+                {
+                    // index into adjacents here
+                }
+                
+                // Grab the adjacents here
+                
                 Console.Write(rightNode.GridPos);
                 rightNode = rightNode.Adjacents[1];
             }
