@@ -31,7 +31,12 @@ public class Camera
     private float _sensitivity;
 
     private bool _hasMouseMoved;
-    
+
+    public Vector3 Position
+    {
+        get { return _position; }
+    }
+
     public Camera()
     {
         // Default camera values
