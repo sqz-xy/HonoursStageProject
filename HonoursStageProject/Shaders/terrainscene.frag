@@ -14,6 +14,7 @@ void main()
 {
 
     // Lighting
+
     float ambientStrength = 0.1;
     vec3 lightColour = vec3(1, 1, 1);
     vec3 lightPos = vec3(0, 10, 0);
