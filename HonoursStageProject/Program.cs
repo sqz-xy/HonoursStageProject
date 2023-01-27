@@ -2,12 +2,10 @@
 
 namespace HonoursStageProject;
 
-/* Use a Terrain Mesh as a chunk essentially
- * Chunk contains a position transform
- * Initialize the transform using double nested loop for the initial map
- * Loop through the chunks and their vertices to add initial height map data
- *
- *
+/* TODO:
+ * Add multiple textures for different reliefs
+ * Fix Lighting
+ * Fix chunk joining
  * 
  */
 
