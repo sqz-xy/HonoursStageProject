@@ -112,36 +112,37 @@ public class ChunkManager
             {
                 // Loop through adjacents, create an empty 2d array of chunksize and populate the sides with edge values of adjacents (Clockwise) 
                 // Fix Corners by taking an avg and make sure the terrain stitches together properly.
-                // Fix terrain stitching not working correctly
+                // Fix terrain stitching not working correctly, due to the fact that the adjacent height data is sometimes all 0s which means and those 0s will be acted on by the ds 
                 float[,] heightValues = new float[rightNode.HeightData.GetLength(0), rightNode.HeightData.GetLength(1)];
+                float[,] nullValues = new float[rightNode.HeightData.GetLength(0), rightNode.HeightData.GetLength(1)];
+                
                 float[] row, col;
                 
-               
-                    for (int i = 0; i < rightNode.Adjacents.Length; i++)
+                for (int i = 0; i < rightNode.Adjacents.Length; i++)
+                {
+                    switch (i)
                     {
-                        switch (i)
-                        {
-                            case 0: // UP
-                                if (rightNode.Adjacents[0] == null) {break;}
-                                row = GetRow(rightNode.Adjacents[0].HeightData, rightNode.Adjacents[0].HeightData.GetLength(0) - 1);
-                                SetRow(heightValues, 0, row);
-                                break;
-                            case 1: // RIGHT
-                                if (rightNode.Adjacents[1] == null) {break;}
-                                col = GetCol(rightNode.Adjacents[1].HeightData, 0);
-                                SetCol(heightValues, heightValues.GetLength(1) - 1, col);
-                                break;
-                            case 2: // DOWN
-                                if (rightNode.Adjacents[2] == null) {break;}
-                                row = GetRow(rightNode.Adjacents[2].HeightData, 0);
-                                SetRow(heightValues, heightValues.GetLength(0) - 1, row);
-                                break;
-                            case 3: // LEFT
-                                if (rightNode.Adjacents[3] == null) {break;}
-                                col = GetCol(rightNode.Adjacents[3].HeightData, rightNode.Adjacents[3].HeightData.GetLength(1) - 1);
-                                SetCol(heightValues, 0, col);
-                                break;
-                        }
+                        case 0: // UP
+                            if (rightNode.Adjacents[0] == null) {break;}
+                            row = GetRow(rightNode.Adjacents[0].HeightData, rightNode.Adjacents[0].HeightData.GetLength(0) - 1);
+                            SetRow(heightValues, 0, row);
+                            break;
+                        case 1: // RIGHT
+                            if (rightNode.Adjacents[1] == null) {break;}
+                            col = GetCol(rightNode.Adjacents[1].HeightData, 0);
+                            SetCol(heightValues, heightValues.GetLength(1) - 1, col);
+                            break;
+                        case 2: // DOWN
+                            if (rightNode.Adjacents[2] == null) {break;}
+                            row = GetRow(rightNode.Adjacents[2].HeightData, 0);
+                            SetRow(heightValues, heightValues.GetLength(0) - 1, row);
+                            break;
+                        case 3: // LEFT
+                            if (rightNode.Adjacents[3] == null) {break;}
+                            col = GetCol(rightNode.Adjacents[3].HeightData, rightNode.Adjacents[3].HeightData.GetLength(1) - 1);
+                            SetCol(heightValues, 0, col);
+                            break;
+                    }
                     
                     
                     Random rnd = new Random();
@@ -206,6 +207,4 @@ public class ChunkManager
         for (var i = 0; i < colLength; i++)
             pMatrix[i, pCol] = pColValues[i];
     }
-    
-    
 }

@@ -112,7 +112,7 @@ public class DiamondSquare : Algorithm
             for (var y = 0; y < Size - 1; y += step)
             {
                 if (Data[x + halfStep, y + halfStep] != 0)
-                    continue;
+                    break;
                 
                 // Working on crash fix
                 if (x + step >= Size || y + step >= Size)
@@ -135,7 +135,7 @@ public class DiamondSquare : Algorithm
             for (var y = (x + halfStep) % step; y < Size - 1; y += step)
             {
                 if (Data[x, y] != 0)
-                    continue;
+                    break;
                 
                 top = Data[(x - halfStep + Size - 1) % (Size - 1), y];
                 bottom = Data[(x + halfStep) % (Size - 1), y];
