@@ -54,7 +54,7 @@ public class DiamondSquare : Algorithm
         DiamondSquareAlgorithm(rnd, randomRange, pFalloff, pScale);
 
 #if  DEBUG
-        //PrintData(Data);
+        PrintData(Data);
 #endif
         return Data;
         //return Normalise(Data);
@@ -113,10 +113,6 @@ public class DiamondSquare : Algorithm
             {
                 if (Data[x + halfStep, y + halfStep] != 0)
                     break;
-                
-                // Working on crash fix
-                if (x + step >= Size || y + step >= Size)
-                    continue;
                 
                 topLeft = Data[x, y];
                 topRight = Data[x + step, y];

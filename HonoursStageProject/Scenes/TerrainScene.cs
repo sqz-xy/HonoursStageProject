@@ -91,7 +91,7 @@ public sealed class TerrainScene : Scene
         // Need to fix scaling chunk boundry issue
         
         _chunkManager = new ChunkManager();
-        _chunkManager.GenerateMap(2, 16, 1.0f);
+        _chunkManager.GenerateMap(2, 16, 1.0f, 2);
 
         var uViewPosLocation = GL.GetUniformLocation(_shader.Handle, "uViewPos");
         GL.Uniform3(uViewPosLocation, _camera.Position);
@@ -162,13 +162,14 @@ public sealed class TerrainScene : Scene
                 SceneManager.Exit();
                 break;
             case 'z':
+                _chunkManager.SaveData("TestData.txt");
                 // Limit is bufferSize, Make a mesh, IMGUI configurable
-                _meshes.Remove(_terrainMesh);
+                /*_meshes.Remove(_terrainMesh);
                 _terrainMesh = new TerrainMesh(new Vector3(0.0f, 2, 0.0f), 16, 1);
                 _diamondSquare = new DiamondSquare(_terrainMesh.Size);
                 _terrainMesh.AddHeightData(_diamondSquare.GenerateData(rnd.Next(), 1, 0.5f)); 
                 _meshes.Add(_terrainMesh);
-                _terrainMesh.BufferData(_terrainMesh.BufferIndex);
+                _terrainMesh.BufferData(_terrainMesh.BufferIndex);*/
                 break;
         }
     }

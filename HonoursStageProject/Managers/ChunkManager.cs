@@ -11,6 +11,13 @@ public class ChunkManager
     private Chunk _sourceChunk;
     private int _textureIndex;
     private Chunk[,] _chunkGrid;
+    private int _mapSize;
+    private float _mapScale;
+    private int _chunkSize;
+    private int _seed;
+
+    private FileManager _fileManager;
+    
     private Vector2[] _directions = 
     {
         // Clockwise, Can add diagonals if needed
@@ -28,12 +35,17 @@ public class ChunkManager
         _renderableChunks = new();
         _unRenderableChunks = new();
         _textureIndex = TextureManager.BindTextureData("Textures/button.png");
+        _fileManager = new AsciiFileManager();
     }
 
-    public void GenerateMap(int pMapSize, int pChunkSize, float pMapScale)
+    public void GenerateMap(int pMapSize, int pChunkSize, float pMapScale, int pSeed)
     {
         // Populate the grid of chunks
         _chunkGrid = new Chunk[pMapSize, pMapSize];
+        _mapScale = pMapScale;
+        _mapSize = pMapSize;
+        _chunkSize = pChunkSize;
+        _seed = pSeed;
         
         // is used to make sure the chunks are centred correctly
         var centreOffset = (pChunkSize / 2); 
@@ -143,17 +155,27 @@ public class ChunkManager
                             SetCol(heightValues, 0, col);
                             break;
                     }
-                    
-                    
-                    Random rnd = new Random();
-                    //heightData = ds.GenerateData(2, rightNode.Scale, 0.5f, heightValues);
-                    heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues);
-                    rightNode.AddHeightData(heightData);
+
+                    if (rightNode != _sourceChunk)
+                    {
+                        Random rnd = new Random();
+                        //heightData = ds.GenerateData(2, rightNode.Scale, 0.5f, heightValues);
+                        heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues);
+                        rightNode.AddHeightData(heightData);  
+                    }
                 }
                 rightNode = rightNode.Adjacents[1];
             }
             downNode = downNode.Adjacents[2];
         }
+    }
+
+    public void SaveData(string pFileName)
+    {
+        new Thread(() =>
+        {
+            _fileManager.SaveHeightData(pFileName, _mapSize, _mapScale, _seed, _sourceChunk);
+        }).Start();
     }
     
     
@@ -176,8 +198,6 @@ public class ChunkManager
         {
             rowVector[i] = pMatrix[pRow, i];
         }
-    
-
         return rowVector;
     }
     
