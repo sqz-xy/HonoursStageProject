@@ -111,6 +111,9 @@ public class DiamondSquare : Algorithm
             for (var x = 0; x < Size - 1; x += step)
             for (var y = 0; y < Size - 1; y += step)
             {
+                if (x + step >= Size || y + step >= Size)
+                    continue;
+                
                 if (Data[x + halfStep, y + halfStep] != 0)
                     break;
                 

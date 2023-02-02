@@ -87,11 +87,11 @@ public sealed class TerrainScene : Scene
             terrainMesh.BufferData();
         }
         
-        // Chunk Manager, putting this before the other meshes causes a crash?
+        
         // Need to fix scaling chunk boundry issue
         
         _chunkManager = new ChunkManager();
-        _chunkManager.GenerateMap(2, 16, 1.0f, 2);
+        _chunkManager.GenerateMap(2, 16, 1.0f, 2, "Resources/TestInput.txt");
 
         var uViewPosLocation = GL.GetUniformLocation(_shader.Handle, "uViewPos");
         GL.Uniform3(uViewPosLocation, _camera.Position);

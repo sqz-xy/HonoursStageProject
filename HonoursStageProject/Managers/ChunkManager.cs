@@ -35,10 +35,10 @@ public class ChunkManager
         _renderableChunks = new();
         _unRenderableChunks = new();
         _textureIndex = TextureManager.BindTextureData("Textures/button.png");
-        _fileManager = new AsciiFileManager();
+        _fileManager = new AscFileManager();
     }
 
-    public void GenerateMap(int pMapSize, int pChunkSize, float pMapScale, int pSeed)
+    public void GenerateMap(int pMapSize, int pChunkSize, float pMapScale, int pSeed, string pFileName)
     {
         // Populate the grid of chunks
         _chunkGrid = new Chunk[pMapSize, pMapSize];
@@ -47,21 +47,32 @@ public class ChunkManager
         _chunkSize = pChunkSize;
         _seed = pSeed;
         
-        // is used to make sure the chunks are centred correctly
-        var centreOffset = (pChunkSize / 2); 
+        // For diamond square
+        if (_chunkSize % 2 == 0)
+            _chunkSize++;
         
-        for (var i = 0; i < pMapSize; i++)
-        for (var j = 0; j < pMapSize; j++)
-        {
-            // Make sure the chunks are offset correctly so the middle of the chunk map is 0,0
-            var xOffset = -(pMapSize * pChunkSize) / 2;
-            var yOffset = -(pMapSize * pChunkSize) / 2;
+        // is used to make sure the chunks are centred correctly
+        var centreOffset = (_chunkSize / 2);
 
-            _chunkGrid[i, j] =
-                new Chunk(
-                    new Vector3(xOffset + (i * pChunkSize) + centreOffset, -2, yOffset + (j * pChunkSize) + centreOffset),
-                    pChunkSize, pMapScale, 
-                    new Vector2(i, j), _textureIndex);
+        if (pFileName == string.Empty)
+        {
+            for (var i = 0; i < _mapSize; i++)
+            for (var j = 0; j < _mapSize; j++)
+            {
+                // Make sure the chunks are offset correctly so the middle of the chunk map is 0,0
+                var xOffset = -(_mapSize * _chunkSize) / 2;
+                var yOffset = -(_mapSize * _chunkSize) / 2;
+
+                _chunkGrid[i, j] =
+                    new Chunk(
+                        new Vector3(xOffset + (i * _chunkSize) + centreOffset, -2, yOffset + (j * _chunkSize) + centreOffset),
+                        _chunkSize, _mapScale, 
+                        new Vector2(i, j), _textureIndex);
+            } 
+        }
+        else
+        {
+            _chunkGrid = _fileManager.ReadHeightData(pFileName, _textureIndex);
         }
         
         // Construct linked grid
@@ -91,7 +102,8 @@ public class ChunkManager
         _sourceChunk = _chunkGrid[0, 0];
 
         // This now needs to use the adjacents to populate the height data
-        GenChunkHeightData(pMapSize);
+        if (pFileName == string.Empty)
+            GenChunkHeightData(pMapSize);
         
         // Buffer the chunk data
         foreach (var chunk in _chunkGrid)
