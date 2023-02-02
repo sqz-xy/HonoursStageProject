@@ -110,9 +110,7 @@ public class ChunkManager
         
         // Seed source chunk
         var ds = new DiamondSquare(_sourceChunk.Size);
-        float[,] heightData = ds.GenerateData(2, _sourceChunk.Scale, 0.5f);
-        _sourceChunk.AddHeightData(heightData);
-        
+
         // Traverse the linked grid
         var downNode = _sourceChunk;
 
@@ -155,14 +153,12 @@ public class ChunkManager
                             SetCol(heightValues, 0, col);
                             break;
                     }
-
-                    if (rightNode != _sourceChunk)
-                    {
-                        Random rnd = new Random();
-                        //heightData = ds.GenerateData(2, rightNode.Scale, 0.5f, heightValues);
-                        heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues);
-                        rightNode.AddHeightData(heightData);  
-                    }
+                    
+                    Random rnd = new Random();
+                    //heightData = ds.GenerateData(2, rightNode.Scale, 0.5f, heightValues);
+                    var heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues);
+                    rightNode.AddHeightData(heightData);  
+                    
                 }
                 rightNode = rightNode.Adjacents[1];
             }

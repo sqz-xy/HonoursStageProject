@@ -12,6 +12,17 @@ public class AsciiFileManager : FileManager
 
     public override void SaveHeightData(string pFileName, int pMapSize, float pMapScale, int pSeed, Chunk pSourceChunk)
     {
+        
+        // Add header info
+        using StreamWriter sw = new StreamWriter(pFileName);
+        
+        sw.WriteLine($"ncols {pSourceChunk.Size * pMapSize}");
+        sw.WriteLine($"nrows {pSourceChunk.Size * pMapSize}");
+        sw.WriteLine($"xllcorner {pSourceChunk.Size * pMapSize}");
+        sw.WriteLine($"yllcorner {pSourceChunk.Size * pMapSize}");
+        sw.WriteLine($"cellsize {pSourceChunk.Size}");
+        sw.WriteLine($"nodata_value sd:{pSeed} mscale:{pMapScale} msize:{pMapSize}");
+        
         // Construct a large 2d array of all the data and then write it
         float[,] cumulativeData = new float[pSourceChunk.Size * (pMapSize),
             pSourceChunk.Size * (pMapSize)];
@@ -42,7 +53,7 @@ public class AsciiFileManager : FileManager
         }
 
         // Save cumulative data
-        using StreamWriter sw = new StreamWriter(pFileName);
+
         for (int i = 0; i < cumulativeData.GetLength(0); i++)
         {
             if (i != 0)
