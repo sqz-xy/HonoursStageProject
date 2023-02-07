@@ -72,7 +72,13 @@ public class ChunkManager
         }
         else
         {
-            _chunkGrid = _fileManager.ReadHeightData(pFileName, _textureIndex);
+            var success = _fileManager.ReadHeightData(pFileName, _textureIndex, out _chunkGrid);
+            if (!success)
+            {
+                // Recursive call if file not read successfully
+                Console.WriteLine("File Not Read!");
+                //GenerateMap(pMapSize, pChunkSize, pMapScale, pSeed, "");
+            }
         }
         
         // Construct linked grid

@@ -8,31 +8,41 @@ public class AscFileManager : FileManager
     
     //TODO: Allow for missing scale, seed, etc.      Seed Saving.           Fix Gap!!!!!!!
 
-    public override Chunk[,] ReadHeightData(string pFileName, int pTextureIndex)
+    public override bool ReadHeightData(string pFileName, int pTextureIndex, out Chunk[,] pChunkGrid)
     {
         int mapSize, cellSize;
         float mapScale;
+        float[,] chunkedData;
 
-        var headerData = File.ReadLines(pFileName).Take(6).ToList();
-        
-        // Need to add defaults for event of no header data
-        cellSize = int.Parse(headerData[4].Split(' ')[1]);
-        mapScale = int.Parse(headerData[5].Split(' ')[4]);
-        mapSize = int.Parse(headerData[5].Split(' ')[6]);
-
-        var heightData = File.ReadLines(pFileName).Skip(6).ToList();
-        var chunkedData = new float[cellSize * mapSize, cellSize * mapSize];
-
-        for (int i = 0; i < heightData.Count; ++i)
+        try
         {
-            var line = heightData[i];
-            for (int j = 0; j < chunkedData.GetLength(1); ++j)
+            var headerData = File.ReadLines(pFileName).Take(6).ToList();
+        
+            // Need to add defaults for event of no header data
+            cellSize = int.Parse(headerData[4].Split(' ')[1]);
+            mapScale = int.Parse(headerData[5].Split(' ')[4]);
+            mapSize = int.Parse(headerData[5].Split(' ')[6]);
+
+            var heightData = File.ReadLines(pFileName).Skip(6).ToList();
+            chunkedData = new float[cellSize * mapSize, cellSize * mapSize];
+
+            for (int i = 0; i < heightData.Count; ++i)
             {
-                var lineData = line.Split(' ');
-                chunkedData[i, j] = float.Parse(lineData[j]);
+                var line = heightData[i];
+                for (int j = 0; j < chunkedData.GetLength(1); ++j)
+                {
+                    var lineData = line.Split(' ');
+                    chunkedData[i, j] = float.Parse(lineData[j]);
+                }
             }
         }
-
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            pChunkGrid = new Chunk[0, 0];
+            return false;
+        }
+        
         var chunkGrid = new Chunk[mapSize, mapSize];
 
         var centreOffset = cellSize / 2;
@@ -61,8 +71,8 @@ public class AscFileManager : FileManager
             chunkGrid[i, j].AddHeightData(chunkGrid[i, j].HeightData);
         }
         
-        
-        return chunkGrid;
+        pChunkGrid = chunkGrid;
+        return true;
     }
 
     public override void SaveHeightData(string pFileName, int pMapSize, float pMapScale, int pSeed, Chunk pSourceChunk)

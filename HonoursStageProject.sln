@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HonoursStageProject", "HonoursStageProject\HonoursStageProject.csproj", "{ECB7FE1D-C7BE-42C3-9D5B-D6D33C824A31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HonoursStageProjectUnitTests", "HonoursStageProjectUnitTests\HonoursStageProjectUnitTests.csproj", "{B631B55C-7EEC-47B5-AECD-D36BEA1C0856}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HSPUnitTests", "HSPUnitTests\HSPUnitTests.csproj", "{91BA267A-4219-40FF-B85A-495D7288C186}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +14,9 @@ Global
 		{ECB7FE1D-C7BE-42C3-9D5B-D6D33C824A31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECB7FE1D-C7BE-42C3-9D5B-D6D33C824A31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ECB7FE1D-C7BE-42C3-9D5B-D6D33C824A31}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B631B55C-7EEC-47B5-AECD-D36BEA1C0856}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B631B55C-7EEC-47B5-AECD-D36BEA1C0856}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B631B55C-7EEC-47B5-AECD-D36BEA1C0856}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B631B55C-7EEC-47B5-AECD-D36BEA1C0856}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91BA267A-4219-40FF-B85A-495D7288C186}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91BA267A-4219-40FF-B85A-495D7288C186}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91BA267A-4219-40FF-B85A-495D7288C186}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91BA267A-4219-40FF-B85A-495D7288C186}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

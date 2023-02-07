@@ -91,7 +91,10 @@ public sealed class TerrainScene : Scene
         // Need to fix scaling chunk boundry issue
         
         _chunkManager = new ChunkManager();
-        _chunkManager.GenerateMap(2, 16, 1.0f, 2, "Resources/TestInput.txt");
+        
+        // TESTING
+        //_chunkManager.GenerateMap(2, 16, 1.0f, 2, "Resources/TestInput.txt");
+        _chunkManager.GenerateMap(2, 16, 1.0f, 2, "");
 
         var uViewPosLocation = GL.GetUniformLocation(_shader.Handle, "uViewPos");
         GL.Uniform3(uViewPosLocation, _camera.Position);
