@@ -94,7 +94,7 @@ public sealed class TerrainScene : Scene
         
         // TESTING
         //_chunkManager.GenerateMap(2, 16, 1.0f, 2, "Resources/TestInput.txt");
-        _chunkManager.GenerateMap(2, 16, 1.0f, 2, "");
+        _chunkManager.GenerateMap(10, 16, 1.0f, 2, "");
 
         var uViewPosLocation = GL.GetUniformLocation(_shader.Handle, "uViewPos");
         GL.Uniform3(uViewPosLocation, _camera.Position);
@@ -112,7 +112,7 @@ public sealed class TerrainScene : Scene
            //mesh.Render(_shader.Handle); // COMMENTED OUT FOR TESTING
         }
         
-        _chunkManager.RenderMap(_shader.Handle);
+        _chunkManager.RenderMap(_shader.Handle, _camera, 2f);
     }
 
     public override void Update(FrameEventArgs pE)

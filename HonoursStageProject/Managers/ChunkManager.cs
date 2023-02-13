@@ -191,14 +191,28 @@ public class ChunkManager
             _fileManager.SaveHeightData(pFileName, _mapSize, _mapScale, _seed, _sourceChunk);
         }).Start();
     }
+
+    public bool DistanceCulling(Camera pCamera, Chunk pChunk, float pRenderDistance)
+    {
+        pRenderDistance *= _chunkSize; // Multiply so the input is in chunks
+        var cam = (float) (Math.Pow((pCamera.Position.X - pChunk.Position.X), 2));
+        var chunk = (float) (Math.Pow((pCamera.Position.Z - pChunk.Position.Z), 2));
+        var sum = cam + chunk;
+
+        if (Math.Sqrt(sum) < pRenderDistance)
+            return true;
+
+        return false;
+    }
     
     
-    public void RenderMap(int pShaderHandle)
+    public void RenderMap(int pShaderHandle, Camera pCamera, float pRenderDistance)
     {
         foreach (var chunk in _chunkGrid)
         {
+            if (DistanceCulling(pCamera, chunk, pRenderDistance))
+                chunk.Render(pShaderHandle);
             // Can't be multithreaded because the binding indexes increment
-            chunk.Render(pShaderHandle);
         }
     }
     
