@@ -15,8 +15,6 @@ public class Frustum
          * This Helped https://stackoverflow.com/questions/25821037/opentk-opengl-frustum-culling-clipping-too-soon
          */
         
-        private float[] _clipMatrix = new float[ 16 ];
-        
         // 6 Faces, 4 Points per face
         
         /*
@@ -59,70 +57,71 @@ public class Frustum
         
         public void GenerateViewFrustum(Matrix4 pProj , Matrix4 pView)
         {
-            Matrix4 ClipMatrix;
+            // Maths from here http://www.lighthouse3d.com/tutorials/view-frustum-culling/clip-space-approach-extracting-the-planes/
+            Matrix4 clipMatrix = new Matrix4();
             
             // Create the clipping matrix
-            _clipMatrix[ 0 ] = (pView.M11 * pProj.M11) + (pView.M12 * pProj.M21) + (pView.M13 * pProj.M31) + (pView.M14 * pProj.M41);
-            _clipMatrix[ 1 ] = (pView.M11 * pProj.M12) + (pView.M12 * pProj.M22) + (pView.M13 * pProj.M32) + (pView.M14 * pProj.M42);
-            _clipMatrix[ 2 ] = (pView.M11 * pProj.M13) + (pView.M12 * pProj.M23) + (pView.M13 * pProj.M33) + (pView.M14 * pProj.M43);
-            _clipMatrix[ 3 ] = (pView.M11 * pProj.M14) + (pView.M12 * pProj.M24) + (pView.M13 * pProj.M34) + (pView.M14 * pProj.M44);
+            clipMatrix.M11 = (pView.M11 * pProj.M11) + (pView.M12 * pProj.M21) + (pView.M13 * pProj.M31) + (pView.M14 * pProj.M41); // 0
+            clipMatrix.M12 = (pView.M11 * pProj.M12) + (pView.M12 * pProj.M22) + (pView.M13 * pProj.M32) + (pView.M14 * pProj.M42); // 1
+            clipMatrix.M13 = (pView.M11 * pProj.M13) + (pView.M12 * pProj.M23) + (pView.M13 * pProj.M33) + (pView.M14 * pProj.M43); // 2
+            clipMatrix.M14 = (pView.M11 * pProj.M14) + (pView.M12 * pProj.M24) + (pView.M13 * pProj.M34) + (pView.M14 * pProj.M44); // 3
 
-            _clipMatrix[ 4 ] = (pView.M21 * pProj.M11) + (pView.M22 * pProj.M21) + (pView.M23 * pProj.M31) + (pView.M24 * pProj.M41);
-            _clipMatrix[ 5 ] = (pView.M21 * pProj.M12) + (pView.M22 * pProj.M22) + (pView.M23 * pProj.M32) + (pView.M24 * pProj.M42);
-            _clipMatrix[ 6 ] = (pView.M21 * pProj.M13) + (pView.M22 * pProj.M23) + (pView.M23 * pProj.M33) + (pView.M24 * pProj.M43);
-            _clipMatrix[ 7 ] = (pView.M21 * pProj.M14) + (pView.M22 * pProj.M24) + (pView.M23 * pProj.M34) + (pView.M24 * pProj.M44);
+            clipMatrix.M21 = (pView.M21 * pProj.M11) + (pView.M22 * pProj.M21) + (pView.M23 * pProj.M31) + (pView.M24 * pProj.M41); // 4
+            clipMatrix.M22 = (pView.M21 * pProj.M12) + (pView.M22 * pProj.M22) + (pView.M23 * pProj.M32) + (pView.M24 * pProj.M42); // 5
+            clipMatrix.M23 = (pView.M21 * pProj.M13) + (pView.M22 * pProj.M23) + (pView.M23 * pProj.M33) + (pView.M24 * pProj.M43); // 6
+            clipMatrix.M24 = (pView.M21 * pProj.M14) + (pView.M22 * pProj.M24) + (pView.M23 * pProj.M34) + (pView.M24 * pProj.M44); // 7
 
-            _clipMatrix[ 8 ] = (pView.M31 * pProj.M11) + (pView.M32 * pProj.M21) + (pView.M33 * pProj.M31) + (pView.M34 * pProj.M41);
-            _clipMatrix[ 9 ] = (pView.M31 * pProj.M12) + (pView.M32 * pProj.M22) + (pView.M33 * pProj.M32) + (pView.M34 * pProj.M42);
-            _clipMatrix[ 10 ] = (pView.M31 * pProj.M13) + (pView.M32 * pProj.M23) + (pView.M33 * pProj.M33) + (pView.M34 * pProj.M43);
-            _clipMatrix[ 11 ] = (pView.M31 * pProj.M14) + (pView.M32 * pProj.M24) + (pView.M33 * pProj.M34) + (pView.M34 * pProj.M44);
+            clipMatrix.M31 = (pView.M31 * pProj.M11) + (pView.M32 * pProj.M21) + (pView.M33 * pProj.M31) + (pView.M34 * pProj.M41); // 8
+            clipMatrix.M32 = (pView.M31 * pProj.M12) + (pView.M32 * pProj.M22) + (pView.M33 * pProj.M32) + (pView.M34 * pProj.M42); // 9
+            clipMatrix.M33 = (pView.M31 * pProj.M13) + (pView.M32 * pProj.M23) + (pView.M33 * pProj.M33) + (pView.M34 * pProj.M43); // 10
+            clipMatrix.M34 = (pView.M31 * pProj.M14) + (pView.M32 * pProj.M24) + (pView.M33 * pProj.M34) + (pView.M34 * pProj.M44); // 11
 
-            _clipMatrix[ 12 ] = (pView.M41 * pProj.M11) + (pView.M42 * pProj.M21) + (pView.M43 * pProj.M31) + (pView.M44 * pProj.M41);
-            _clipMatrix[ 13 ] = (pView.M41 * pProj.M12) + (pView.M42 * pProj.M22) + (pView.M43 * pProj.M32) + (pView.M44 * pProj.M42);
-            _clipMatrix[ 14 ] = (pView.M41 * pProj.M13) + (pView.M42 * pProj.M23) + (pView.M43 * pProj.M33) + (pView.M44 * pProj.M43);
-            _clipMatrix[ 15 ] = (pView.M41 * pProj.M14) + (pView.M42 * pProj.M24) + (pView.M43 * pProj.M34) + (pView.M44 * pProj.M44);
+            clipMatrix.M41 = (pView.M41 * pProj.M11) + (pView.M42 * pProj.M21) + (pView.M43 * pProj.M31) + (pView.M44 * pProj.M41); // 12
+            clipMatrix.M42 = (pView.M41 * pProj.M12) + (pView.M42 * pProj.M22) + (pView.M43 * pProj.M32) + (pView.M44 * pProj.M42); // 13
+            clipMatrix.M43 = (pView.M41 * pProj.M13) + (pView.M42 * pProj.M23) + (pView.M43 * pProj.M33) + (pView.M44 * pProj.M43); // 14
+            clipMatrix.M44 = (pView.M41 * pProj.M14) + (pView.M42 * pProj.M24) + (pView.M43 * pProj.M34) + (pView.M44 * pProj.M44); // 15
 
             
             // Right Plane
-            _frustum[0, 0] = _clipMatrix[3] - _clipMatrix[0];
-            _frustum[0, 1] = _clipMatrix[7] - _clipMatrix[4] ;
-            _frustum[0, 2] = _clipMatrix[11] - _clipMatrix[8];
-            _frustum[0, 3] = _clipMatrix[15] - _clipMatrix[12];
+            _frustum[0, 0] = clipMatrix.M14 - clipMatrix.M11;
+            _frustum[0, 1] = clipMatrix.M24 - clipMatrix.M21;
+            _frustum[0, 2] = clipMatrix.M34 - clipMatrix.M31;
+            _frustum[0, 3] = clipMatrix.M44 - clipMatrix.M41;
             NormaliseFace(_frustum , 0);
 
             // Left Plane
-            _frustum[1, 0] = _clipMatrix[3] + _clipMatrix[0];
-            _frustum[1, 1] = _clipMatrix[7] + _clipMatrix[4];
-            _frustum[1, 2] = _clipMatrix[11] + _clipMatrix[8];
-            _frustum[1, 3] = _clipMatrix[15] + _clipMatrix[12];
+            _frustum[1, 0] = clipMatrix.M14 + clipMatrix.M11;
+            _frustum[1, 1] = clipMatrix.M24 + clipMatrix.M21;
+            _frustum[1, 2] = clipMatrix.M34 + clipMatrix.M31;
+            _frustum[1, 3] = clipMatrix.M44  + clipMatrix.M41;
             NormaliseFace(_frustum , 1);
 
             // Bottom Plane
-            _frustum[2, 0] = _clipMatrix[3] + _clipMatrix[1];
-            _frustum[2, 1] = _clipMatrix[7] + _clipMatrix[5];
-            _frustum[2, 2] = _clipMatrix[11] + _clipMatrix[9];
-            _frustum[2, 3] = _clipMatrix[15] + _clipMatrix[13];
+            _frustum[2, 0] = clipMatrix.M14 + clipMatrix.M12;
+            _frustum[2, 1] = clipMatrix.M24 + clipMatrix.M22;
+            _frustum[2, 2] = clipMatrix.M34 + clipMatrix.M32;
+            _frustum[2, 3] = clipMatrix.M44 + clipMatrix.M42;
             NormaliseFace(_frustum, 2);
 
             // Top Plane
-            _frustum[3, 0] = _clipMatrix[3] - _clipMatrix[1];
-            _frustum[3, 1] = _clipMatrix[7] - _clipMatrix[5];
-            _frustum[3, 2] = _clipMatrix[11] - _clipMatrix[9];
-            _frustum[3, 3] = _clipMatrix[15] - _clipMatrix[13];
+            _frustum[3, 0] = clipMatrix.M14 - clipMatrix.M12;
+            _frustum[3, 1] = clipMatrix.M24 - clipMatrix.M22;
+            _frustum[3, 2] = clipMatrix.M34 - clipMatrix.M32;
+            _frustum[3, 3] = clipMatrix.M44 - clipMatrix.M42;
             NormaliseFace(_frustum , 3);
 
-            // Back Plane
-            _frustum[4, 0] = _clipMatrix[3] - _clipMatrix[2];
-            _frustum[4, 1] = _clipMatrix[7] - _clipMatrix[6];
-            _frustum[4, 2] = _clipMatrix[11] - _clipMatrix[10];
-            _frustum[4, 3] = _clipMatrix[15] - _clipMatrix[14];
+            // Far Plane
+            _frustum[4, 0] = clipMatrix.M14 - clipMatrix.M13;
+            _frustum[4, 1] = clipMatrix.M24 - clipMatrix.M23;
+            _frustum[4, 2] = clipMatrix.M34 - clipMatrix.M33;
+            _frustum[4, 3] = clipMatrix.M44 - clipMatrix.M43;
             NormaliseFace( _frustum , 4);
 
-            // Front Plane
-            _frustum[5 , 0 ] = _clipMatrix[ 3 ] + _clipMatrix[ 2 ];
-            _frustum[5 , 1 ] = _clipMatrix[ 7 ] + _clipMatrix[ 6 ];
-            _frustum[5 , 2 ] = _clipMatrix[ 11 ] + _clipMatrix[ 10 ];
-            _frustum[5 , 3 ] = _clipMatrix[ 15 ] + _clipMatrix[ 14 ];
+            // Near Plane
+            _frustum[4, 0] = clipMatrix.M14 + clipMatrix.M13;
+            _frustum[4, 1] = clipMatrix.M24 + clipMatrix.M23;
+            _frustum[4, 2] = clipMatrix.M34 + clipMatrix.M33;
+            _frustum[4, 3] = clipMatrix.M44 + clipMatrix.M43;
             NormaliseFace( _frustum , 5);
         }
     }
