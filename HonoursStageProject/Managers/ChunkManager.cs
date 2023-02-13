@@ -210,13 +210,12 @@ public class ChunkManager
     {
         foreach (var chunk in _chunkGrid)
         {
-            if (DistanceCulling(pCamera, chunk, pRenderDistance))
-                chunk.Render(pShaderHandle);
-            // Can't be multithreaded because the binding indexes increment
+           //if (DistanceCulling(pCamera, chunk, pRenderDistance))
+                if (pCamera.ViewFrustum.IsPointIntersecting(chunk.Position))
+                    chunk.Render(pShaderHandle);
         }
     }
     
-   
     private float[] GetRow(float[,] pMatrix, int pRow)
     {
         var rowLength = pMatrix.GetLength(1);

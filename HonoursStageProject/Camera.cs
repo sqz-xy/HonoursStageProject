@@ -1,4 +1,5 @@
 ﻿using HonoursStageProject.Managers;
+using HonoursStageProject.Objects;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
@@ -17,41 +18,37 @@ public class Camera
 {
     public Matrix4 View;
     public Matrix4 Projection;
-
-    private Vector3 _position;
-    private Vector3 _up;
-    private Vector3 _right;
-    private Vector3 _direction;
-
+    public Vector3 Position;
+    public Vector3 Up;
+    public Vector3 Right;
+    public Vector3 Direction;
+    public Frustum ViewFrustum;
+    
     private Vector2 _lastMousePos;
-
     private float _pitch;
     private float _yaw;
-
     private float _sensitivity;
-
     private bool _hasMouseMoved;
 
-    public Vector3 Position
-    {
-        get { return _position; }
-    }
-
+    
     public Camera()
     {
         // Default camera values
         
-        _position = new Vector3(0.0f, 8f, 0.0f);
+        Position = new Vector3(0.0f, 8f, 0.0f);
         var target = new Vector3(0.0f, 0.0f, 0.0f);
-        _up = new Vector3(0.0f, 1.0f,  0.0f);
-        _direction = Vector3.Normalize(target - _position);
-        _right = Vector3.Normalize(Vector3.Cross(_up, _direction));
+        Up = new Vector3(0.0f, 1.0f,  0.0f);
+        Direction = Vector3.Normalize(target - Position);
+        Right = Vector3.Normalize(Vector3.Cross(Up, Direction));
             
         View = Matrix4.CreateTranslation(0, 0, -2);
         Projection = Matrix4.CreatePerspectiveFieldOfView(1, (float)SceneManager.SWidth / SceneManager.SHeight, 0.1f, 100);
 
         _sensitivity = 0.05f;
         _hasMouseMoved = false;
+
+        ViewFrustum = new Frustum();
+        ViewFrustum.GenerateViewFrustum(Projection, View);
     }
 
     /// <summary>
@@ -63,17 +60,17 @@ public class Camera
     {
         switch (pDirection)
         {
-            case Direction.Forward:
-                _position += _direction * pDistance;
+            case HonoursStageProject.Direction.Forward:
+                Position += Direction * pDistance;
                 break;
-            case Direction.Backward:
-                _position -= _direction * pDistance;
+            case HonoursStageProject.Direction.Backward:
+                Position -= Direction * pDistance;
                 break;
-            case Direction.Left:
-                _position += _right * pDistance;
+            case HonoursStageProject.Direction.Left:
+                Position += Right * pDistance;
                 break;
-            case Direction.Right:
-                _position -= _right * pDistance;
+            case HonoursStageProject.Direction.Right:
+                Position -= Right * pDistance;
                 break;
         }
     }
@@ -119,14 +116,13 @@ public class Camera
             }
         }
         
-        _direction.X = (float)Math.Cos(MathHelper.DegreesToRadians(_pitch)) * (float)Math.Cos(MathHelper.DegreesToRadians(_yaw));
-        _direction.Y = (float)Math.Sin(MathHelper.DegreesToRadians(_pitch));
-        _direction.Z = (float)Math.Cos(MathHelper.DegreesToRadians(_pitch)) * (float)Math.Sin(MathHelper.DegreesToRadians(_yaw));
+        Direction.X = (float)Math.Cos(MathHelper.DegreesToRadians(_pitch)) * (float)Math.Cos(MathHelper.DegreesToRadians(_yaw));
+        Direction.Y = (float)Math.Sin(MathHelper.DegreesToRadians(_pitch));
+        Direction.Z = (float)Math.Cos(MathHelper.DegreesToRadians(_pitch)) * (float)Math.Sin(MathHelper.DegreesToRadians(_yaw));
         
         // Update the right value so side to side movement is relative 
-        _right = Vector3.Normalize(Vector3.Cross(_up, _direction));
-        _direction = Vector3.Normalize(_direction);
-        
+        Right = Vector3.Normalize(Vector3.Cross(Up, Direction));
+        Direction = Vector3.Normalize(Direction);
     }
 
     /// <summary>
@@ -134,7 +130,8 @@ public class Camera
     /// </summary>
     public void UpdateCamera(int pShaderHandle)
     {
-        View = Matrix4.LookAt(_position, _position + _direction, _up); 
+        View = Matrix4.LookAt(Position, Position + Direction, Up);
+        ViewFrustum.GenerateViewFrustum(Projection, View);
         
         var uView = GL.GetUniformLocation(pShaderHandle, "uView");
         GL.UniformMatrix4(uView, true, ref View);

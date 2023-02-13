@@ -25,6 +25,5 @@ void main()
     oFragPos = vec3(uModel * vec4(aPosition, 1.0));
     oNormal = mat3(transpose(inverse(uModel))) * aNormal;
     oColour = colour * brightnessMultiplier;
-    
     gl_Position = position;
 }
