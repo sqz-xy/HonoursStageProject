@@ -6,8 +6,6 @@ namespace HonoursStageProject.Managers;
 
 public class ChunkManager
 {
-    private List<Chunk> _renderableChunks;
-    private List<Chunk> _unRenderableChunks;
     private Chunk _sourceChunk;
     private int _textureIndex;
     private Chunk[,] _chunkGrid;
@@ -21,19 +19,16 @@ public class ChunkManager
     private Vector2[] _directions = 
     {
         // Clockwise, Can add diagonals if needed
-        new Vector2(0, -1), // UP
-        new Vector2(1, 0),  // RIGHT
-        new Vector2(0, 1),  // DOWN
-        new Vector2(-1, 0)  // LEFT
+        new(0, -1), // UP
+        new(1, 0),  // RIGHT
+        new(0, 1),  // DOWN
+        new(-1, 0)  // LEFT
     };
     
-    // Texture Initialization
     
 
     public ChunkManager()
     {
-        _renderableChunks = new();
-        _unRenderableChunks = new();
         _textureIndex = TextureManager.BindTextureData("Textures/button.png");
         _fileManager = new AscFileManager();
     }
