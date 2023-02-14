@@ -41,11 +41,11 @@ public class ChunkManager
         _mapSize = pMapSize;
         _chunkSize = pChunkSize;
         _seed = pSeed;
-        
+
         // For diamond square
         if (_chunkSize % 2 == 0)
             _chunkSize++;
-        
+
         // is used to make sure the chunks are centred correctly
         var centreOffset = (_chunkSize / 2);
 
@@ -55,8 +55,8 @@ public class ChunkManager
             for (var j = 0; j < _mapSize; j++)
             {
                 // Make sure the chunks are offset correctly so the middle of the chunk map is 0,0
-                var xOffset = -(_mapSize * _chunkSize) / 2;
-                var yOffset = -(_mapSize * _chunkSize) / 2;
+                var xOffset = -((_mapSize * _chunkSize) / 2);
+                var yOffset = -((_mapSize * _chunkSize) / 2);
 
                 _chunkGrid[i, j] =
                     new Chunk(
@@ -137,8 +137,7 @@ public class ChunkManager
                 // Fix Corners by taking an avg and make sure the terrain stitches together properly.
                 // Fix terrain stitching not working correctly, due to the fact that the adjacent height data is sometimes all 0s which means and those 0s will be acted on by the ds 
                 float[,] heightValues = new float[rightNode.HeightData.GetLength(0), rightNode.HeightData.GetLength(1)];
-                float[,] nullValues = new float[rightNode.HeightData.GetLength(0), rightNode.HeightData.GetLength(1)];
-                
+
                 float[] row, col;
                 
                 for (int i = 0; i < rightNode.Adjacents.Length; i++)
@@ -205,7 +204,7 @@ public class ChunkManager
     {
         foreach (var chunk in _chunkGrid)
         {
-           //if (DistanceCulling(pCamera, chunk, pRenderDistance))
+           if (DistanceCulling(pCamera, chunk, pRenderDistance))
                 if (pCamera.ViewFrustum.IsPointIntersecting(chunk.Position))
                     chunk.Render(pShaderHandle);
         }
