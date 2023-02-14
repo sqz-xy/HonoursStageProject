@@ -41,7 +41,7 @@ public class ChunkManager
         _mapSize = pMapSize;
         _chunkSize = pChunkSize;
         _seed = pSeed;
-
+        
         // For diamond square
         if (_chunkSize % 2 == 0)
             _chunkSize++;
@@ -165,13 +165,12 @@ public class ChunkManager
                             SetCol(heightValues, 0, col);
                             break;
                     }
-                    
-                    Random rnd = new Random();
-                    //heightData = ds.GenerateData(2, rightNode.Scale, 0.5f, heightValues);
-                    var heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues);
-                    rightNode.AddHeightData(heightData);  
-                    
                 }
+                Random rnd = new Random();
+                //heightData = ds.GenerateData(2, rightNode.Scale, 0.5f, heightValues);
+                var heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues);
+                rightNode.AddHeightData(heightData);  
+                
                 rightNode = rightNode.Adjacents[1];
             }
             downNode = downNode.Adjacents[2];
