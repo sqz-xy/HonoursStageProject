@@ -46,6 +46,8 @@ public class ChunkManager
         if (_chunkSize % 2 == 0)
             _chunkSize++;
 
+        // * 0.5f
+        
         // is used to make sure the chunks are centred correctly
         var centreOffset = (_chunkSize / 2);
 
@@ -192,6 +194,7 @@ public class ChunkManager
         var chunk = (float) (Math.Pow((pCamera.Position.Z - pChunk.Position.Z), 2));
         var sum = cam + chunk;
 
+        // Multiply renderdistance by itself instead, its much faster
         if (Math.Sqrt(sum) < pRenderDistance)
             return true;
 

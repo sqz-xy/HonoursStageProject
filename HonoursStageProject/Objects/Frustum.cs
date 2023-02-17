@@ -159,6 +159,7 @@ public class Frustum
             return pPlane;
         }
         
+        // Uses the dot product
         public bool IsPointIntersecting(Vector3 pLocation)
         {
             /*
