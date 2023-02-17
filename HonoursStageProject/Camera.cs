@@ -18,6 +18,9 @@ public class Camera
 {
     public Matrix4 View;
     public Matrix4 Projection;
+    
+    public Matrix4 CullingProj;
+    
     public Vector3 Position;
     public Vector3 Up;
     public Vector3 Right;
@@ -43,6 +46,9 @@ public class Camera
             
         View = Matrix4.CreateTranslation(0, 0, -2);
         Projection = Matrix4.CreatePerspectiveFieldOfView(1, (float)SceneManager.SWidth / SceneManager.SHeight, 0.1f, 100);
+        CullingProj = Matrix4.CreatePerspectiveFieldOfView(1.75f, (float)SceneManager.SWidth / SceneManager.SHeight, 0.05f, 100);
+        
+        // Make a slightly bigger matrices for the culling
 
         _sensitivity = 0.05f;
         _hasMouseMoved = false;
@@ -131,7 +137,7 @@ public class Camera
     public void UpdateCamera(int pShaderHandle)
     {
         View = Matrix4.LookAt(Position, Position + Direction, Up);
-        ViewFrustum.GenerateViewFrustum(Projection, View);
+        ViewFrustum.GenerateViewFrustum(CullingProj, View);
         
         var uView = GL.GetUniformLocation(pShaderHandle, "uView");
         GL.UniformMatrix4(uView, true, ref View);
