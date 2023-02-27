@@ -19,10 +19,6 @@ public class Chunk : Object
 
     public Chunk(Vector3 pPosition, int pSize, float pScale, Vector2 pGridPos, int pTextureIndex)
     {
-        // For diamond square
-        if (pSize % 2 == 0)
-            pSize++;
-
         Size = pSize;
         Scale = pScale;
         Adjacents = new Chunk[4];

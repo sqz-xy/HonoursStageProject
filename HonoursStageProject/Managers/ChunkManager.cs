@@ -41,10 +41,6 @@ public class ChunkManager
         _mapSize = pMapSize;
         _chunkSize = pChunkSize;
         _seed = pSeed;
-        
-        // For diamond square
-        if (_chunkSize % 2 == 0)
-            _chunkSize++;
 
         // * 0.5f
         
@@ -140,43 +136,97 @@ public class ChunkManager
                 // Fix terrain stitching not working correctly, due to the fact that the adjacent height data is sometimes all 0s which means and those 0s will be acted on by the ds 
                 float[,] heightValues = new float[rightNode.HeightData.GetLength(0), rightNode.HeightData.GetLength(1)];
 
-                float[] row, col;
-                
-                for (int i = 0; i < rightNode.Adjacents.Length; i++)
-                {
-                    switch (i)
-                    {
-                        case 0: // UP
-                            if (rightNode.Adjacents[0] == null) {break;}
-                            row = GetRow(rightNode.Adjacents[0].HeightData, rightNode.Adjacents[0].HeightData.GetLength(0) - 1);
-                            SetRow(heightValues, 0, row);
-                            break;
-                        case 1: // RIGHT
-                            if (rightNode.Adjacents[1] == null) {break;}
-                            col = GetCol(rightNode.Adjacents[1].HeightData, 0);
-                            SetCol(heightValues, heightValues.GetLength(1) - 1, col);
-                            break;
-                        case 2: // DOWN
-                            if (rightNode.Adjacents[2] == null) {break;}
-                            row = GetRow(rightNode.Adjacents[2].HeightData, 0);
-                            SetRow(heightValues, heightValues.GetLength(0) - 1, row);
-                            break;
-                        case 3: // LEFT
-                            if (rightNode.Adjacents[3] == null) {break;}
-                            col = GetCol(rightNode.Adjacents[3].HeightData, rightNode.Adjacents[3].HeightData.GetLength(1) - 1);
-                            SetCol(heightValues, 0, col);
-                            break;
-                    }
-                }
+                // Initial pass for seeding data
+                heightValues = MatchSides(rightNode, heightValues);
                 Random rnd = new Random();
-                //heightData = ds.GenerateData(2, rightNode.Scale, 0.5f, heightValues);
-                var heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues);
-                rightNode.AddHeightData(heightData);  
+
+                float[,] heightData;
+                if (rightNode == _sourceChunk)
+                    heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, true);
+                else
+                    heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, false);
+                
+                
+                rightNode.AddHeightData(heightData);
+
+                //rightNode.HeightData = MatchSides(rightNode, rightNode.HeightData);
                 
                 rightNode = rightNode.Adjacents[1];
             }
             downNode = downNode.Adjacents[2];
         }
+
+        // Second size matching pass
+        MatchSides();
+    }
+
+    private void MatchSides()
+    {
+        var downNode = _sourceChunk;
+
+        while (downNode != null)
+        {
+            var rightNode = downNode;
+
+            while (rightNode != null)
+            {
+                rightNode.HeightData = MatchSides(rightNode, rightNode.HeightData);
+                
+                rightNode = rightNode.Adjacents[1];
+            }
+            downNode = downNode.Adjacents[2];
+        }
+    }
+
+    private float[,] MatchSides(Chunk rightNode, float[,] heightValues)
+    {
+        float[] row, col;
+
+        for (int i = 0; i < rightNode.Adjacents.Length; i++)
+        {
+            // The bug is related to this, the 0s dont appear if my diamond square runs without pre seed, next thing to fix is other 0s
+            switch (i)
+            {
+                case 0: // UP
+                    if (rightNode.Adjacents[0] == null)
+                    {
+                        break;
+                    }
+
+                    row = GetRow(rightNode.Adjacents[0].HeightData, rightNode.Adjacents[0].HeightData.GetLength(0) - 1);
+                    SetRow(heightValues, 0, row);
+                    break;
+                case 1: // RIGHT
+                    if (rightNode.Adjacents[1] == null)
+                    {
+                        break;
+                    }
+
+                    col = GetCol(rightNode.Adjacents[1].HeightData, 0);
+                    SetCol(heightValues, heightValues.GetLength(1) - 1, col);
+                    break;
+                case 2: // DOWN
+                    if (rightNode.Adjacents[2] == null)
+                    {
+                        break;
+                    }
+
+                    row = GetRow(rightNode.Adjacents[2].HeightData, 0);
+                    SetRow(heightValues, heightValues.GetLength(0) - 1, row);
+                    break;
+                case 3: // LEFT
+                    if (rightNode.Adjacents[3] == null)
+                    {
+                        break;
+                    }
+
+                    col = GetCol(rightNode.Adjacents[3].HeightData, rightNode.Adjacents[3].HeightData.GetLength(1) - 1);
+                    SetCol(heightValues, 0, col);
+                    break;
+            }
+        }
+
+        return heightValues;
     }
 
     public void SaveData(string pFileName)

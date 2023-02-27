@@ -169,7 +169,7 @@ public class Frustum
                 if ((_viewFrustum[i].Points[0] * pLocation.X) + 
                     (_viewFrustum[i].Points[1] * pLocation.Y) + 
                     (_viewFrustum[i].Points[2] * pLocation.Z) + 
-                    (_viewFrustum[i].Points[3]) <= 0 )
+                    (_viewFrustum[i].Points[3]) <= 0)
                     return false;
             return true;
         }

@@ -8,9 +8,6 @@ public class DiamondSquare : Algorithm
 {
     public DiamondSquare(int pSize) : base(pSize)
     {
-        if (pSize % 2 == 0)
-            pSize++;
-
         Size = pSize;   
     }
     
@@ -69,15 +66,25 @@ public class DiamondSquare : Algorithm
     /// <param name="pFalloff">The falloff of the roughness</param>
     /// <param name="pPreSeed">Seeded Data</param>
     /// <returns>A 2D array of height values</returns>
-    public override float[,] GenerateData(int pSeed, float pScale, float pFalloff, float[,] pPreSeed)
+    public override float[,] GenerateData(int pSeed, float pScale, float pFalloff, float[,] pPreSeed, bool pSeedCorners)
     {
-        Data = null;
-
+        Data = pPreSeed;
+        
         // Initialize random
         var rnd = new Random(pSeed);
         var randomRange = 1.0f;
+
+        // Seed the corners of the first chunk
+        // Some corners for other chunks will have 0s on the corner because they dont get pre seeded, talk to darren about this
+        // Chunk sizes can only be 1, 2, 3, 8, 16, 21, 64, 128 
         
-        Data = pPreSeed;
+        if (pSeedCorners)
+        {
+            Data[0, 0] = (NextFloat(rnd, -randomRange, randomRange));
+            Data[0, Size - 1] = (NextFloat(rnd, -randomRange, randomRange));
+            Data[Size - 1, 0] = (NextFloat(rnd, -randomRange, randomRange));
+            Data[Size - 1, Size - 1] = (NextFloat(rnd, -randomRange, randomRange)); 
+        }
         
         //PrintData(pPreSeed);
         
@@ -90,6 +97,7 @@ public class DiamondSquare : Algorithm
         return Data;
         //return Normalise(Data);
     }
+    
 
     /// <summary>
     /// The diamond square algorithm
@@ -111,12 +119,6 @@ public class DiamondSquare : Algorithm
             for (var x = 0; x < Size - 1; x += step)
             for (var y = 0; y < Size - 1; y += step)
             {
-                if (x + step >= Size || y + step >= Size)
-                    continue;
-                
-                if (Data[x + halfStep, y + halfStep] != 0)
-                    break;
-                
                 topLeft = Data[x, y];
                 topRight = Data[x + step, y];
                 bottomLeft = Data[x, y + step];
@@ -133,9 +135,6 @@ public class DiamondSquare : Algorithm
             for (var x = 0; x < Size - 1; x += halfStep)
             for (var y = (x + halfStep) % step; y < Size - 1; y += step)
             {
-                if (Data[x, y] != 0)
-                    break;
-                
                 top = Data[(x - halfStep + Size - 1) % (Size - 1), y];
                 bottom = Data[(x + halfStep) % (Size - 1), y];
                 left = Data[x, (y + halfStep) % (Size - 1)];

@@ -10,9 +10,9 @@ public abstract class Algorithm : IAlgorithm
         Size = pSize;
     }
     
-    public abstract float[,] GenerateData(int pSeed, float pScale, float pFalloff);
+    public abstract float[,] GenerateData(int pSeed, float pScale, float pFalloff, float[,] pPreSeed, bool pSeedCorners);
     
-    public abstract float[,] GenerateData(int pSeed, float pScale, float pFalloff, float[,] pPreSeed);
+    public abstract float[,] GenerateData(int pSeed, float pScale, float pFalloff);
     
     /// <summary>
     /// Prints stored data to the console

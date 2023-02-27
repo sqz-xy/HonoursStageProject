@@ -18,9 +18,9 @@ static class VertexManager
     {
         _bufferSize = pBufferSize;
         
-        _vboIDs = new int[pBufferSize];
-        _vaoIDs = new int[pBufferSize];
-        _eboIDs = new int[pBufferSize];
+        _vboIDs = new int[_bufferSize];
+        _vaoIDs = new int[_bufferSize];
+        _eboIDs = new int[_bufferSize];
 
         _vboIndex = 0;
         _vaoIndex = 0;
