@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using System.Diagnostics;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform.Windows;
 
@@ -28,15 +29,17 @@ public class DiamondSquare : Algorithm
     public override float[,] GenerateData(int pSeed, float pScale, float pFalloff)
     {
         Data = null;
-        // Utilize roughness, and add a seed check
-        // Fix high size crash
-        // Allow meshes to seed adjacent meshes
+
+        if (IsValidSize(Size, Size))
+        {
+            Debug.Fail("Invalid Grid Dimensions, Size must be a power of 2 + 1");
+            return new float[0, 0];
+        }
         
         // Initialize random
         var rnd = new Random(pSeed);
         var randomRange = 1.0f;
-        //float randomRange = 1;
-        
+
         // Initialize Grid, Size has to be odd
         
         Data = new float[Size, Size];
@@ -68,6 +71,13 @@ public class DiamondSquare : Algorithm
     /// <returns>A 2D array of height values</returns>
     public override float[,] GenerateData(int pSeed, float pScale, float pFalloff, float[,] pPreSeed, bool pSeedCorners)
     {
+
+        if (IsValidSize(pPreSeed.GetLength(0), pPreSeed.GetLength(1)))
+        {
+            Debug.Fail("Invalid Grid Dimensions, Size must be a power of 2 + 1");
+            return new float[0, 0];
+        }
+        
         Data = pPreSeed;
         
         // Initialize random
@@ -154,5 +164,16 @@ public class DiamondSquare : Algorithm
             pRandomRange /= Math.Max(pRandomRange / 2, 1);
             step /= 2;
         }
+    }
+
+    bool IsValidSize(int pWidth, int pHeight)
+    {
+        if (pWidth == 0 || pHeight == 0)
+            return false;
+        
+        if (pWidth != pHeight)
+            return false;
+
+        return (pWidth & (pWidth - 1)) == 0;
     }
 }

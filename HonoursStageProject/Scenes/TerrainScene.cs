@@ -54,7 +54,9 @@ public sealed class TerrainScene : Scene
         
         // TESTING
         //_chunkManager.GenerateMap(2, 16, 1.0f, 2, "Resources/TestInput.txt");
-        _chunkManager.GenerateMap(20, 17, 1.0f, 2, "");
+        
+        // Chunk sizes can only be 2, 3, 4, 9, 17, 33, 65, 129 
+        _chunkManager.GenerateMap(4, 17, 1.0f, 2, "");
 
         var uViewPosLocation = GL.GetUniformLocation(_shader.Handle, "uViewPos");
         GL.Uniform3(uViewPosLocation, _camera.Position);
