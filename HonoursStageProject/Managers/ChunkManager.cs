@@ -7,16 +7,19 @@ namespace HonoursStageProject.Managers;
 public class ChunkManager
 {
     private Chunk _sourceChunk;
-    private int _textureIndex;
+    private readonly int _textureIndex;
     private Chunk[,] _chunkGrid;
     private int _mapSize;
     private float _mapScale;
     private int _chunkSize;
     private int _seed;
 
-    private FileManager _fileManager;
+    private ICulling distanceCulling;
+    private ICulling frustumCulling;
+
+    private readonly FileManager _fileManager;
     
-    private Vector2[] _directions = 
+    private readonly Vector2[] _directions = 
     {
         // Clockwise, Can add diagonals if needed
         new(0, -1), // UP
@@ -33,7 +36,7 @@ public class ChunkManager
         _fileManager = new AscFileManager();
     }
 
-    public void GenerateMap(int pMapSize, int pChunkSize, float pMapScale, int pSeed, string pFileName)
+    public void GenerateMap(int pMapSize, int pChunkSize, float pMapScale, int pSeed, string pFileName, float pRenderDistance)
     {
         // Populate the grid of chunks
         _chunkGrid = new Chunk[pMapSize, pMapSize];
@@ -58,7 +61,7 @@ public class ChunkManager
 
                 _chunkGrid[i, j] =
                     new Chunk(
-                        new Vector3(xOffset + (i * _chunkSize) + centreOffset, -2, yOffset + (j * _chunkSize) + centreOffset),
+                        new Vector3(xOffset + (i * _chunkSize * 0.94f) + centreOffset, -2, yOffset + (j * _chunkSize * 0.94f) + centreOffset),
                         _chunkSize, _mapScale, 
                         new Vector2(i, j), _textureIndex);
             } 
@@ -108,13 +111,18 @@ public class ChunkManager
         foreach (var chunk in _chunkGrid)
         {
             // Can't be multithreaded because the binding indexes increment
+            chunk.PrintHeightData();
             chunk.BufferData();
         }
+        
+        frustumCulling = new FrustumCulling();
+        distanceCulling = new DistanceCulling(pRenderDistance, pChunkSize);
     }
 
     private void GenChunkHeightData(int pMapSize)
     {
-        /* Chunk hold reference to adjacents
+        /*
+         * Chunk hold reference to adjacents
          * Populate data array with the edges of adjacents
          * Then run the algorithm
          */
@@ -133,7 +141,7 @@ public class ChunkManager
             {
                 // Loop through adjacents, create an empty 2d array of chunksize and populate the sides with edge values of adjacents (Clockwise) 
                 // Fix Corners by taking an avg and make sure the terrain stitches together properly.
-                // Fix terrain stitching not working correctly, due to the fact that the adjacent height data is sometimes all 0s which means and those 0s will be acted on by the ds 
+                
                 float[,] heightValues = new float[rightNode.HeightData.GetLength(0), rightNode.HeightData.GetLength(1)];
 
                 // Initial pass for seeding data
@@ -141,15 +149,13 @@ public class ChunkManager
                 Random rnd = new Random();
 
                 float[,] heightData;
+                
                 if (rightNode == _sourceChunk)
                     heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, true);
                 else
                     heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, false);
                 
-                
                 rightNode.AddHeightData(heightData);
-
-                //rightNode.HeightData = MatchSides(rightNode, rightNode.HeightData);
                 
                 rightNode = rightNode.Adjacents[1];
             }
@@ -170,7 +176,7 @@ public class ChunkManager
 
             while (rightNode != null)
             {
-                rightNode.HeightData = MatchSides(rightNode, rightNode.HeightData);
+                rightNode.AddHeightData(MatchSides(rightNode, rightNode.HeightData));
                 
                 rightNode = rightNode.Adjacents[1];
             }
@@ -180,11 +186,11 @@ public class ChunkManager
 
     private float[,] MatchSides(Chunk rightNode, float[,] heightValues)
     {
-        float[] row, col;
-
         for (int i = 0; i < rightNode.Adjacents.Length; i++)
         {
             // The bug is related to this, the 0s dont appear if my diamond square runs without pre seed, next thing to fix is other 0s
+            float[] row, col;
+
             switch (i)
             {
                 case 0: // UP
@@ -236,28 +242,14 @@ public class ChunkManager
             _fileManager.SaveHeightData(pFileName, _mapSize, _mapScale, _seed, _sourceChunk);
         }).Start();
     }
-
-    public bool DistanceCulling(Camera pCamera, Chunk pChunk, float pRenderDistance)
-    {
-        pRenderDistance *= _chunkSize; // Multiply so the input is in chunks
-        var cam = (float) (Math.Pow((pCamera.Position.X - pChunk.Position.X), 2));
-        var chunk = (float) (Math.Pow((pCamera.Position.Z - pChunk.Position.Z), 2));
-        var sum = cam + chunk;
-
-        // Multiply renderdistance by itself instead, its much faster
-        if (Math.Sqrt(sum) < pRenderDistance)
-            return true;
-
-        return false;
-    }
     
     
-    public void RenderMap(int pShaderHandle, Camera pCamera, float pRenderDistance)
+    public void RenderMap(int pShaderHandle, Camera pCamera)
     {
         foreach (var chunk in _chunkGrid)
         {
-           if (DistanceCulling(pCamera, chunk, pRenderDistance))
-                if (pCamera.ViewFrustum.IsPointIntersecting(chunk.Position))
+           if (distanceCulling.Cull(chunk, pCamera))
+                if (frustumCulling.Cull(chunk, pCamera))
                     chunk.Render(pShaderHandle);
         }
     }

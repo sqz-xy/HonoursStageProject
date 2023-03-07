@@ -129,6 +129,19 @@ public class Chunk : Object
             yPointer += stride;
         }
     }
+
+    public void PrintHeightData()
+    {
+        for (var i = 0; i < HeightData.GetLength(0); i++)
+        {
+            Console.WriteLine("");
+            for (var j = 0; j < HeightData.GetLength(0); j++)
+            {
+                Console.Write($"{HeightData[i, j] }");
+            }   
+        }
+
+    }
     
     public override void Render(int pShaderHandle)
     {

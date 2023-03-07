@@ -124,7 +124,7 @@ public class AscFileManager : FileManager
                 sw.WriteLine();
             
             for (int j = 0; j < cumulativeData.GetLength(1); j++)
-                sw.Write($"{cumulativeData[i, j]} ");
+                sw.Write($"{cumulativeData[i, j]}");
         }
     }
 }

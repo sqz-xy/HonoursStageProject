@@ -2,7 +2,7 @@
 
 namespace HonoursStageProject.Objects;
 
-struct Plane
+public struct Plane
 {
     public Vector4 Points;
 
@@ -32,7 +32,7 @@ public class Frustum
             +-----------+ 
         */
         
-        private Plane[] _viewFrustum = new Plane[6];
+        public Plane[] ViewFrustum = new Plane[6];
         
         public void GenerateViewFrustum(Matrix4 pProj , Matrix4 pView)
         {
@@ -70,7 +70,7 @@ public class Frustum
                 }
             };
             rightPlane = NormalisePlane(rightPlane);
-            _viewFrustum[0] = rightPlane;
+            ViewFrustum[0] = rightPlane;
 
             // Left Plane
             var leftPlane = new Plane
@@ -84,7 +84,7 @@ public class Frustum
                 }
             };
             leftPlane = NormalisePlane(leftPlane);
-            _viewFrustum[1] = leftPlane;
+            ViewFrustum[1] = leftPlane;
 
             // Bottom Plane
             var bottomPlane = new Plane
@@ -98,7 +98,7 @@ public class Frustum
                 }
             };
             bottomPlane = NormalisePlane(bottomPlane);
-            _viewFrustum[2] = bottomPlane;
+            ViewFrustum[2] = bottomPlane;
 
             // Top Plane
             var topPlane = new Plane
@@ -112,7 +112,7 @@ public class Frustum
                 }
             };
             topPlane = NormalisePlane(topPlane);
-            _viewFrustum[3] = topPlane;
+            ViewFrustum[3] = topPlane;
 
             // Far Plane
             var farPlane = new Plane
@@ -126,7 +126,7 @@ public class Frustum
                 }
             };
             farPlane = NormalisePlane(farPlane);
-            _viewFrustum[4] = farPlane;
+            ViewFrustum[4] = farPlane;
 
             // Near Plane
             var nearPlane = new Plane
@@ -140,7 +140,7 @@ public class Frustum
                 }
             };
             nearPlane = NormalisePlane(nearPlane);
-            _viewFrustum[5] = nearPlane;
+            ViewFrustum[5] = nearPlane;
         }
         
         private Plane NormalisePlane(Plane pPlane)
@@ -158,21 +158,5 @@ public class Frustum
             
             return pPlane;
         }
-        
-        // Uses the dot product
-        public bool IsPointIntersecting(Vector3 pLocation)
-        {
-            /*
-             * dist = A*rx + B*ry + C*rz + D
-             */
-            for (var i = 0; i < 6; i++ )
-                if ((_viewFrustum[i].Points[0] * pLocation.X) + 
-                    (_viewFrustum[i].Points[1] * pLocation.Y) + 
-                    (_viewFrustum[i].Points[2] * pLocation.Z) + 
-                    (_viewFrustum[i].Points[3]) <= 0)
-                    return false;
-            return true;
-        }
-
     }
     
