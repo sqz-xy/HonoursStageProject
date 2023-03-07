@@ -14,9 +14,7 @@ public class ChunkManager
     private int _chunkSize;
     private int _seed;
 
-    private ICulling distanceCulling;
-    private ICulling frustumCulling;
-
+    private List<ICulling> _cullingAlgorithms;
     private readonly FileManager _fileManager;
     
     private readonly Vector2[] _directions = 
@@ -115,8 +113,11 @@ public class ChunkManager
             chunk.BufferData();
         }
         
-        frustumCulling = new FrustumCulling();
-        distanceCulling = new DistanceCulling(pRenderDistance, pChunkSize);
+        _cullingAlgorithms = new List<ICulling>()
+        {
+            new FrustumCulling(),
+            new DistanceCulling(pRenderDistance, pChunkSize)
+        };
     }
 
     private void GenChunkHeightData(int pMapSize)
@@ -248,9 +249,13 @@ public class ChunkManager
     {
         foreach (var chunk in _chunkGrid)
         {
-           if (distanceCulling.Cull(chunk, pCamera))
-                if (frustumCulling.Cull(chunk, pCamera))
-                    chunk.Render(pShaderHandle);
+            // true means in the view
+            bool renderChunk = true;
+            foreach (var culling in _cullingAlgorithms)
+                renderChunk &= culling.Cull(chunk, pCamera);
+            
+            if (renderChunk)
+                chunk.Render(pShaderHandle);
         }
     }
     
