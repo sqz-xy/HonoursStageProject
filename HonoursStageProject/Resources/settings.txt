@@ -1,0 +1,9 @@
+﻿// Chunk sizes can only be 2, 3, 4, 9, 17, 33, 65, 129 
+// Settings with an asterisk are compulsory
+
+map_size*:4
+chunk_size*:17
+map_scale*:1.0
+render_distance:5.0
+seed:2
+filename:

@@ -15,6 +15,7 @@ public sealed class TerrainScene : Scene
     private Camera _camera;
     private Algorithm _diamondSquare;
     private ChunkManager _chunkManager;
+    private FileManager _fileManager;
     
     public TerrainScene(SceneManager pSceneManager) : base(pSceneManager)
     {
@@ -27,7 +28,7 @@ public sealed class TerrainScene : Scene
         pSceneManager.KeyPressEvent += KeyPress;
         pSceneManager.CursorVisible = false;
         pSceneManager.CursorGrabbed = true;
-
+        
         Initialize();
     }
 
@@ -42,13 +43,14 @@ public sealed class TerrainScene : Scene
         // Camera and Shader initialization
         _camera = new Camera();
         _shader = new Shader(@"Shaders/terrainscene.vert", @"Shaders/terrainscene.frag");
-        
+        _fileManager = new AscFileManager();
 
         // Object initialization (Terrain mesh) Buffer size cannot be modified during runtime
         VertexManager.Initialize(100000);
         TextureManager.Initialize(2);
-        
-        // Need to fix scaling chunk boundry issue
+
+        // TEST
+        Settings settings = _fileManager.LoadSettings();
         
         _chunkManager = new ChunkManager();
         
@@ -56,8 +58,9 @@ public sealed class TerrainScene : Scene
         //_chunkManager.GenerateMap(2, 16, 1.0f, 2, "Resources/TestInput.txt");
         
         // Chunk sizes can only be 2, 3, 4, 9, 17, 33, 65, 129 
-        _chunkManager.GenerateMap(4, 17, 1.0f, 2, "", 1f);
-
+        //_chunkManager.GenerateMap(4, 17, 1.0f, 2, "", 1f);
+        _chunkManager.GenerateMap(settings.MapSize, settings.ChunkSize, settings.MapScale, settings.Seed, settings.FileName, settings.RenderDistance);
+        
         var uViewPosLocation = GL.GetUniformLocation(_shader.Handle, "uViewPos");
         GL.Uniform3(uViewPosLocation, _camera.Position);
         
