@@ -124,8 +124,12 @@ public sealed class TerrainScene : Scene
                 SceneManager.Exit();
                 break;
             case 'z':
+                // Test Logic
                 _chunkManager.SaveData("TestData.txt");
+                Settings settings = _fileManager.LoadSettings();
+                _chunkManager.GenerateMap(settings.MapSize, 33, settings.MapScale, settings.Seed, settings.FileName, settings.RenderDistance);
                 break;
+            // Add scaling 
         }
     }
 

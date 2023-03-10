@@ -5,6 +5,7 @@ using OpenTK.Platform.Windows;
 
 namespace HonoursStageProject.Algorithms;
 
+//TODO: Scaling Multiplier, scroll wheel
 public class DiamondSquare : Algorithm
 {
     public DiamondSquare(int pSize) : base(pSize)
