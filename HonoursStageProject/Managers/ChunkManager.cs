@@ -53,15 +53,20 @@ public class ChunkManager
             for (var i = 0; i < _mapSize; i++)
             for (var j = 0; j < _mapSize; j++)
             {
-                // Make sure the chunks are offset correctly so the middle of the chunk map is 0,0
-                var xOffset = -((_mapSize * _chunkSize) / 2);
-                var yOffset = -((_mapSize * _chunkSize) / 2);
+                var t = new Thread(() =>
+                {
+                    // Make sure the chunks are offset correctly so the middle of the chunk map is 0,0
+                    var xOffset = -((_mapSize * _chunkSize) / 2);
+                    var yOffset = -((_mapSize * _chunkSize) / 2);
 
-                _chunkGrid[i, j] =
-                    new Chunk(
-                        new Vector3(xOffset + (i * _chunkSize * 0.94f) + centreOffset, -2, yOffset + (j * _chunkSize * 0.94f) + centreOffset),
-                        _chunkSize, _mapScale, 
-                        new Vector2(i, j), _textureIndex);
+                    _chunkGrid[i, j] =
+                        new Chunk(
+                            new Vector3(xOffset + (i * _chunkSize * 0.94f) + centreOffset, -2, yOffset + (j * _chunkSize * 0.94f) + centreOffset),
+                            _chunkSize, _mapScale, 
+                            new Vector2(i, j), _textureIndex);
+                });
+                t.Start();
+                t.Join();
             } 
         }
         else
@@ -140,29 +145,32 @@ public class ChunkManager
 
             while (rightNode != null)
             {
-                // Loop through adjacents, create an empty 2d array of chunksize and populate the sides with edge values of adjacents (Clockwise) 
-                // Fix Corners by taking an avg and make sure the terrain stitches together properly.
+                var t = new Thread(() =>
+                {
+                    // Loop through adjacents, create an empty 2d array of chunksize and populate the sides with edge values of adjacents (Clockwise) 
+                    // Fix Corners by taking an avg and make sure the terrain stitches together properly.
                 
-                float[,] heightValues = new float[rightNode.HeightData.GetLength(0), rightNode.HeightData.GetLength(1)];
+                    float[,] heightValues = new float[rightNode.HeightData.GetLength(0), rightNode.HeightData.GetLength(1)];
 
-                // Initial pass for seeding data
-                heightValues = MatchSides(rightNode, heightValues);
-                Random rnd = new Random();
+                    // Initial pass for seeding data
+                    heightValues = MatchSides(rightNode, heightValues);
+                    Random rnd = new Random();
 
-                float[,] heightData;
+                    float[,] heightData;
                 
-                if (rightNode == _sourceChunk)
-                    heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, true);
-                else
-                    heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, false);
+                    if (rightNode == _sourceChunk)
+                        heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, true);
+                    else
+                        heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, false);
                 
-                rightNode.AddHeightData(heightData);
-                
+                    rightNode.AddHeightData(heightData);
+                });
+                t.Start();
+                t.Join();
                 rightNode = rightNode.Adjacents[1];
             }
             downNode = downNode.Adjacents[2];
         }
-
         // Second size matching pass
         MatchSides();
     }
@@ -177,7 +185,12 @@ public class ChunkManager
 
             while (rightNode != null)
             {
-                rightNode.AddHeightData(MatchSides(rightNode, rightNode.HeightData));
+                var t = new Thread(() =>
+                {
+                    rightNode.AddHeightData(MatchSides(rightNode, rightNode.HeightData));
+                });
+                t.Start();
+                t.Join();
                 
                 rightNode = rightNode.Adjacents[1];
             }
@@ -256,6 +269,36 @@ public class ChunkManager
             
             if (renderChunk)
                 chunk.Render(pShaderHandle);
+        }
+    }
+
+    public void ScaleChunkHeight(float pScale)
+    {
+        var downNode = _sourceChunk;
+
+        while (downNode != null)
+        {
+            var rightNode = downNode;
+
+            while (rightNode != null)
+            {
+                var t = new Thread(() =>
+                {
+                    for (var i = 0;  i < rightNode.HeightData.GetLength(0); i++)
+                    for (int j = 0;  j < rightNode.HeightData.GetLength(1); j++)
+                    {
+                        rightNode.HeightData[i, j] *= pScale;
+                        rightNode.AddHeightData(rightNode.HeightData);
+                        
+                    }
+                });
+                t.Start();
+                t.Join();
+                
+                rightNode.BufferData(rightNode.BufferIndex);
+                rightNode = rightNode.Adjacents[1];
+            }
+            downNode = downNode.Adjacents[2];
         }
     }
     

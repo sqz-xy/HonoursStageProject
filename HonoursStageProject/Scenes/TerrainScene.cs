@@ -126,6 +126,12 @@ public sealed class TerrainScene : Scene
             case 'z':
                 _chunkManager.SaveData("TestData.txt");
                 break;
+            case '.':
+                _chunkManager.ScaleChunkHeight(1.1f);
+                break;
+            case ',':
+                _chunkManager.ScaleChunkHeight(0.9f);
+                break;
         }
     }
 
