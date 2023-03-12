@@ -53,12 +53,8 @@ public class DiamondSquare : Algorithm
 
         // Run Algorithm
         DiamondSquareAlgorithm(rnd, randomRange, pFalloff, pScale);
-
-#if  DEBUG
-        PrintData(Data);
-#endif
+        
         return Data;
-        //return Normalise(Data);
     }
 
 
