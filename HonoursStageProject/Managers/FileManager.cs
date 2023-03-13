@@ -1,4 +1,5 @@
-﻿using HonoursStageProject.Objects;
+﻿using HonoursStageProject.Algorithms;
+using HonoursStageProject.Objects;
 
 namespace HonoursStageProject.Managers;
 
@@ -15,6 +16,7 @@ public abstract class FileManager
         Random rnd = new Random();
 
         string[] lines = File.ReadAllLines("Resources/Settings.txt");
+        var assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
 
         foreach (var line in lines)
         {
@@ -57,6 +59,28 @@ public abstract class FileManager
                     break;
                 case "filename":
                     settings.FileName = value;
+                    break;
+                case "terrain_algorithms":
+                    
+                    // Parse terrain algorithms
+                    var terrainAlgorithms = value.Split();
+                    foreach (var algorithm in terrainAlgorithms)
+                    {
+                        // settings.TerrainAlgorithms.Add( Activator.CreateInstance(null, algorithm) as IAlgorithm);
+                    }
+                       
+                    break;
+                case "culling_algorithms" :
+                    
+                    // Parse terrain algorithms
+                    var cullingAlgorithms = value.Split();  
+                    foreach (var algorithm in cullingAlgorithms)
+                    {
+                        
+                    }
+                    
+                    break;
+                default:
                     break;
             }
         }

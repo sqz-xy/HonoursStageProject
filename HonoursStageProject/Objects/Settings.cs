@@ -1,4 +1,6 @@
-﻿namespace HonoursStageProject.Objects;
+﻿using HonoursStageProject.Algorithms;
+
+namespace HonoursStageProject.Objects;
 
 public struct Settings
 {
@@ -8,4 +10,6 @@ public struct Settings
     public int Seed;
     public String FileName;
     public float RenderDistance;
+    public List<IAlgorithm> TerrainAlgorithms;
+    public List<ICulling> CullingAlgorithms;
 }
