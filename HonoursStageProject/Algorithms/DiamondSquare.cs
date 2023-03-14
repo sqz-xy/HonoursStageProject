@@ -12,6 +12,11 @@ public class DiamondSquare : Algorithm
     {
         Size = pSize;   
     }
+
+    public DiamondSquare()
+    {
+        
+    }
     
     /* https://craftofcoding.wordpress.com/tag/diamond-square-algorithm/ */
     /* https://yonatankra.com/how-to-create-terrain-and-heightmaps-using-the-diamond-square-algorithm-in-javascript/ */

@@ -2,12 +2,17 @@
 
 public abstract class Algorithm : IAlgorithm
 {
-    protected int Size;
+    public int Size;
     protected float[,] Data;
     
     protected Algorithm(int pSize)
     {
         Size = pSize;
+    }
+
+    protected Algorithm()
+    {
+        
     }
     
     public abstract float[,] GenerateData(int pSeed, float pScale, float pFalloff, float[,] pPreSeed, bool pSeedCorners);

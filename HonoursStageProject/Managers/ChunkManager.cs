@@ -307,7 +307,6 @@ public class ChunkManager
                     {
                         node.HeightData[i, j] *= pScale;
                         node.AddHeightData(node.HeightData);
-                        
                     }
                 });
                 t.Start();

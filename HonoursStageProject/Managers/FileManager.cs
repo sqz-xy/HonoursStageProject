@@ -16,7 +16,7 @@ public abstract class FileManager
         Random rnd = new Random();
 
         string[] lines = File.ReadAllLines("Resources/Settings.txt");
-        var assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+        const string namespaceName = "HonoursStageProject.Algorithms.";
 
         foreach (var line in lines)
         {
@@ -66,7 +66,10 @@ public abstract class FileManager
                     var terrainAlgorithms = value.Split();
                     foreach (var algorithm in terrainAlgorithms)
                     {
-                        // settings.TerrainAlgorithms.Add( Activator.CreateInstance(null, algorithm) as IAlgorithm);
+                        //var alg = Activator.CreateInstance(System.Reflection.Assembly.GetExecutingAssembly().GetName().Name, namespaceName + algorithm) as IAlgorithm;
+                        //var algAsClass = alg as Algorithm;
+                        //algAsClass.Size = settings.ChunkSize;
+                        //settings.TerrainAlgorithms.Add(algAsClass);
                     }
                        
                     break;
