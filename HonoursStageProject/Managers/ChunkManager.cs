@@ -43,7 +43,6 @@ public class ChunkManager
         _chunkSize = pChunkSize;
         _seed = pSeed;
 
-        var threads = new List<Thread>();
         // * 0.5f
         
         // is used to make sure the chunks are centred correctly
@@ -54,26 +53,21 @@ public class ChunkManager
             for (var i = 0; i < _mapSize; i++)
             for (var j = 0; j < _mapSize; j++)
             {
-                var i1 = i;
-                var j1 = j;
                 var t = new Thread(() =>
                 {
                     // Make sure the chunks are offset correctly so the middle of the chunk map is 0,0
                     var xOffset = -((_mapSize * _chunkSize) / 2);
                     var yOffset = -((_mapSize * _chunkSize) / 2);
 
-                    _chunkGrid[i1, j1] =
+                    _chunkGrid[i, j] =
                         new Chunk(
-                            new Vector3(xOffset + (i1 * _chunkSize * 0.94f) + centreOffset, -2, yOffset + (j1 * _chunkSize * 0.94f) + centreOffset),
+                            new Vector3(xOffset + (i * _chunkSize * 0.94f) + centreOffset, -2, yOffset + (j * _chunkSize * 0.94f) + centreOffset),
                             _chunkSize, _mapScale, 
-                            new Vector2(i1, j1), _textureIndex);
+                            new Vector2(i, j), _textureIndex);
                 });
                 t.Start();
-                threads.Add(t);
-            }
-
-            foreach (var thread in threads)
-                thread.Join();
+                t.Join();
+            } 
         }
         else
         {
@@ -141,7 +135,7 @@ public class ChunkManager
         
         // Seed source chunk
         var ds = new DiamondSquare(_sourceChunk.Size);
-        var threads = new List<Thread>();
+
         // Traverse the linked grid
         var downNode = _sourceChunk;
 
@@ -151,37 +145,32 @@ public class ChunkManager
 
             while (rightNode != null)
             {
-                var node = rightNode;
                 var t = new Thread(() =>
                 {
                     // Loop through adjacents, create an empty 2d array of chunksize and populate the sides with edge values of adjacents (Clockwise) 
                     // Fix Corners by taking an avg and make sure the terrain stitches together properly.
                 
-                    float[,] heightValues = new float[node.HeightData.GetLength(0), node.HeightData.GetLength(1)];
+                    float[,] heightValues = new float[rightNode.HeightData.GetLength(0), rightNode.HeightData.GetLength(1)];
 
                     // Initial pass for seeding data
-                    heightValues = MatchSides(node, heightValues);
+                    heightValues = MatchSides(rightNode, heightValues);
                     Random rnd = new Random();
 
                     float[,] heightData;
                 
-                    if (node == _sourceChunk)
-                        heightData = ds.GenerateData(rnd.Next(), node.Scale, 0.5f, heightValues, true);
+                    if (rightNode == _sourceChunk)
+                        heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, true);
                     else
-                        heightData = ds.GenerateData(rnd.Next(), node.Scale, 0.5f, heightValues, false);
+                        heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, false);
                 
-                    node.AddHeightData(heightData);
+                    rightNode.AddHeightData(heightData);
                 });
                 t.Start();
-                
+                t.Join();
                 rightNode = rightNode.Adjacents[1];
             }
             downNode = downNode.Adjacents[2];
         }
-
-        foreach (var thread in threads)
-            thread.Join();
-        
         // Second size matching pass
         MatchSides();
     }
@@ -189,7 +178,6 @@ public class ChunkManager
     private void MatchSides()
     {
         var downNode = _sourceChunk;
-        var threads = new List<Thread>();
 
         while (downNode != null)
         {
@@ -197,21 +185,17 @@ public class ChunkManager
 
             while (rightNode != null)
             {
-                var node = rightNode;
                 var t = new Thread(() =>
                 {
-                    node.AddHeightData(MatchSides(node, node.HeightData));
+                    rightNode.AddHeightData(MatchSides(rightNode, rightNode.HeightData));
                 });
                 t.Start();
-                threads.Add(t);
+                t.Join();
                 
                 rightNode = rightNode.Adjacents[1];
             }
             downNode = downNode.Adjacents[2];
         }
-
-        foreach (var thread in threads)
-            thread.Join();
     }
 
     private float[,] MatchSides(Chunk rightNode, float[,] heightValues)
@@ -291,7 +275,6 @@ public class ChunkManager
     public void ScaleChunkHeight(float pScale)
     {
         var downNode = _sourceChunk;
-        var threads = new List<Thread>();
 
         while (downNode != null)
         {
@@ -299,27 +282,24 @@ public class ChunkManager
 
             while (rightNode != null)
             {
-                var node = rightNode;
                 var t = new Thread(() =>
                 {
-                    for (var i = 0;  i < node.HeightData.GetLength(0); i++)
-                    for (int j = 0;  j < node.HeightData.GetLength(1); j++)
+                    for (var i = 0;  i < rightNode.HeightData.GetLength(0); i++)
+                    for (int j = 0;  j < rightNode.HeightData.GetLength(1); j++)
                     {
-                        node.HeightData[i, j] *= pScale;
-                        node.AddHeightData(node.HeightData);
+                        rightNode.HeightData[i, j] *= pScale;
+                        rightNode.AddHeightData(rightNode.HeightData);
+                        
                     }
                 });
                 t.Start();
-                threads.Add(t);
+                t.Join();
                 
                 rightNode.BufferData(rightNode.BufferIndex);
                 rightNode = rightNode.Adjacents[1];
             }
             downNode = downNode.Adjacents[2];
         }
-
-        foreach (var thread in threads)
-            thread.Join();
     }
     
     private float[] GetRow(float[,] pMatrix, int pRow)
