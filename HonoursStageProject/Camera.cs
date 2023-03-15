@@ -54,7 +54,7 @@ public class Camera
         _hasMouseMoved = false;
 
         ViewFrustum = new Frustum();
-        ViewFrustum.GenerateViewFrustum(Projection, View);
+        ViewFrustum.GenerateViewFrustum(CullingProj, View);
     }
 
     /// <summary>

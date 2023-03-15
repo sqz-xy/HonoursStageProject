@@ -275,30 +275,35 @@ public class ChunkManager
     public void ScaleChunkHeight(float pScale)
     {
         var downNode = _sourceChunk;
-
+        var threads = new List<Thread>();
+        
         while (downNode != null)
         {
             var rightNode = downNode;
 
             while (rightNode != null)
             {
+                var node = rightNode;
                 var t = new Thread(() =>
                 {
-                    for (var i = 0;  i < rightNode.HeightData.GetLength(0); i++)
-                    for (int j = 0;  j < rightNode.HeightData.GetLength(1); j++)
+                    for (var i = 0;  i < node.HeightData.GetLength(0); i++)
+                    for (int j = 0;  j < node.HeightData.GetLength(1); j++)
                     {
-                        rightNode.HeightData[i, j] *= pScale;
-                        rightNode.AddHeightData(rightNode.HeightData);
+                        node.HeightData[i, j] *= pScale;
+                        node.AddHeightData(node.HeightData);
                         
                     }
                 });
                 t.Start();
-                t.Join();
+                threads.Add(t);
                 
                 rightNode.BufferData(rightNode.BufferIndex);
                 rightNode = rightNode.Adjacents[1];
             }
             downNode = downNode.Adjacents[2];
+
+            foreach (var thread in threads)
+                thread.Join();
         }
     }
     
