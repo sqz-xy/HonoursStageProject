@@ -62,14 +62,11 @@ public abstract class FileManager
                 case "filename":
                     settings.FileName = value;
                     break;
-                case "terrain_algorithms":
-                    
+                case "terrain_algorithm":
                     // Parse terrain algorithms
-                    var terrainAlgorithms = value.Split();
-                    foreach (var algorithm in terrainAlgorithms)
                     {
                         var type = Type.GetType(namespaceName + value);
-                        var alg = (Algorithm)Activator.CreateInstance(type);
+                        var alg = (Algorithm) Activator.CreateInstance(type);
                         alg.Size = settings.ChunkSize;
                         settings.TerrainAlgorithm = alg;
                     }

@@ -8,5 +8,5 @@ map_scale*:1.0
 render_distance:5.0
 seed:
 filename:
-terrain_algorithms:DiamondSquare
+terrain_algorithm:DiamondSquare
 culling_algorithms:DistanceCulling FrustumCulling
