@@ -5,7 +5,7 @@ namespace HonoursStageProject.Managers;
 
 public abstract class FileManager
 {
-    public abstract bool ReadHeightData(string pFileName, int pTextureIndex, out Chunk[,] pChunkGrid);
+    public abstract bool ReadHeightData(string pFileName, int pTextureIndex, out Chunk[,] pChunkGrid, ref Settings pSettings);
 
     public abstract void SaveHeightData(string pFileName, int pMapSize, float pF, int pSeed, Chunk pSourceChunk);
 

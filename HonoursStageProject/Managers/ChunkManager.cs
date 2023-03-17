@@ -71,12 +71,19 @@ public class ChunkManager
         }
         else
         {
-            var success = _fileManager.ReadHeightData(pSettings.FileName, _textureIndex, out _chunkGrid);
+            var success = _fileManager.ReadHeightData(pSettings.FileName, _textureIndex, out _chunkGrid, ref pSettings);
+            
+            // Set the data again if it has been changed by the loaded file
+            _mapSize = pSettings.MapSize;
+            _chunkSize = pSettings.ChunkSize;
+            
             if (!success)
             {
                 // Recursive call if file not read successfully
                 Console.WriteLine("File Not Read!");
-                //GenerateMap(pMapSize, pChunkSize, pMapScale, pSeed, "");
+                pSettings.FileName = "";
+                GenerateMap(pSettings);
+                throw new Exception();
             }
         }
         

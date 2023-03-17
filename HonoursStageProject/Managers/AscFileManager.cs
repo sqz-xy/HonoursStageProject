@@ -6,25 +6,40 @@ namespace HonoursStageProject.Managers;
 public class AscFileManager : FileManager
 {
     
-    //TODO: Remove nodata vars and use settings instead, fix algorithm loading
+    //TODO: Remove nodata vars and use settings instead, fix algorithm loading (Chunking should be independent from the map)
     //TODO: Next Week: Texturing, testing
+    //TODO: Maybe store map data in a struct so i can re load them at runtime?
+    
+    //TODO: CellSize Limitation https://www.loc.gov/preservation/digital/formats/fdd/fdd000421.shtml, ive been using cellsize for the chunksize in line coordinate system
+    
 
-    public override bool ReadHeightData(string pFileName, int pTextureIndex, out Chunk[,] pChunkGrid)
+    public override bool ReadHeightData(string pFileName, int pTextureIndex, out Chunk[,] pChunkGrid, ref Settings pSettings)
     {
+        pChunkGrid = new Chunk[0, 0];
+
+        int numRowsCols;
         int mapSize, cellSize;
         float mapScale;
         float[,] chunkedData;
 
         try
         {
-            var headerData = File.ReadLines(pFileName).Take(6).ToList();
-        
+            var nrows = int.Parse(File.ReadLines(pFileName).Take(1).ToList()[0].Split(' ')[1]);
+            var ncols = int.Parse(File.ReadLines(pFileName).Skip(1).Take(1).ToList()[0].Split(' ')[1]);
+
+            // Square the map if uneven
+            if (nrows != ncols)
+                numRowsCols = nrows < ncols ? nrows : ncols;
+            else
+                numRowsCols = nrows;
+
             // Need to add defaults for event of no header data
-            cellSize = int.Parse(headerData[4].Split(' ')[1]);
-            mapScale = int.Parse(headerData[5].Split(' ')[4]);
-            mapSize = int.Parse(headerData[5].Split(' ')[6]);
+            cellSize = int.Parse(File.ReadLines(pFileName).Skip(4).Take(1).ToList()[0].Split(' ')[1]);
+            mapScale = pSettings.MapScale;
+            mapSize = numRowsCols / cellSize;
 
             var heightData = File.ReadLines(pFileName).Skip(6).ToList();
+
             chunkedData = new float[cellSize * mapSize, cellSize * mapSize];
 
             for (int i = 0; i < heightData.Count; ++i)
@@ -40,10 +55,9 @@ public class AscFileManager : FileManager
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
-            pChunkGrid = new Chunk[0, 0];
             return false;
         }
-        
+
         var chunkGrid = new Chunk[mapSize, mapSize];
 
         var centreOffset = cellSize / 2;
@@ -73,6 +87,8 @@ public class AscFileManager : FileManager
         }
         
         pChunkGrid = chunkGrid;
+        pSettings.MapSize = mapSize;
+        pSettings.ChunkSize = cellSize;
         return true;
     }
 
@@ -86,7 +102,7 @@ public class AscFileManager : FileManager
         sw.WriteLine($"xllcorner {pSourceChunk.Size * pMapSize}");
         sw.WriteLine($"yllcorner {pSourceChunk.Size * pMapSize}");
         sw.WriteLine($"cellsize {pSourceChunk.Size}");
-        sw.WriteLine($"nodata_value sd: {pSeed} mscale: {pMapScale} msize: {pMapSize}");
+        sw.WriteLine($"nodata_value {pSeed}");
         
         // Construct a large 2d array of all the data and then write it
         float[,] cumulativeData = new float[pSourceChunk.Size * (pMapSize),
@@ -125,7 +141,7 @@ public class AscFileManager : FileManager
                 sw.WriteLine();
             
             for (int j = 0; j < cumulativeData.GetLength(1); j++)
-                sw.Write($"{cumulativeData[i, j]}");
+                sw.Write($"{cumulativeData[i, j]} ");
         }
     }
 }
