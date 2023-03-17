@@ -17,6 +17,8 @@ public abstract class FileManager
 
         string[] lines = File.ReadAllLines("Resources/Settings.txt");
         const string namespaceName = "HonoursStageProject.Algorithms.";
+        
+        settings.CullingAlgorithms = new List<ICulling>();
 
         foreach (var line in lines)
         {
@@ -66,22 +68,25 @@ public abstract class FileManager
                     var terrainAlgorithms = value.Split();
                     foreach (var algorithm in terrainAlgorithms)
                     {
-                        //var alg = Activator.CreateInstance(System.Reflection.Assembly.GetExecutingAssembly().GetName().Name, namespaceName + algorithm) as IAlgorithm;
-                        //var algAsClass = alg as Algorithm;
-                        //algAsClass.Size = settings.ChunkSize;
-                        //settings.TerrainAlgorithms.Add(algAsClass);
+                        var type = Type.GetType(namespaceName + value);
+                        var alg = (Algorithm)Activator.CreateInstance(type);
+                        alg.Size = settings.ChunkSize;
+                        settings.TerrainAlgorithm = alg;
                     }
-                       
                     break;
                 case "culling_algorithms" :
-                    
                     // Parse terrain algorithms
-                    var cullingAlgorithms = value.Split();  
+                    var cullingAlgorithms = value.Split(' ');  
+                    
+                    if (value == String.Empty)
+                        break;
+                    
                     foreach (var algorithm in cullingAlgorithms)
                     {
-                        
+                        var type = Type.GetType(namespaceName + algorithm);
+                        var alg = Activator.CreateInstance(type);
+                        settings.CullingAlgorithms.Add(alg as ICulling);
                     }
-                    
                     break;
                 default:
                     break;

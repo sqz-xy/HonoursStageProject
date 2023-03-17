@@ -10,6 +10,6 @@ public struct Settings
     public int Seed;
     public String FileName;
     public float RenderDistance;
-    public List<IAlgorithm> TerrainAlgorithms;
+    public IAlgorithm TerrainAlgorithm;
     public List<ICulling> CullingAlgorithms;
 }

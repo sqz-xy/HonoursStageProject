@@ -4,7 +4,7 @@ namespace HonoursStageProject.Algorithms;
 
 public class FrustumCulling : ICulling
 {
-    public bool Cull(Chunk pChunk, Camera pCamera)
+    public bool Cull(Chunk pChunk, Camera pCamera, Settings pSettings)
     {
         /*
         * dist = A*rx + B*ry + C*rz + D

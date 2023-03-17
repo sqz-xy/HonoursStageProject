@@ -13,10 +13,15 @@ public class DistanceCulling : ICulling
         RenderDistance = pRenderDistance;
         ChunkSize = pChunkSize;
     }
-    
-    public bool Cull(Chunk pChunk, Camera pCamera)
+
+    public DistanceCulling()
     {
-        float renderDistance = ChunkSize * RenderDistance; // Multiply so the input is in chunks
+        
+    }
+    
+    public bool Cull(Chunk pChunk, Camera pCamera, Settings pSettings)
+    {
+        float renderDistance = pSettings.ChunkSize * pSettings.RenderDistance; // Multiply so the input is in chunks
         var cam = (float) (Math.Pow((pCamera.Position.X - pChunk.Position.X), 2));
         var chunk = (float) (Math.Pow((pCamera.Position.Z - pChunk.Position.Z), 2));
         var sum = cam + chunk;

@@ -9,12 +9,8 @@ public class ChunkManager
     private Chunk _sourceChunk;
     private readonly int _textureIndex;
     private Chunk[,] _chunkGrid;
-    private int _mapSize;
-    private float _mapScale;
-    private int _chunkSize;
-    private int _seed;
-
-    private List<ICulling> _cullingAlgorithms;
+    private Settings _settings;
+    
     private readonly FileManager _fileManager;
     
     private readonly Vector2[] _directions = 
@@ -38,31 +34,28 @@ public class ChunkManager
     {
         // Populate the grid of chunks
         _chunkGrid = new Chunk[pSettings.MapSize, pSettings.MapSize];
-        _mapScale = pSettings.MapScale;
-        _mapSize = pSettings.MapSize;
-        _chunkSize = pSettings.ChunkSize;
-        _seed = pSettings.Seed;
+        _settings = pSettings;
 
         // * 0.5f
         
         // is used to make sure the chunks are centred correctly
-        var centreOffset = (_chunkSize / 2);
+        var centreOffset = (_settings.ChunkSize / 2);
 
         if (pSettings.FileName == string.Empty)
         {
-            for (var i = 0; i < _mapSize; i++)
-            for (var j = 0; j < _mapSize; j++)
+            for (var i = 0; i < _settings.MapSize; i++)
+            for (var j = 0; j < _settings.MapSize; j++)
             {
                 var t = new Thread(() =>
                 {
                     // Make sure the chunks are offset correctly so the middle of the chunk map is 0,0
-                    var xOffset = -((_mapSize * _chunkSize) / 2);
-                    var yOffset = -((_mapSize * _chunkSize) / 2);
+                    var xOffset = -((_settings.MapSize * _settings.ChunkSize) / 2);
+                    var yOffset = -((_settings.MapSize * _settings.ChunkSize) / 2);
 
                     _chunkGrid[i, j] =
                         new Chunk(
-                            new Vector3(xOffset + (i * _chunkSize * 0.94f) + centreOffset, -2, yOffset + (j * _chunkSize * 0.94f) + centreOffset),
-                            _chunkSize, _mapScale, 
+                            new Vector3(xOffset + (i * _settings.ChunkSize * 0.94f) + centreOffset, -2, yOffset + (j * _settings.ChunkSize * 0.94f) + centreOffset),
+                            _settings.ChunkSize, _settings.MapScale, 
                             new Vector2(i, j), _textureIndex);
                 });
                 t.Start();
@@ -71,12 +64,10 @@ public class ChunkManager
         }
         else
         {
-            var success = _fileManager.ReadHeightData(pSettings.FileName, _textureIndex, out _chunkGrid, ref pSettings);
+            var success = _fileManager.ReadHeightData(pSettings.FileName, _textureIndex, out _chunkGrid, ref _settings);
             
             // Set the data again if it has been changed by the loaded file
-            _mapSize = pSettings.MapSize;
-            _chunkSize = pSettings.ChunkSize;
-            
+
             if (!success)
             {
                 // Recursive call if file not read successfully
@@ -88,8 +79,8 @@ public class ChunkManager
         }
         
         // Construct linked grid
-        for (var i = 0; i < _mapSize; i++)
-        for (var j = 0; j < _mapSize; j++)
+        for (var i = 0; i < _settings.MapSize; i++)
+        for (var j = 0; j < _settings.MapSize; j++)
         {
             // Assign current node
             var currentChunk = _chunkGrid[i, j];
@@ -101,7 +92,7 @@ public class ChunkManager
                  var yOffset = j + (int)_directions[y].Y;
 
                 // Bounds checking
-                if (xOffset >= _mapSize || yOffset >= _mapSize || xOffset < 0 || yOffset < 0)
+                if (xOffset >= _settings.MapSize || yOffset >= _settings.MapSize || xOffset < 0 || yOffset < 0)
                 {
                     currentChunk.Adjacents[y] = null;
                     continue;
@@ -115,7 +106,7 @@ public class ChunkManager
 
         // This now needs to use the adjacents to populate the height data
         if (pSettings.FileName == string.Empty)
-            GenChunkHeightData(_mapSize);
+            GenChunkHeightData(_settings.MapSize);
         
         // Buffer the chunk data
         foreach (var chunk in _chunkGrid)
@@ -124,12 +115,6 @@ public class ChunkManager
             chunk.PrintHeightData();
             chunk.BufferData();
         }
-        
-        _cullingAlgorithms = new List<ICulling>()
-        {
-            new FrustumCulling(),
-            new DistanceCulling(pSettings.RenderDistance, pSettings.ChunkSize)
-        };
     }
 
     private void GenChunkHeightData(int pMapSize)
@@ -141,7 +126,7 @@ public class ChunkManager
          */
         
         // Seed source chunk
-        var ds = new DiamondSquare(_sourceChunk.Size);
+        //var ds = new DiamondSquare(_sourceChunk.Size);
 
         // Traverse the linked grid
         var downNode = _sourceChunk;
@@ -166,9 +151,9 @@ public class ChunkManager
                     float[,] heightData;
                 
                     if (rightNode == _sourceChunk)
-                        heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, true);
+                        heightData = _settings.TerrainAlgorithm.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, true);
                     else
-                        heightData = ds.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, false);
+                        heightData = _settings.TerrainAlgorithm.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, false);
                 
                     rightNode.AddHeightData(heightData);
                 });
@@ -260,7 +245,7 @@ public class ChunkManager
     {
         new Thread(() =>
         {
-            _fileManager.SaveHeightData(pFileName, _mapSize, _mapScale, _seed, _sourceChunk);
+            _fileManager.SaveHeightData(pFileName, _settings.MapSize, _settings.MapScale, _settings.Seed, _sourceChunk);
         }).Start();
     }
     
@@ -269,12 +254,17 @@ public class ChunkManager
     {
         foreach (var chunk in _chunkGrid)
         {
-            // true means in the view
-            bool renderChunk = true;
-            foreach (var culling in _cullingAlgorithms)
-                renderChunk &= culling.Cull(chunk, pCamera);
-            
-            if (renderChunk)
+            if (_settings.CullingAlgorithms.Count > 0)
+            {
+                // true means in the view
+                bool renderChunk = true;
+                foreach (var culling in _settings.CullingAlgorithms)
+                    renderChunk &= culling.Cull(chunk, pCamera, _settings);
+
+                if (renderChunk)
+                    chunk.Render(pShaderHandle);
+            }
+            else
                 chunk.Render(pShaderHandle);
         }
     }

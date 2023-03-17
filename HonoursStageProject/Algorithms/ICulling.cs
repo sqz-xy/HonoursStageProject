@@ -5,5 +5,5 @@ namespace HonoursStageProject.Algorithms;
 
 public interface ICulling
 {
-    public bool Cull(Chunk pChunk, Camera pCamera);
+    public bool Cull(Chunk pChunk, Camera pCamera, Settings pSettings);
 }
