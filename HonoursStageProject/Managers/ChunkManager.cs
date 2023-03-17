@@ -34,21 +34,21 @@ public class ChunkManager
         _fileManager = new AscFileManager();
     }
 
-    public void GenerateMap(int pMapSize, int pChunkSize, float pMapScale, int pSeed, string pFileName, float pRenderDistance)
+    public void GenerateMap(Settings pSettings)
     {
         // Populate the grid of chunks
-        _chunkGrid = new Chunk[pMapSize, pMapSize];
-        _mapScale = pMapScale;
-        _mapSize = pMapSize;
-        _chunkSize = pChunkSize;
-        _seed = pSeed;
+        _chunkGrid = new Chunk[pSettings.MapSize, pSettings.MapSize];
+        _mapScale = pSettings.MapScale;
+        _mapSize = pSettings.MapSize;
+        _chunkSize = pSettings.ChunkSize;
+        _seed = pSettings.Seed;
 
         // * 0.5f
         
         // is used to make sure the chunks are centred correctly
         var centreOffset = (_chunkSize / 2);
 
-        if (pFileName == string.Empty)
+        if (pSettings.FileName == string.Empty)
         {
             for (var i = 0; i < _mapSize; i++)
             for (var j = 0; j < _mapSize; j++)
@@ -71,7 +71,7 @@ public class ChunkManager
         }
         else
         {
-            var success = _fileManager.ReadHeightData(pFileName, _textureIndex, out _chunkGrid);
+            var success = _fileManager.ReadHeightData(pSettings.FileName, _textureIndex, out _chunkGrid);
             if (!success)
             {
                 // Recursive call if file not read successfully
@@ -81,8 +81,8 @@ public class ChunkManager
         }
         
         // Construct linked grid
-        for (var i = 0; i < pMapSize; i++)
-        for (var j = 0; j < pMapSize; j++)
+        for (var i = 0; i < _mapSize; i++)
+        for (var j = 0; j < _mapSize; j++)
         {
             // Assign current node
             var currentChunk = _chunkGrid[i, j];
@@ -94,7 +94,7 @@ public class ChunkManager
                  var yOffset = j + (int)_directions[y].Y;
 
                 // Bounds checking
-                if (xOffset >= pMapSize || yOffset >= pMapSize || xOffset < 0 || yOffset < 0)
+                if (xOffset >= _mapSize || yOffset >= _mapSize || xOffset < 0 || yOffset < 0)
                 {
                     currentChunk.Adjacents[y] = null;
                     continue;
@@ -107,8 +107,8 @@ public class ChunkManager
         _sourceChunk = _chunkGrid[0, 0];
 
         // This now needs to use the adjacents to populate the height data
-        if (pFileName == string.Empty)
-            GenChunkHeightData(pMapSize);
+        if (pSettings.FileName == string.Empty)
+            GenChunkHeightData(_mapSize);
         
         // Buffer the chunk data
         foreach (var chunk in _chunkGrid)
@@ -121,7 +121,7 @@ public class ChunkManager
         _cullingAlgorithms = new List<ICulling>()
         {
             new FrustumCulling(),
-            new DistanceCulling(pRenderDistance, pChunkSize)
+            new DistanceCulling(pSettings.RenderDistance, pSettings.ChunkSize)
         };
     }
 

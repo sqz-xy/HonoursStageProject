@@ -6,7 +6,8 @@ namespace HonoursStageProject.Managers;
 public class AscFileManager : FileManager
 {
     
-    //TODO: Allow for missing scale, seed, etc.      Seed Saving.           Fix Gap!!!!!!!
+    //TODO: Remove nodata vars and use settings instead, fix algorithm loading
+    //TODO: Next Week: Texturing, testing
 
     public override bool ReadHeightData(string pFileName, int pTextureIndex, out Chunk[,] pChunkGrid)
     {
