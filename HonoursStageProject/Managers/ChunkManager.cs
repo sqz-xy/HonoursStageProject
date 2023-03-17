@@ -117,6 +117,19 @@ public class ChunkManager
         }
     }
 
+    public void RegenerateMap()
+    {
+        GenChunkHeightData(_settings.MapSize);
+        
+        // Buffer the chunk data
+        foreach (var chunk in _chunkGrid)
+        {
+            // Can't be multithreaded because the binding indexes increment
+            chunk.PrintHeightData();
+            chunk.BufferData(chunk.BufferIndex);
+        }
+    }
+
     private void GenChunkHeightData(int pMapSize)
     {
         /*

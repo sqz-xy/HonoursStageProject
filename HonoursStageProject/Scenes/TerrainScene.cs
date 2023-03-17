@@ -132,6 +132,9 @@ public sealed class TerrainScene : Scene
             case ',':
                 _chunkManager.ScaleChunkHeight(0.9f);
                 break;
+            case 'g':
+                _chunkManager.RegenerateMap();
+                break;
         }
     }
 

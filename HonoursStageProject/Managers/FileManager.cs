@@ -11,7 +11,6 @@ public abstract class FileManager
 
     public Settings LoadSettings()
     {
-        //TODO: Load in algorithm types, move file manager into scene manager as singleton
         Settings settings = new Settings();
         Random rnd = new Random();
 

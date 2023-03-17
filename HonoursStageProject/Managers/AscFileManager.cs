@@ -5,9 +5,7 @@ namespace HonoursStageProject.Managers;
 
 public class AscFileManager : FileManager
 {
-    
-    //TODO: Remove nodata vars and use settings instead, fix algorithm loading (Chunking should be independent from the map)
-    //TODO: Next Week: Texturing, testing
+    //TODO: Next Week: Texturing, testing, REFACTOR REFACTOR REFACTOR
     //TODO: Maybe store map data in a struct so i can re load them at runtime?
     
     //TODO: CellSize Limitation https://www.loc.gov/preservation/digital/formats/fdd/fdd000421.shtml, ive been using cellsize for the chunksize in line coordinate system
