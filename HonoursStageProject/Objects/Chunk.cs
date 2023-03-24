@@ -139,7 +139,7 @@ public class Chunk : Object
             Console.WriteLine("");
             for (var j = 0; j < HeightData.GetLength(0); j++)
             {
-                Console.Write($"{HeightData[i, j] }");
+                Console.Write($"{HeightData[i, j]} ");
             }   
         }
 
