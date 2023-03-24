@@ -41,6 +41,7 @@ public class ChunkManager
         // is used to make sure the chunks are centred correctly
         var centreOffset = (_settings.ChunkSize / 2);
 
+        var chunkID = 0;
         if (pSettings.FileName == string.Empty)
         {
             for (var i = 0; i < _settings.MapSize; i++)
@@ -57,6 +58,7 @@ public class ChunkManager
                             new Vector3(xOffset + (i * _settings.ChunkSize * 0.94f) + centreOffset, -2, yOffset + (j * _settings.ChunkSize * 0.94f) + centreOffset),
                             _settings.ChunkSize, _settings.MapScale, 
                             new Vector2(i, j), _textureIndex);
+                    _chunkGrid[i, j].ID = chunkID++;
                 });
                 t.Start();
                 t.Join();
@@ -178,6 +180,8 @@ public class ChunkManager
         }
         // Second size matching pass
         MatchSides();
+        
+        //TODO: Chunks arent placed correctly im pretty sure causing the matching issue
     }
 
     private void MatchSides()

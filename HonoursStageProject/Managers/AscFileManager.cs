@@ -91,10 +91,10 @@ public class AscFileManager : FileManager
                     }
                 }
                 chunkGrid[chunkIndexX, chunkIndexY].AddHeightData(chunkGrid[chunkIndexX, chunkIndexY].HeightData);
-                chunkPointerX += cellSize;
+                chunkPointerY += cellSize;
             }
-            chunkPointerX = 0;
-            chunkPointerY += cellSize;
+            chunkPointerY = 0;
+            chunkPointerX += cellSize;
         }
         
         pChunkGrid = chunkGrid;

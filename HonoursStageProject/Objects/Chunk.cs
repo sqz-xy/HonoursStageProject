@@ -16,6 +16,8 @@ public class Chunk : Object
     public Chunk[] Adjacents { get; }
     public Vector2 GridPos { get; }
     public float[,] HeightData { get; set; }
+    
+    public int ID { get; set; }
 
     public Chunk(Vector3 pPosition, int pSize, float pScale, Vector2 pGridPos, int pTextureIndex)
     {
