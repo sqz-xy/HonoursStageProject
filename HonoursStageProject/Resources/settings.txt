@@ -7,6 +7,6 @@ chunk_size*:17
 map_scale*:1.0
 render_distance:5.0
 seed:
-filename:
+filename:Resources/Calibration.asc
 terrain_algorithm:DiamondSquare
 culling_algorithms:DistanceCulling FrustumCulling

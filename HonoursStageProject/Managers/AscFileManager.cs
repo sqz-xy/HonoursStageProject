@@ -39,14 +39,14 @@ public class AscFileManager : FileManager
             var heightData = File.ReadLines(pFileName).Skip(6).ToList();
 
             chunkedData = new float[cellSize * mapSize, cellSize * mapSize];
-
-            for (int i = 0; i < heightData.Count; ++i)
+            
+            for (var i = 0; i < heightData.Count; ++i)
             {
                 var line = heightData[i];
-                for (int j = 0; j < chunkedData.GetLength(1); ++j)
+                for (var j = 0; j < chunkedData.GetLength(1); ++j)
                 {
-                    var lineData = line.Split(' ');
-                    chunkedData[i, j] = float.Parse(lineData[j]);
+                    string[] split = line.Split(' ');
+                    chunkedData[i, j] = float.Parse(split[j]);
                 }
             }
         }
@@ -62,26 +62,39 @@ public class AscFileManager : FileManager
         
         // Create Chunks
         for (var i = 0; i < mapSize; i++)
-        for (var j = 0; j < mapSize; j++)
         {
-            var xOffset = -(mapSize * cellSize) / 2;
-            var yOffset = -(mapSize * cellSize) / 2;
-            
-            var xDataPointer = 0;
-            var yDataPointer = 0;
-
-            chunkGrid[i, j] =
-                new Chunk(
-                    new Vector3(xOffset + (i * cellSize) + centreOffset, -2, yOffset + (j * cellSize) + centreOffset),
-                    cellSize, mapScale, 
-                    new Vector2(i, j), pTextureIndex);
-            
-            for (int k = xDataPointer; k < cellSize; k++)
-            for (int l = yDataPointer; l < cellSize; l++)
+            for (var j = 0; j < mapSize; j++)
             {
-                chunkGrid[i, j].HeightData[k, l] = chunkedData[k, l];
+                var xOffset = -(mapSize * cellSize) / 2;
+                var yOffset = -(mapSize * cellSize) / 2;
+
+                chunkGrid[i, j] =
+                    new Chunk(
+                        new Vector3(xOffset + (i * cellSize) + centreOffset, -2, yOffset + (j * cellSize) + centreOffset),
+                        cellSize, mapScale, 
+                        new Vector2(i, j), pTextureIndex);
             }
-            chunkGrid[i, j].AddHeightData(chunkGrid[i, j].HeightData);
+        }
+        
+        var chunkPointerX = 0;
+        var chunkPointerY = 0;
+
+        for (int chunkIndexX = 0; chunkIndexX < chunkGrid.GetLength(0); chunkIndexX++)
+        {
+            for (int chunkIndexY = 0; chunkIndexY < chunkGrid.GetLength(1); chunkIndexY++)
+            {
+                for (int i = 0; i < cellSize; i++)
+                {
+                    for (int j = 0; j < cellSize; j++)
+                    {
+                        chunkGrid[chunkIndexX, chunkIndexY].HeightData[i, j] = chunkedData[i + chunkPointerX, j + chunkPointerY];
+                    }
+                }
+                chunkGrid[chunkIndexX, chunkIndexY].AddHeightData(chunkGrid[chunkIndexX, chunkIndexY].HeightData);
+                chunkPointerX += cellSize;
+            }
+            chunkPointerX = 0;
+            chunkPointerY += cellSize;
         }
         
         pChunkGrid = chunkGrid;
