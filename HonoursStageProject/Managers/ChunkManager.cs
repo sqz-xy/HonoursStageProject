@@ -58,7 +58,7 @@ public class ChunkManager
                             new Vector3(xOffset + (j * _settings.ChunkSize) + centreOffset, 0, yOffset + (i * _settings.ChunkSize) + centreOffset),
                             _settings.ChunkSize, _settings.MapScale, 
                             new Vector2(j, i), _textureIndex);
-                    _chunkGrid[j, i].ID = chunkID++;
+                    _chunkGrid[i, j].ID = chunkID++;
                 });
                 t.Start();
                 t.Join();
@@ -76,7 +76,6 @@ public class ChunkManager
                 Console.WriteLine("File Not Read!");
                 pSettings.FileName = "";
                 GenerateMap(pSettings);
-                throw new Exception();
             }
         }
         
@@ -179,6 +178,7 @@ public class ChunkManager
             downNode = downNode.Adjacents[2];
         }
         // Second size matching pass
+        
         MatchSides();
         
         //TODO: Chunks arent placed correctly im pretty sure causing the matching issue

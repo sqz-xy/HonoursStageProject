@@ -95,9 +95,8 @@ public class DiamondSquare : Algorithm
             Data[0, 0] = (NextFloat(rnd, -randomRange, randomRange));
             Data[0, Size - 1] = (NextFloat(rnd, -randomRange, randomRange));
             Data[Size - 1, 0] = (NextFloat(rnd, -randomRange, randomRange));
-            Data[Size - 1, Size - 1] = (NextFloat(rnd, -randomRange, randomRange)); 
+            Data[Size - 1, Size - 1] = (NextFloat(rnd, -randomRange, randomRange));
         }
-        
         //PrintData(pPreSeed);
         
         // Run Algorithm
