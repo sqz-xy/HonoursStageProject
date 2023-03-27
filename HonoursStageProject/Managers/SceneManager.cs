@@ -42,6 +42,7 @@ public class SceneManager : GameWindow
         base.OnLoad(pEventArgs);
         
         GL.DepthMask(true);
+        GL.Disable(EnableCap.CullFace); // Cullface
         GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         
         _currentScene = new MainMenuScene(this);
