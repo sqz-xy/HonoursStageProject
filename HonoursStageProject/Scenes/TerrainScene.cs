@@ -50,7 +50,7 @@ public sealed class TerrainScene : Scene
         TextureManager.Initialize(2);
 
         // TEST
-        Settings settings = _fileManager.LoadSettings();
+        Settings settings = _fileManager.LoadSettings("Resources/settings.txt");
         
         _chunkManager = new ChunkManager();
         

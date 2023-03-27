@@ -9,12 +9,12 @@ public abstract class FileManager
 
     public abstract void SaveHeightData(string pFileName, int pMapSize, float pF, int pSeed, Chunk pSourceChunk);
 
-    public Settings LoadSettings()
+    public Settings LoadSettings(string pFileName)
     {
         Settings settings = new Settings();
         Random rnd = new Random();
 
-        string[] lines = File.ReadAllLines("Resources/Settings.txt");
+        string[] lines = File.ReadAllLines(pFileName);
         const string namespaceName = "HonoursStageProject.Algorithms.";
         
         settings.CullingAlgorithms = new List<ICulling>();
