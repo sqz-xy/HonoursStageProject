@@ -7,6 +7,6 @@ chunk_size*:17
 map_scale*:1.0
 render_distance:5.0
 seed:
-filename:Resources/TA12NE.asc
+filename:Resources/TestInput.asc
 terrain_algorithm:DiamondSquare
 culling_algorithms:DistanceCulling FrustumCulling

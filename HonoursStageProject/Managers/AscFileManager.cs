@@ -70,9 +70,9 @@ public class AscFileManager : FileManager
 
                 chunkGrid[i, j] =
                     new Chunk(
-                        new Vector3(xOffset + (i * cellSize) + centreOffset, -2, yOffset + (j * cellSize) + centreOffset),
+                        new Vector3(xOffset + (j * cellSize) + centreOffset, -2, yOffset + (i * cellSize) + centreOffset),
                         cellSize, mapScale, 
-                        new Vector2(i, j), pTextureIndex);
+                        new Vector2(j, i), pTextureIndex);
             }
         }
         
