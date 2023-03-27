@@ -55,7 +55,7 @@ public class ChunkManager
 
                     _chunkGrid[i, j] =
                         new Chunk(
-                            new Vector3(xOffset + (i * _settings.ChunkSize * 0.94f) + centreOffset, -2, yOffset + (j * _settings.ChunkSize * 0.94f) + centreOffset),
+                            new Vector3(xOffset + (i * _settings.ChunkSize) + centreOffset, 0, yOffset + (j * _settings.ChunkSize) + centreOffset),
                             _settings.ChunkSize, _settings.MapScale, 
                             new Vector2(i, j), _textureIndex);
                     _chunkGrid[i, j].ID = chunkID++;

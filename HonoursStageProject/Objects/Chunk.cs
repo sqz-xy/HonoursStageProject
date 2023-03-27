@@ -101,8 +101,8 @@ public class Chunk : Object
         // Indices bug with extra lines
         // Possibly fixed, TODO: Ask Darren
 
-        for (var heightIndex = 0; heightIndex < pSize - 1; ++heightIndex)
-        for (var widthIndex = 0; widthIndex < pSize - 1; ++widthIndex)
+        for (var heightIndex = 0; heightIndex < pSize - 1; heightIndex++)
+        for (var widthIndex = 0; widthIndex < pSize - 1; widthIndex++)
         {
             indices.Add((uint) ((uint) pSize * heightIndex + widthIndex)); // Top left corner
             indices.Add((uint) ((uint) ((uint) pSize * heightIndex + widthIndex) + pSize)); // Bottom left corner
