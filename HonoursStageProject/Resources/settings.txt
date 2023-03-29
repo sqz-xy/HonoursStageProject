@@ -5,7 +5,7 @@
 map_size*:5
 chunk_size*:17
 map_scale*:1.0
-render_distance:5.0
+render_distance:20.0
 seed:
 filename:
 terrain_algorithm:DiamondSquare

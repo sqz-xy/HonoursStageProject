@@ -39,7 +39,7 @@ public class ChunkManager
         // * 0.5f
         
         // is used to make sure the chunks are centred correctly
-        var centreOffset = (_settings.ChunkSize / 2);
+        var centreOffset = (_settings.ChunkSize / 2) * _settings.MapScale;
 
         var chunkID = 0;
         if (pSettings.FileName == string.Empty)
@@ -50,12 +50,12 @@ public class ChunkManager
                 var t = new Thread(() =>
                 {
                     // Make sure the chunks are offset correctly so the middle of the chunk map is 0,0
-                    var xOffset = -((_settings.MapSize * _settings.ChunkSize) / 2);
-                    var yOffset = -((_settings.MapSize * _settings.ChunkSize) / 2);
+                    var xOffset = -((_settings.MapSize * _settings.ChunkSize) / 2) * _settings.MapScale;
+                    var yOffset = -((_settings.MapSize * _settings.ChunkSize) / 2) * _settings.MapScale;
 
                     _chunkGrid[i, j] =
                         new Chunk(
-                            new Vector3(xOffset + (j * _settings.ChunkSize) + centreOffset, 0, yOffset + (i * _settings.ChunkSize) + centreOffset),
+                            new Vector3(xOffset + ((j * ((_settings.ChunkSize * _settings.MapScale) - 1)) + centreOffset), 0, yOffset + (i * ((_settings.ChunkSize * _settings.MapScale) - 1)) + centreOffset),
                             _settings.ChunkSize, _settings.MapScale, 
                             new Vector2(j, i), _textureIndex);
                     _chunkGrid[i, j].ID = chunkID++;
