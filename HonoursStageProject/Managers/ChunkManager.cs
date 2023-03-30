@@ -24,9 +24,11 @@ public class ChunkManager
     
     
 
-    public ChunkManager()
+    public ChunkManager(bool pBindTexture)
     {
-        _textureIndex = TextureManager.BindTextureData("Textures/button.png");
+        if (pBindTexture)
+            _textureIndex = TextureManager.BindTextureData("Textures/button.png");
+        
         _fileManager = new AscFileManager();
     }
 
@@ -109,13 +111,14 @@ public class ChunkManager
         if (pSettings.FileName == string.Empty)
             GenChunkHeightData(_settings.MapSize);
         
+        
+    }
+
+    public void BufferMap()
+    {
         // Buffer the chunk data
         foreach (var chunk in _chunkGrid)
-        {
-            // Can't be multithreaded because the binding indexes increment
-            chunk.PrintHeightData();
             chunk.BufferData();
-        }
     }
 
     public void RegenerateMap()
@@ -126,7 +129,7 @@ public class ChunkManager
         foreach (var chunk in _chunkGrid)
         {
             // Can't be multithreaded because the binding indexes increment
-            chunk.PrintHeightData();
+            //chunk.PrintHeightData();
             chunk.BufferData(chunk.BufferIndex);
         }
     }
@@ -358,5 +361,10 @@ public class ChunkManager
 
         for (var i = 0; i < colLength; i++)
             pMatrix[i, pCol] = pColValues[i];
+    }
+
+    public Chunk GetSourceChunk()
+    {
+        return _sourceChunk;
     }
 }

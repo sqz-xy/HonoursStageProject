@@ -1,0 +1,12 @@
+﻿// Chunk sizes can only be 2, 3, 4, 9, 17, 33, 65, 129 
+// Settings with an asterisk are compulsory
+// When loading a file, map size and chunk size will be overridden based on the dimensions of the height map being loaded. 
+
+map_size*:5
+chunk_size*:17
+map_scale*:1.0
+render_distance:5.0
+seed:10
+filename:
+terrain_algorithm:DiamondSquare
+culling_algorithms:DistanceCulling FrustumCulling
