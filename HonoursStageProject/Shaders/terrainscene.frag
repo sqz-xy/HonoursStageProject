@@ -36,7 +36,14 @@ void main()
     vec3 specular = specularStrength * spec * lightColour;
 
     vec3 result = (ambient + diffuse + specular) * vec3(1, 1, 1);
-    FragColor = vec4(result, 1.0) * texture(uTextureSampler1, oTexCoords) + oColour;
+   // FragColor = vec4(result, 1.0) * texture(uTextureSampler1, oTexCoords) + oColour;
+    
+    vec4 colour = vec4(1, 1, 1, 1);
+    
+    if (oFragPos.y > 0.5f)
+        colour = vec4(0, 255, 0, 0);
+        
+    FragColor = colour;
     
     //FragColor = texture(uTextureSampler1, oTexCoords); //Not using textures currently
    // FragColor = oColour + texture(uTextureSampler1, oTexCoords) / 20;
