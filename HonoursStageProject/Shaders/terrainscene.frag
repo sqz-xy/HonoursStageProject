@@ -40,9 +40,12 @@ void main()
     
     vec4 colour = vec4(1, 1, 1, 1);
     
-    if (oFragPos.y > 0.5f)
+    if (oFragPos.y > 0.0f)
         colour = vec4(0, 255, 0, 0);
-        
+    else
+        colour = vec4(0, 0, 255, 0);
+    
+    
     FragColor = colour;
     
     //FragColor = texture(uTextureSampler1, oTexCoords); //Not using textures currently

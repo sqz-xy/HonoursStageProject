@@ -8,6 +8,8 @@ namespace HonoursStageProject.Algorithms;
 //TODO: Scaling Multiplier, scroll wheel
 public class DiamondSquare : Algorithm
 {
+    
+    //TODO: ROUGHNESS AND FALLOFF ADD TO SETTINGS https://gorbitsprojects.wordpress.com/2016/12/28/diamond-square-algorithm/
     public DiamondSquare(int pSize) : base(pSize)
     {
         Size = pSize;   

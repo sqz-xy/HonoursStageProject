@@ -117,7 +117,7 @@ public class ChunkManager
 
         // This now needs to use the adjacents to populate the height data
         if (pSettings.FileName == string.Empty)
-            GenChunkHeightData(_settings.MapSize);
+            GenChunkHeightData();
     }
 
     public void BufferMap()
@@ -129,7 +129,7 @@ public class ChunkManager
 
     public void RegenerateMap()
     {
-        GenChunkHeightData(_settings.MapSize);
+        GenChunkHeightData();
         
         // Buffer the chunk data
         foreach (var chunk in _chunkGrid)
@@ -140,7 +140,7 @@ public class ChunkManager
         }
     }
 
-    private void GenChunkHeightData(int pMapSize)
+    private void GenChunkHeightData()
     {
         if (_settings.TerrainAlgorithm == null)
             return;
