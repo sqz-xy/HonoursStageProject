@@ -16,6 +16,7 @@ public sealed class TerrainScene : Scene
     private Algorithm _diamondSquare;
     private ChunkManager _chunkManager;
     private FileManager _fileManager;
+    private Settings _settings;
     
     public TerrainScene(SceneManager pSceneManager) : base(pSceneManager)
     {
@@ -50,7 +51,7 @@ public sealed class TerrainScene : Scene
         TextureManager.Initialize(2);
 
         // TEST
-        Settings settings = _fileManager.LoadSettings("Resources/settings.txt");
+        _settings = _fileManager.LoadSettings("Resources/settings.txt");
         
         _chunkManager = new ChunkManager(true);
         
@@ -59,7 +60,7 @@ public sealed class TerrainScene : Scene
         
         // Chunk sizes can only be 2, 3, 4, 9, 17, 33, 65, 129 
         //_chunkManager.GenerateMap(4, 17, 1.0f, 2, "", 1f);
-        _chunkManager.GenerateMap(settings);
+        _chunkManager.GenerateMap(_settings);
         _chunkManager.BufferMap();
         
         var uViewPosLocation = GL.GetUniformLocation(_shader.Handle, "uViewPos");

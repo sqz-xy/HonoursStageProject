@@ -3,6 +3,8 @@ using System.ComponentModel.Design;
 using HonoursStageProject.Algorithms;
 using HonoursStageProject.Managers;
 using HonoursStageProject.Objects;
+using OpenTK;
+
 namespace HSPUnitTests;
 
 public class FileLoadTest
@@ -57,7 +59,73 @@ public class FileLoadTest
         // Left Chunk should be null
         Assert.Null(sourceChunk.Adjacents[3]);
     }
-    
+
+    [Fact]
+    public void DataGenSuccess()
+    {
+        // Write test to test if adjacent chunks mesh together
+        AscFileManager manager = new AscFileManager();
+        var settings = manager.LoadSettings("Resources/settings_chunk_test.txt");
+        
+        var chunkManager = new ChunkManager(false);
+        chunkManager.GenerateMap(settings);
+
+        var sourceChunk = chunkManager.GetSourceChunk();
+
+        // Loop through chunks
+        var downNode = sourceChunk;
+
+        while (downNode != null)
+        {
+            var rightNode = downNode;
+
+            while (rightNode != null)
+            {
+                // test all chunks for adjacent 0s
+                CheckZeros(rightNode);
+                rightNode = rightNode.Adjacents[1];
+            }
+            downNode = downNode.Adjacents[2];
+        }
+    }
+
+    private void CheckZeros(Chunk pChunk)
+    {
+        Vector2[] _directions = 
+        {
+            new(-1, 0),
+            new(-1, 1),
+            new(0, 1),
+            new(1, 1),
+            new(1, 0),
+            new(1, -1),
+            new(0, -1),
+            new(-1, -1)
+        };
+        
+        // Loop through all values
+        for (var i = 0; i < pChunk.HeightData.GetLength(0); i++)
+        for (var j = 0; j < pChunk.HeightData.GetLength(1); j++)
+        {
+            // If 0, check for adjacent 0s
+            if (pChunk.HeightData[i, j] != 0) continue;
+            
+            // Multiple adjacent 0s = fail
+            for (var k = 0; k < _directions.Length; k++)
+            {
+                var x = i + (int) _directions[k].X;
+                var y = j + (int) _directions[k].Y;
+
+                // Bounds check
+                if (x > pChunk.HeightData.GetLength(0) - 1 || y > pChunk.HeightData.GetLength(0) - 1 || y < 0 || x < 0)
+                    continue;
+
+                if (pChunk.HeightData[x, y] == 0)
+                    Assert.Fail("Multiple adjacent 0s");
+            }
+        }
+    }
+
     private float[] GetRow(float[,] pMatrix, int pRow)
     {
         var rowLength = pMatrix.GetLength(1);
@@ -70,14 +138,6 @@ public class FileLoadTest
         return rowVector;
     }
     
-    private void SetRow(float[,] pMatrix, int pRow, float[] pRowValues)
-    {
-        var rowLength = pMatrix.GetLength(1);
-
-        for (var i = 0; i < rowLength; i++)
-            pMatrix[pRow, i] = pRowValues[i];
-    }
-    
     private float[] GetCol(float[,] pMatrix, int pCol)
     {
         var colLength = pMatrix.GetLength(0);
@@ -87,13 +147,5 @@ public class FileLoadTest
             colVector[i] = pMatrix[i, pCol];
 
         return colVector;
-    }
-    
-    private void SetCol(float[,] pMatrix, int pCol, float[] pColValues)
-    {
-        var colLength = pMatrix.GetLength(0);
-
-        for (var i = 0; i < colLength; i++)
-            pMatrix[i, pCol] = pColValues[i];
     }
 }

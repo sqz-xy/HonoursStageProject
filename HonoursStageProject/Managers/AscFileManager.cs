@@ -79,6 +79,7 @@ public class AscFileManager : FileManager
         var chunkPointerX = 0;
         var chunkPointerY = 0;
 
+        // Add height data
         for (int chunkIndexX = 0; chunkIndexX < chunkGrid.GetLength(0); chunkIndexX++)
         {
             for (int chunkIndexY = 0; chunkIndexY < chunkGrid.GetLength(1); chunkIndexY++)
@@ -154,5 +155,7 @@ public class AscFileManager : FileManager
             for (int j = 0; j < cumulativeData.GetLength(1); j++)
                 sw.Write($"{cumulativeData[i, j]} ");
         }
+
+        Console.WriteLine("Data Saved!");
     }
 }

@@ -43,27 +43,31 @@ public class ChunkManager
         // is used to make sure the chunks are centred correctly
         var centreOffset = (_settings.ChunkSize / 2) * _settings.MapScale;
 
+        var threads = new List<Thread>();
         var chunkID = 0;
+        
         if (pSettings.FileName == string.Empty)
         {
             for (var i = 0; i < _settings.MapSize; i++)
             for (var j = 0; j < _settings.MapSize; j++)
             {
+                var i1 = i;
+                var j1 = j;
                 var t = new Thread(() =>
                 {
                     // Make sure the chunks are offset correctly so the middle of the chunk map is 0,0
                     var xOffset = -((_settings.MapSize * _settings.ChunkSize) / 2) * _settings.MapScale;
                     var yOffset = -((_settings.MapSize * _settings.ChunkSize) / 2) * _settings.MapScale;
 
-                    _chunkGrid[i, j] =
+                    _chunkGrid[i1, j1] =
                         new Chunk(
-                            new Vector3(xOffset + ((j * ((_settings.ChunkSize * _settings.MapScale) - 1)) + centreOffset), 0, yOffset + (i * ((_settings.ChunkSize * _settings.MapScale) - 1)) + centreOffset),
+                            new Vector3(xOffset + ((j1 * ((_settings.ChunkSize * _settings.MapScale) - 1)) + centreOffset), 0, yOffset + (i1 * ((_settings.ChunkSize * _settings.MapScale) - 1)) + centreOffset),
                             _settings.ChunkSize, _settings.MapScale, 
-                            new Vector2(j, i), _textureIndex);
-                    _chunkGrid[i, j].ID = chunkID++;
+                            new Vector2(j1, i1), _textureIndex);
+                    _chunkGrid[i1, j1].ID = chunkID++;
                 });
+                threads.Add(t);
                 t.Start();
-                t.Join();
             } 
         }
         else
@@ -80,6 +84,10 @@ public class ChunkManager
                 GenerateMap(pSettings);
             }
         }
+
+        foreach (var thread in threads)
+            thread.Join();
+        
         
         // Construct linked grid
         for (var i = 0; i < _settings.MapSize; i++)
@@ -110,8 +118,6 @@ public class ChunkManager
         // This now needs to use the adjacents to populate the height data
         if (pSettings.FileName == string.Empty)
             GenChunkHeightData(_settings.MapSize);
-        
-        
     }
 
     public void BufferMap()
@@ -136,15 +142,15 @@ public class ChunkManager
 
     private void GenChunkHeightData(int pMapSize)
     {
+        if (_settings.TerrainAlgorithm == null)
+            return;
+        
         /*
          * Chunk hold reference to adjacents
          * Populate data array with the edges of adjacents
          * Then run the algorithm
          */
         
-        // Seed source chunk
-        //var ds = new DiamondSquare(_sourceChunk.Size);
-
         // Traverse the linked grid
         var downNode = _sourceChunk;
 
@@ -154,28 +160,25 @@ public class ChunkManager
 
             while (rightNode != null)
             {
-                var t = new Thread(() =>
-                {
-                    // Loop through adjacents, create an empty 2d array of chunksize and populate the sides with edge values of adjacents (Clockwise) 
-                    // Fix Corners by taking an avg and make sure the terrain stitches together properly.
-                
-                    float[,] heightValues = new float[rightNode.HeightData.GetLength(0), rightNode.HeightData.GetLength(1)];
+                // Cant multithread due to race condition
+                // Loop through adjacents, create an empty 2d array of chunksize and populate the sides with edge values of adjacents (Clockwise) 
+                // Fix Corners by taking an avg and make sure the terrain stitches together properly.
+            
+                float[,] heightValues = new float[rightNode.HeightData.GetLength(0), rightNode.HeightData.GetLength(1)];
 
-                    // Initial pass for seeding data
-                    heightValues = MatchSides(rightNode, heightValues);
-                    Random rnd = new Random();
+                // Initial pass for seeding data
+                heightValues = MatchSides(rightNode, heightValues);
+                Random rnd = new Random();
 
-                    float[,] heightData;
+                float[,] heightData;
                 
-                    if (rightNode == _sourceChunk)
-                        heightData = _settings.TerrainAlgorithm.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, true);
-                    else
-                        heightData = _settings.TerrainAlgorithm.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, false);
+                if (rightNode == _sourceChunk)
+                    heightData = _settings.TerrainAlgorithm.GenerateData(rnd.Next(), rightNode.Scale, 0.5f);
+                else
+                    heightData = _settings.TerrainAlgorithm.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, true);
+            
+                rightNode.AddHeightData(heightData);
                 
-                    rightNode.AddHeightData(heightData);
-                });
-                t.Start();
-                t.Join();
                 rightNode = rightNode.Adjacents[1];
             }
             downNode = downNode.Adjacents[2];
@@ -197,13 +200,8 @@ public class ChunkManager
 
             while (rightNode != null)
             {
-                var t = new Thread(() =>
-                {
-                    rightNode.AddHeightData(MatchSides(rightNode, rightNode.HeightData));
-                });
-                t.Start();
-                t.Join();
-                
+                // Race condition -
+                rightNode.AddHeightData(MatchSides(rightNode, rightNode.HeightData));
                 rightNode = rightNode.Adjacents[1];
             }
             downNode = downNode.Adjacents[2];
@@ -221,43 +219,37 @@ public class ChunkManager
             {
                 case 0: // UP
                     if (rightNode.Adjacents[0] == null)
-                    {
                         break;
-                    }
-
+                    
                     row = GetRow(rightNode.Adjacents[0].HeightData, rightNode.Adjacents[0].HeightData.GetLength(0) - 1);
                     SetRow(heightValues, 0, row);
                     break;
+                
                 case 1: // RIGHT
                     if (rightNode.Adjacents[1] == null)
-                    {
                         break;
-                    }
 
-                    col = GetCol(rightNode.Adjacents[1].HeightData, 0);
+                        col = GetCol(rightNode.Adjacents[1].HeightData, 0);
                     SetCol(heightValues, heightValues.GetLength(1) - 1, col);
                     break;
+                
                 case 2: // DOWN
                     if (rightNode.Adjacents[2] == null)
-                    {
                         break;
-                    }
-
+                    
                     row = GetRow(rightNode.Adjacents[2].HeightData, 0);
                     SetRow(heightValues, heightValues.GetLength(0) - 1, row);
                     break;
+                
                 case 3: // LEFT
                     if (rightNode.Adjacents[3] == null)
-                    {
                         break;
-                    }
-
+                    
                     col = GetCol(rightNode.Adjacents[3].HeightData, rightNode.Adjacents[3].HeightData.GetLength(1) - 1);
                     SetCol(heightValues, 0, col);
                     break;
             }
         }
-
         return heightValues;
     }
 
@@ -272,20 +264,30 @@ public class ChunkManager
     
     public void RenderMap(int pShaderHandle, Camera pCamera)
     {
-        foreach (var chunk in _chunkGrid)
-        {
-            if (_settings.CullingAlgorithms.Count > 0)
-            {
-                // true means in the view
-                bool renderChunk = true;
-                foreach (var culling in _settings.CullingAlgorithms)
-                    renderChunk &= culling.Cull(chunk, pCamera, _settings);
+        var downNode = _sourceChunk;
 
-                if (renderChunk)
-                    chunk.Render(pShaderHandle);
+        while (downNode != null)
+        {
+            var rightNode = downNode;
+
+            while (rightNode != null)
+            {
+                if (_settings.CullingAlgorithms.Count > 0)
+                {
+                    // true means in the view
+                    bool renderChunk = true;
+                    foreach (var culling in _settings.CullingAlgorithms)
+                        renderChunk &= culling.Cull(rightNode, pCamera, _settings);
+
+                    if (renderChunk)
+                        rightNode.Render(pShaderHandle);
+                }
+                else
+                    rightNode.Render(pShaderHandle);
+                
+                rightNode = rightNode.Adjacents[1];
             }
-            else
-                chunk.Render(pShaderHandle);
+            downNode = downNode.Adjacents[2];
         }
     }
 

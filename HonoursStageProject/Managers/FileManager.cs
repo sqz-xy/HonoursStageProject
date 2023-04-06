@@ -64,6 +64,9 @@ public abstract class FileManager
                 case "terrain_algorithm":
                     // Parse terrain algorithms
                     {
+                        if (value == String.Empty)
+                            break;
+                        
                         var type = Type.GetType(namespaceName + value);
                         var alg = (Algorithm) Activator.CreateInstance(type);
                         alg.Size = settings.ChunkSize;

@@ -51,6 +51,7 @@ public class DiamondSquare : Algorithm
         Data = new float[Size, Size];
 
         // Seed initial values
+        
         Data[0, 0] = (NextFloat(rnd, -randomRange, randomRange));
         Data[0, Size - 1] = (NextFloat(rnd, -randomRange, randomRange));
         Data[Size - 1, 0] = (NextFloat(rnd, -randomRange, randomRange));
@@ -90,18 +91,30 @@ public class DiamondSquare : Algorithm
         // Some corners for other chunks will have 0s on the corner because they dont get pre seeded, talk to darren about this
         // Chunk sizes can only be 1, 2, 3, 8, 16, 21, 64, 128 
         
+        // Seed corners based on avg of adjacents, this is a limitation of ds algorithm, corners are supposed to be pre-seeded so they don't get hit by algorithm
+        // This doesn't affect the source chunk because this gets seeded straight away
         if (pSeedCorners)
         {
-            Data[0, 0] = (NextFloat(rnd, -randomRange, randomRange));
-            Data[0, Size - 1] = (NextFloat(rnd, -randomRange, randomRange));
-            Data[Size - 1, 0] = (NextFloat(rnd, -randomRange, randomRange));
-            Data[Size - 1, Size - 1] = (NextFloat(rnd, -randomRange, randomRange));
+            if (Data[0, 0] == 0) {Data[0, 0] = (Data[1, 0] + Data[0, 1] + Data[1, 1]) / 3;}
+            if (Data[0, Size - 1] == 0) {Data[0, Size - 1] = (Data[0, Size - 2] + Data[1, Size - 1] + Data[1, Size - 2]) / 3;}
+            if (Data[Size - 1, 0] == 0) {Data[Size - 1, 0] = (Data[Size - 2, 0] + Data[Size - 1, 1] + Data[Size - 2, 1]) / 3;}
+            if (Data[Size - 1, Size - 1] == 0) {Data[Size - 1, Size - 1] = (Data[Size - 2, Size - 1] + Data[Size - 1, Size - 2] + Data[Size - 2, Size - 2]) / 3;}
         }
         //PrintData(pPreSeed);
         
         // Run Algorithm
-        DiamondSquareAlgorithm(rnd, randomRange, pFalloff, pScale);
 
+        try
+        {
+            DiamondSquareAlgorithm(rnd, randomRange, pFalloff, pScale);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"{e.Message} \n Diamond square size incorrect, must be 2n + 1! \n Retrying with default chunk size of 17");
+            Size = 17;
+            DiamondSquareAlgorithm(rnd, randomRange, pFalloff, pScale);
+        }
+        
 #if  DEBUG
         //PrintData(Data);
 #endif
