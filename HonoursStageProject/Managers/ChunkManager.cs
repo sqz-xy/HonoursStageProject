@@ -1,5 +1,6 @@
 ﻿using HonoursStageProject.Algorithms;
 using HonoursStageProject.Objects;
+using HonoursStageProject.Scenes;
 using OpenTK;
 
 namespace HonoursStageProject.Managers;
@@ -10,6 +11,7 @@ public class ChunkManager
     private readonly int _textureIndex;
     private Chunk[,] _chunkGrid;
     private Settings _settings;
+    private Scene _parentScene;
     
     private readonly FileManager _fileManager;
     
@@ -22,13 +24,12 @@ public class ChunkManager
         new(-1, 0)  // LEFT
     };
     
-    
-
-    public ChunkManager(bool pBindTexture)
+    public ChunkManager(bool pBindTexture, Scene pParentScene)
     {
         if (pBindTexture)
             _textureIndex = TextureManager.BindTextureData("Textures/button.png");
-        
+
+        _parentScene = pParentScene;
         _fileManager = new AscFileManager();
     }
 
@@ -73,15 +74,10 @@ public class ChunkManager
         else
         {
             var success = _fileManager.ReadHeightData(pSettings.FileName, _textureIndex, out _chunkGrid, ref _settings);
-            
-            // Set the data again if it has been changed by the loaded file
-
             if (!success)
             {
-                // Recursive call if file not read successfully
-                Console.WriteLine("File Not Read!");
-                pSettings.FileName = "";
-                GenerateMap(pSettings);
+                _parentScene.ChangeScene(SceneTypes.SceneMainMenu);
+                return;
             }
         }
 

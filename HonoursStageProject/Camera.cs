@@ -139,6 +139,9 @@ public class Camera
         View = Matrix4.LookAt(Position, Position + Direction, Up);
         ViewFrustum.GenerateViewFrustum(CullingProj, View);
         
+        var uViewPosLocation = GL.GetUniformLocation(pShaderHandle, "uViewPos");
+        GL.Uniform3(uViewPosLocation, Position);
+        
         var uView = GL.GetUniformLocation(pShaderHandle, "uView");
         GL.UniformMatrix4(uView, true, ref View);
 

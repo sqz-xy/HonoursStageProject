@@ -62,16 +62,15 @@ static class VertexManager
         _vaoIndex++;
         // Make sure data is buffered correctly
         GL.GetBufferParameter(BufferTarget.ArrayBuffer, BufferParameterName.BufferSize, out int size);
+        
         if (pVertices.Length * sizeof(float) != size)
-        {
-            throw new ApplicationException("Vertex data not loaded onto graphics card correctly");
-        }
+            FileManager.LogMessage("Vertex data not loaded onto graphics card correctly");
+        
 
         GL.GetBufferParameter(BufferTarget.ElementArrayBuffer, BufferParameterName.BufferSize, out size);
+        
         if (pIndices.Length * sizeof(float) != size)
-        {
-            throw new ApplicationException("Index data not loaded onto graphics card correctly");
-        }
+            FileManager.LogMessage("Index data not loaded onto graphics card correctly");
         
         // No normals or textures yet
         EnableVertexAttributes(pIsTextured);
@@ -100,16 +99,14 @@ static class VertexManager
         
         // Make sure data is buffered correctly
         GL.GetBufferParameter(BufferTarget.ArrayBuffer, BufferParameterName.BufferSize, out int size);
+        
         if (pVertices.Length * sizeof(float) != size)
-        {
-            throw new ApplicationException("Vertex data not loaded onto graphics card correctly");
-        }
+            FileManager.LogMessage("Vertex data not loaded onto graphics card correctly");
 
         GL.GetBufferParameter(BufferTarget.ElementArrayBuffer, BufferParameterName.BufferSize, out size);
+        
         if (pIndices.Length * sizeof(float) != size)
-        {
-            throw new ApplicationException("Index data not loaded onto graphics card correctly");
-        }
+            FileManager.LogMessage("Index data not loaded onto graphics card correctly");
         
         // No normals or textures yet
         EnableVertexAttributes(pIsTextured);

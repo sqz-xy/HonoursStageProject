@@ -57,7 +57,8 @@ public static class TextureManager
             }
             else
             {
-                throw new Exception("Could not find file " + filepath);
+                FileManager.LogMessage("Could not find texture file");
+                throw new Exception("Could not find texture file " + filepath);
             }
         }
 

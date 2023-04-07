@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using HonoursStageProject.Managers;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform.Windows;
@@ -40,8 +41,8 @@ public class DiamondSquare : Algorithm
 
         if (IsValidSize(Size, Size))
         {
-            Debug.Fail("Invalid Grid Dimensions, Size must be a power of 2 + 1");
-            return new float[0, 0];
+            FileManager.LogMessage("Generate Data - Invalid Grid Dimensions for diamond square, Size must be a power of 2 + 1");
+            return new float[Size, Size];
         }
         
         // Initialize random
@@ -76,11 +77,10 @@ public class DiamondSquare : Algorithm
     /// <returns>A 2D array of height values</returns>
     public override float[,] GenerateData(int pSeed, float pScale, float pFalloff, float[,] pPreSeed, bool pSeedCorners)
     {
-
         if (IsValidSize(pPreSeed.GetLength(0), pPreSeed.GetLength(1)))
         {
-            Debug.Fail("Invalid Grid Dimensions, Size must be a power of 2 + 1");
-            return new float[0, 0];
+            FileManager.LogMessage("Generate Data Pre Seed - Invalid Grid Dimensions for diamond square, Size must be a power of 2 + 1");
+            return new float[pPreSeed.GetLength(0), pPreSeed.GetLength(1)];
         }
         
         Data = pPreSeed;

@@ -9,6 +9,14 @@ public abstract class FileManager
 
     public abstract void SaveHeightData(string pFileName, int pMapSize, float pF, int pSeed, Chunk pSourceChunk);
 
+    public static void LogMessage(string pMessage)
+    {
+        var sw = new StreamWriter("Log.txt", true); 
+        sw.WriteLine($"{pMessage} - Error occured at: {DateTime.Now:HH:mm:ss tt}");
+        Console.WriteLine($"Error Logged to logfile in output directory! - {pMessage}");
+        sw.Close();
+    }
+
     public Settings LoadSettings(string pFileName)
     {
         Settings settings = new Settings();
@@ -21,7 +29,6 @@ public abstract class FileManager
 
         foreach (var line in lines)
         {
-            
             // Handle comments and gaps
             if (line == "")
                 continue;

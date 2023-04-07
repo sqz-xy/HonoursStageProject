@@ -26,7 +26,9 @@ public sealed class MainMenuScene : Scene
         pSceneManager.Updater = Update;
         pSceneManager.MouseMoveEvent += MouseMovement;
         pSceneManager.MouseClickEvent += MouseClick;
-        
+        pSceneManager.CursorVisible = true;
+        pSceneManager.CursorGrabbed = false;
+
         Initialize();
     }
     
@@ -45,7 +47,7 @@ public sealed class MainMenuScene : Scene
     public override void Render(FrameEventArgs pE)
     {
         //Console.WriteLine("Rendering");
-        
+        GL.ClearColor(0.0f, 0.25f, 0.25f, 1.0f);
         _shader.UseShader();
         _button.Render(_shader.Handle);
     }
@@ -61,8 +63,8 @@ public sealed class MainMenuScene : Scene
     /// <param name="pMouseEventArgs">The mouse event arguments</param>
     private void MouseMovement(MouseEventArgs pMouseEventArgs)
     {
-        var mousePos = new Vector2((float) (-1.0 + 2.0 * pMouseEventArgs.X / SceneManager.Width),
-            (float) (1.0 - 2.0 * pMouseEventArgs.Y / SceneManager.Height));
+        var mousePos = new Vector2((float) (-1.0 + 2.0 * pMouseEventArgs.X / _sceneManager.Width),
+            (float) (1.0 - 2.0 * pMouseEventArgs.Y / _sceneManager.Height));
 
         if (Object.CheckSquareIntersection(_button, mousePos))
             _button.BaseColour = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
@@ -76,11 +78,11 @@ public sealed class MainMenuScene : Scene
     /// <param name="pMouseEventArgs">The mouse event arguments</param>
     private void MouseClick(MouseEventArgs pMouseEventArgs)
     {
-        var mousePos = new Vector2((float) (-1.0 + 2.0 * pMouseEventArgs.X / SceneManager.Width),
-            (float) (1.0 - 2.0 * pMouseEventArgs.Y / SceneManager.Height));
+        var mousePos = new Vector2((float) (-1.0 + 2.0 * pMouseEventArgs.X / _sceneManager.Width),
+            (float) (1.0 - 2.0 * pMouseEventArgs.Y / _sceneManager.Height));
 
         if (Object.CheckSquareIntersection(_button, mousePos))
-            SceneManager.ChangeScene(SceneTypes.SceneTerrain);
+            _sceneManager.ChangeScene(SceneTypes.SceneTerrain);
     }
     
     public override void Close()

@@ -52,7 +52,7 @@ public class AscFileManager : FileManager
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            FileManager.LogMessage("Error loading external height map, data format incorrect!");
             return false;
         }
 

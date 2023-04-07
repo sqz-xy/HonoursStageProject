@@ -20,7 +20,7 @@ public sealed class TerrainScene : Scene
     
     public TerrainScene(SceneManager pSceneManager) : base(pSceneManager)
     {
-        SceneManager.Title = "Terrain Scene";
+        _sceneManager.Title = "Terrain Scene";
         
         pSceneManager.Renderer = Render;
         pSceneManager.Updater = Update;
@@ -49,27 +49,17 @@ public sealed class TerrainScene : Scene
         // Object initialization (Terrain mesh) Buffer size cannot be modified during runtime
         VertexManager.Initialize(100000);
         TextureManager.Initialize(2);
-
-        // TEST
+        
         _settings = _fileManager.LoadSettings("Resources/settings.txt");
-        
-        _chunkManager = new ChunkManager(true);
-        
-        // TESTING
-        //_chunkManager.GenerateMap(2, 16, 1.0f, 2, "Resources/TestInput.txt");
+        _chunkManager = new ChunkManager(true, this);
         
         // Chunk sizes can only be 2, 3, 4, 9, 17, 33, 65, 129 
-        //_chunkManager.GenerateMap(4, 17, 1.0f, 2, "", 1f);
         _chunkManager.GenerateMap(_settings);
         _chunkManager.BufferMap();
-        
-        var uViewPosLocation = GL.GetUniformLocation(_shader.Handle, "uViewPos");
-        GL.Uniform3(uViewPosLocation, _camera.Position);
         
         GL.UseProgram(_shader.Handle);
     }
     
-
     public override void Render(FrameEventArgs pE)
     {
         _shader.UseShader();
@@ -88,7 +78,7 @@ public sealed class TerrainScene : Scene
     /// <param name="pMouseEventArgs">The mouse event arguments</param>
     private void MouseMove(MouseEventArgs pMouseEventArgs)
     {
-        if (SceneManager.Focused)
+        if (_sceneManager.Focused)
         {
             // Center Mouse after movement
             Mouse.SetPosition(pMouseEventArgs.X + SceneManager.SWidth / 2f, pMouseEventArgs.Y + SceneManager.SHeight / 2f);
@@ -123,7 +113,7 @@ public sealed class TerrainScene : Scene
                 GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
                 break;
             case 'f':
-                SceneManager.Exit();
+                _sceneManager.Exit();
                 break;
             case 'z':
                 _chunkManager.SaveData("TestData.txt");
