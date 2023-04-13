@@ -169,10 +169,10 @@ public class ChunkManager
                 float[,] heightData;
                 
                 if (rightNode == _sourceChunk)
-                    heightData = _settings.TerrainAlgorithm.GenerateData(rnd.Next(), rightNode.Scale, 0.5f);
+                    heightData = _settings.TerrainAlgorithm.GenerateData(rnd.Next(), _settings.Roughness, rightNode.Scale);
                 else
-                    heightData = _settings.TerrainAlgorithm.GenerateData(rnd.Next(), rightNode.Scale, 0.5f, heightValues, true);
-            
+                    heightData = _settings.TerrainAlgorithm.GenerateData(rnd.Next(), rightNode.Scale, _settings.Roughness, heightValues, true);
+
                 rightNode.AddHeightData(heightData);
                 
                 rightNode = rightNode.Adjacents[1];

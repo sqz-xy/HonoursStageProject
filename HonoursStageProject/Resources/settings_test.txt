@@ -6,6 +6,7 @@ map_size*:5
 chunk_size*:17
 map_scale*:1.0
 render_distance:5.0
+roughness:2.5
 seed:10
 filename:Resources/TA12NE.asc
 terrain_algorithm:DiamondSquare

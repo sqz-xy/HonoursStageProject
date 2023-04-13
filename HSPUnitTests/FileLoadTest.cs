@@ -21,6 +21,7 @@ public class FileLoadTest
         Assert.Equal(1.0f, settings.MapScale);
         Assert.Equal(5.0f, settings.RenderDistance);
         Assert.Equal(10, settings.Seed);
+        Assert.Equal(2.5f, settings.Roughness);
         Assert.Equal("Resources/TA12NE.asc",settings.FileName);
         
         Assert.True(settings.TerrainAlgorithm.GetType() == typeof(DiamondSquare));

@@ -51,6 +51,9 @@ public abstract class FileManager
                 case  "map_scale*":
                     settings.MapScale = float.Parse(value);
                     break;
+                case "roughness":
+                    settings.Roughness = float.Parse(value);
+                    break;
                 case  "render_distance":
                      settings.RenderDistance = float.Parse(value);
                     break;

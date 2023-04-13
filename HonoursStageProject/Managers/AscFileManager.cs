@@ -101,6 +101,7 @@ public class AscFileManager : FileManager
         pChunkGrid = chunkGrid;
         pSettings.MapSize = mapSize;
         pSettings.ChunkSize = cellSize;
+        FileManager.LogMessage($"Data Loaded from: {pSettings.FileName}");
         return true;
     }
 
@@ -156,6 +157,6 @@ public class AscFileManager : FileManager
                 sw.Write($"{cumulativeData[i, j]} ");
         }
 
-        Console.WriteLine("Data Saved!");
+        FileManager.LogMessage($"Data saved at: {pFileName}");
     }
 }
