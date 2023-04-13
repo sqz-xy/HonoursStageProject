@@ -26,6 +26,12 @@ public static class TextureManager
         /// <param name="pFilePath">The path of the texture to bind</param>
         public static int BindTextureData(string pFilePath)
         {
+            if (_textureIndex == _textureIDs.Length)
+            {
+                FileManager.LogMessage("Not enough texture buffer space preallocated");
+                return -1;  
+            }
+            
             var filepath = @pFilePath;
             if (File.Exists(filepath))
             {            

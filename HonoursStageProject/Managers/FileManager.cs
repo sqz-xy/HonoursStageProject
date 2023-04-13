@@ -74,13 +74,19 @@ public abstract class FileManager
                 case "terrain_algorithm":
                     // Parse terrain algorithms
                     {
-                        if (value == String.Empty)
-                            break;
                         
-                        var type = Type.GetType(namespaceName + value);
-                        var alg = (Algorithm) Activator.CreateInstance(type);
-                        alg.Size = settings.ChunkSize;
-                        settings.TerrainAlgorithm = alg;
+                        try
+                        {
+                            var type = Type.GetType(namespaceName + value);
+                            var alg = (Algorithm) Activator.CreateInstance(type);
+                            alg.Size = settings.ChunkSize;
+                            settings.TerrainAlgorithm = alg;
+                        }
+                        catch (Exception e)
+                        {
+                            FileManager.LogMessage("Valid terrain algorithm not present!");
+                        }
+
                     }
                     break;
                 case "culling_algorithms" :

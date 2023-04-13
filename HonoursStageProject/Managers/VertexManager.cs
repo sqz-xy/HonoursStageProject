@@ -51,6 +51,12 @@ static class VertexManager
     /// <returns>The VAO index of the bound vertices</returns>
     public static int BindVertexData(float[] pVertices, uint[] pIndices, bool pIsTextured)
     {
+        if (_vaoIndex == _vaoIDs.Length)
+        {
+            FileManager.LogMessage("Not enough vertex buffer space preallocated");
+            return -1;  
+        }
+        
         GL.BindVertexArray(_vaoIDs[_vaoIndex]);
 
         GL.BindBuffer(BufferTarget.ArrayBuffer, _vboIDs[_vaoIndex]);
