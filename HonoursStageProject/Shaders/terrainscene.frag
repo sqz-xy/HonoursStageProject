@@ -45,6 +45,7 @@ void main()
     else
         colour = vec4(0, 0, oFragPos.y + 1, 0);
     
+    colour += vec4(oFragPos.y) * 0.5f;
     
     FragColor = colour;
     

@@ -17,10 +17,11 @@ public sealed class MainMenuScene : Scene
 {
     private Shader _shader;
     private Quadrilateral _button;
+    private Quadrilateral _background;
 
     public MainMenuScene(SceneManager pSceneManager) : base(pSceneManager)
     {
-        pSceneManager.Title = "Main Menu";
+        pSceneManager.Title = "Welcome";
 
         pSceneManager.Renderer = Render;
         pSceneManager.Updater = Update;
@@ -35,13 +36,16 @@ public sealed class MainMenuScene : Scene
     public override void Initialize()
     {
         // Initialise variables, Initialize based on number of objects/shaders
-        VertexManager.Initialize(1);
-        TextureManager.Initialize(1);
+        VertexManager.Initialize(2);
+        TextureManager.Initialize(2);
         
         _shader = new Shader(@"Shaders/mainmenu.vert", @"Shaders/mainmenu.frag");
 
-        _button = new Quadrilateral(new Vector3(0.0f, 0.25f, 0.0f), 0.2f, 0.1f, new Vector4(0.1f, 0.1f, 0.1f, 0.0f));
+        _button = new Quadrilateral(new Vector3(0.0f, 0.0f, 0.0f), 0.2f, 0.1f, new Vector4(0.1f, 0.1f, 0.1f, 0.0f), "Textures/button.png");
         _button.BufferData();
+        
+        _background = new Quadrilateral(new Vector3(0.0f, 0.0f, 0.0f), 1, 1, new Vector4(0.0f, 0.0f, 0.0f, 0.0f), "Textures/backgroundtex.png"); 
+        _background.BufferData();
     }
     
     public override void Render(FrameEventArgs pE)
@@ -49,6 +53,7 @@ public sealed class MainMenuScene : Scene
         //Console.WriteLine("Rendering");
         GL.ClearColor(0.0f, 0.25f, 0.25f, 1.0f);
         _shader.UseShader();
+        _background.Render(_shader.Handle);
         _button.Render(_shader.Handle);
     }
     

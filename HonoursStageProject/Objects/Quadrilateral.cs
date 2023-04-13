@@ -12,7 +12,7 @@ public class Quadrilateral : Object
     public float Width;
     public float Height;
 
-    public Quadrilateral(Vector3 pPosition, float pWidth, float pHeight, Vector4 pBaseColour)
+    public Quadrilateral(Vector3 pPosition, float pWidth, float pHeight, Vector4 pBaseColour, string pTexturePath)
     {
         PrimitiveType = OpenTK.Graphics.ES11.PrimitiveType.Triangles;
             
@@ -20,6 +20,7 @@ public class Quadrilateral : Object
         Width = pWidth;
         Height = pHeight;
         BaseColour = pBaseColour;
+        TexturePath = pTexturePath;
 
         Vertices = new float[]
         {
@@ -39,13 +40,12 @@ public class Quadrilateral : Object
     public override void BufferData()
     {
         BufferIndex = VertexManager.BindVertexData(Vertices, Indices, true);
-        TextureIndex = TextureManager.BindTextureData("Textures/button.png");
+        TextureIndex = TextureManager.BindTextureData(TexturePath);
     }
     
     public override void BufferData(int pBufferTarget)
     {
         BufferIndex = VertexManager.BindVertexData(Vertices, Indices, true, pBufferTarget);
-        //TextureIndex = TextureManager.BindTextureData("Textures/button.png");
     }
 
     public sealed override void Render(int pShaderHandle)

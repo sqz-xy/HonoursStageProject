@@ -13,14 +13,14 @@ public sealed class TerrainScene : Scene
 {
     private Shader _shader;
     private Camera _camera;
-    private Algorithm _diamondSquare;
     private ChunkManager _chunkManager;
     private FileManager _fileManager;
     private Settings _settings;
     
+    
     public TerrainScene(SceneManager pSceneManager) : base(pSceneManager)
     {
-        _sceneManager.Title = "Terrain Scene";
+        _sceneManager.Title = "Terrain Generated";
         
         pSceneManager.Renderer = Render;
         pSceneManager.Updater = Update;
@@ -38,8 +38,7 @@ public sealed class TerrainScene : Scene
         GL.ClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         
         GL.Enable(EnableCap.DepthTest);
-        GL.Enable(EnableCap.CullFace);
-        GL.CullFace(CullFaceMode.Front); // Changed due to triangle strip
+
         
         // Camera and Shader initialization
         _camera = new Camera();
@@ -55,6 +54,7 @@ public sealed class TerrainScene : Scene
         
         // Chunk sizes can only be 2, 3, 4, 9, 17, 33, 65, 129 
         _chunkManager.GenerateMap(_settings);
+
         _chunkManager.BufferMap();
         
         GL.UseProgram(_shader.Handle);
@@ -64,10 +64,12 @@ public sealed class TerrainScene : Scene
     {
         _shader.UseShader();
         _chunkManager.RenderMap(_shader.Handle, _camera);
+        
     }
 
     public override void Update(FrameEventArgs pE)
     {
+        _shader.UseShader();
         _camera.RotateCamera(Mouse.GetState());
         _camera.UpdateCamera(_shader.Handle);
     }
@@ -125,6 +127,7 @@ public sealed class TerrainScene : Scene
                 _chunkManager.ScaleChunkHeight(0.9f);
                 break;
             case 'g':
+                if (_settings.FileName != String.Empty) {break;}
                 _chunkManager.RegenerateMap();
                 break;
         }

@@ -52,13 +52,14 @@ public class AscFileManager : FileManager
         }
         catch (Exception e)
         {
-            FileManager.LogMessage("Error loading external height map, data format incorrect!");
+            FileManager.LogMessage($"Error loading external height map {e.Message}");
             return false;
         }
 
         var chunkGrid = new Chunk[mapSize, mapSize];
 
         var centreOffset = cellSize / 2;
+        var threads = new List<Thread>();
         
         // Create Chunks
         for (var i = 0; i < mapSize; i++)
@@ -68,13 +69,27 @@ public class AscFileManager : FileManager
                 var xOffset = -(mapSize * cellSize) / 2;
                 var yOffset = -(mapSize * cellSize) / 2;
 
-                chunkGrid[i, j] =
-                    new Chunk(
-                        new Vector3(xOffset + (i * (cellSize - 1)) + centreOffset, -2, yOffset + (j * (cellSize - 1)) + centreOffset),
-                        cellSize, mapScale, 
-                        new Vector2(j, i), pTextureIndex);
+                var i1 = i;
+                var j1 = j;
+                var t = new Thread(() =>
+                {
+                    // Make sure the chunks are offset correctly so the middle of the chunk map is 0,0
+                    var xOffset = -((mapSize * cellSize) / 2) * mapScale;
+                    var yOffset = -((mapSize * cellSize) / 2) * mapScale;
+
+                    chunkGrid[i1, j1] =
+                        new Chunk(
+                            new Vector3(xOffset + ((i1 * ((cellSize * mapScale) - 1 * mapScale)) + centreOffset), 0, yOffset + (j1 * ((cellSize * mapScale) - 1 * mapScale)) + centreOffset),
+                            cellSize, mapScale, 
+                            new Vector2(i1, j1), pTextureIndex);
+                });
+                threads.Add(t);
+                t.Start();
             }
         }
+        
+        foreach (var thread in threads)
+            thread.Join();
         
         var chunkPointerX = 0;
         var chunkPointerY = 0;

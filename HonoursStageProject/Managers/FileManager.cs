@@ -12,8 +12,8 @@ public abstract class FileManager
     public static void LogMessage(string pMessage)
     {
         var sw = new StreamWriter("Log.txt", true); 
-        sw.WriteLine($"{pMessage} - Error occured at: {DateTime.Now:HH:mm:ss tt}");
-        Console.WriteLine($"Error Logged to logfile in output directory! - {pMessage}");
+        sw.WriteLine($"{pMessage} - Event occured at: {DateTime.Now:HH:mm:ss tt}");
+        Console.WriteLine($"Event Logged to logfile in output directory! - {pMessage}");
         sw.Close();
     }
 

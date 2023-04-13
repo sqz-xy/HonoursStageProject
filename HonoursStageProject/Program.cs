@@ -15,6 +15,6 @@ public static class Program
     public static void Main()
     {
         using var program = new SceneManager();
-        program.Run(60.0);
+        program.Run();
     }
 }

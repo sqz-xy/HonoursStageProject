@@ -34,9 +34,9 @@ public class DiamondSquare : Algorithm
     /// </summary>
     /// <param name="pSeed">The random seed</param>
     /// <param name="pScale">The terrain roughness</param>
-    /// <param name="pFalloff">The falloff of the roughness</param>
+    /// <param name="pRoughness">The falloff of the roughness</param>
     /// <returns>A 2D array of height values</returns>
-    public override float[,] GenerateData(int pSeed, float pScale, float pFalloff)
+    public override float[,] GenerateData(int pSeed, float pScale, float pRoughness)
     {
         Data = null;
 
@@ -62,7 +62,7 @@ public class DiamondSquare : Algorithm
         Data[Size - 1, Size - 1] = (NextFloat(rnd, -randomRange, randomRange));
 
         // Run Algorithm
-        DiamondSquareAlgorithm(rnd, randomRange, pFalloff, pScale);
+        DiamondSquareAlgorithm(rnd, randomRange, pRoughness, pScale);
         
         return Data;
     }
@@ -73,10 +73,10 @@ public class DiamondSquare : Algorithm
     /// </summary>
     /// <param name="pSeed">The random seed</param>
     /// <param name="pScale">The terrain roughness</param>
-    /// <param name="pFalloff">The falloff of the roughness</param>
+    /// <param name="pRoughness">The falloff of the roughness</param>
     /// <param name="pPreSeed">Seeded Data</param>
     /// <returns>A 2D array of height values</returns>
-    public override float[,] GenerateData(int pSeed, float pScale, float pFalloff, float[,] pPreSeed, bool pSeedCorners)
+    public override float[,] GenerateData(int pSeed, float pScale, float pRoughness, float[,] pPreSeed, bool pSeedCorners)
     {
         if (IsValidSize(pPreSeed.GetLength(0), pPreSeed.GetLength(1)))
         {
@@ -109,13 +109,13 @@ public class DiamondSquare : Algorithm
 
         try
         {
-            DiamondSquareAlgorithm(rnd, randomRange, pFalloff, pScale);
+            DiamondSquareAlgorithm(rnd, randomRange, pRoughness, pScale);
         }
         catch (Exception e)
         {
             Console.WriteLine($"{e.Message} \n Diamond square size incorrect, must be 2n + 1! \n Retrying with default chunk size of 17");
             Size = 17;
-            DiamondSquareAlgorithm(rnd, randomRange, pFalloff, pScale);
+            DiamondSquareAlgorithm(rnd, randomRange, pRoughness, pScale);
         }
         
 #if  DEBUG
@@ -131,8 +131,8 @@ public class DiamondSquare : Algorithm
     /// </summary>
     /// <param name="pRnd">The random instance</param>
     /// <param name="pRandomRange">The random range</param>
-    /// <param name="pFalloff">Random falloff</param>
-    private void DiamondSquareAlgorithm(Random pRnd, float pRandomRange, float pFalloff, float pScale)
+    /// <param name="pRoughness">Random falloff</param>
+    private void DiamondSquareAlgorithm(Random pRnd, float pRandomRange, float pRoughness, float pScale)
     {
         var step = Size - 1;
 
@@ -153,7 +153,7 @@ public class DiamondSquare : Algorithm
 
                 // Average of four points plus a random displacement
                 var avg = (topLeft + topRight + bottomLeft + bottomRight) / 4;
-                Data[x + halfStep, y + halfStep] = avg + (float)(pRnd.NextDouble() * 2 - 1) * pFalloff * pScale;
+                Data[x + halfStep, y + halfStep] = avg + (float)(pRnd.NextDouble() * 2 - 1) * pRoughness * pScale;
             }
             
             float top = 0, bottom = 0, left = 0, right = 0;
@@ -169,7 +169,7 @@ public class DiamondSquare : Algorithm
 
                 // Average of four points plus a random displacement
                 var avg = (top + bottom + left + right) / 4;
-                Data[x, y] = avg + (float)(pRnd.NextDouble() * 2 - 1) * pFalloff * pScale;
+                Data[x, y] = avg + (float)(pRnd.NextDouble() * 2 - 1) * pRoughness * pScale;
 
                 if (x == 0)
                     Data[Size - 1, y] = avg;

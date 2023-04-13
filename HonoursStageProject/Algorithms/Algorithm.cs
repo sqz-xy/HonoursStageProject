@@ -15,9 +15,9 @@ public abstract class Algorithm : IAlgorithm
         
     }
     
-    public abstract float[,] GenerateData(int pSeed, float pScale, float pFalloff, float[,] pPreSeed, bool pSeedCorners);
+    public abstract float[,] GenerateData(int pSeed, float pScale, float pRoughness, float[,] pPreSeed, bool pSeedCorners);
     
-    public abstract float[,] GenerateData(int pSeed, float pScale, float pFalloff);
+    public abstract float[,] GenerateData(int pSeed, float pScale, float pRoughness);
     
     /// <summary>
     /// Prints stored data to the console
