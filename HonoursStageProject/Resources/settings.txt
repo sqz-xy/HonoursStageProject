@@ -2,12 +2,12 @@
 // Settings with an asterisk are compulsory
 // When loading a file, map size and chunk size will be overridden based on the dimensions of the height map being loaded. 
 
-map_size*:50
+map_size*:100
 chunk_size*:17
 map_scale*:1.0
-render_distance:20.0
+render_distance:5.0
 roughness:0.5
-seed:
+seed: 0123456
 filename:
 terrain_algorithm:DiamondSquare
-culling_algorithms:DistanceCulling FrustumCulling
+culling_algorithms:

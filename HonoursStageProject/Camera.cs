@@ -37,7 +37,6 @@ public class Camera
     public Camera()
     {
         // Default camera values
-        
         Position = new Vector3(0.0f, 8f, 0.0f);
         var target = new Vector3(0.0f, 0.0f, 0.0f);
         Up = new Vector3(0.0f, 1.0f,  0.0f);
@@ -48,8 +47,6 @@ public class Camera
         Projection = Matrix4.CreatePerspectiveFieldOfView(1, (float)SceneManager.SWidth / SceneManager.SHeight, 0.1f, 100);
         CullingProj = Matrix4.CreatePerspectiveFieldOfView(1.75f, (float)SceneManager.SWidth / SceneManager.SHeight, 0.05f, 100);
         
-        // Make a slightly bigger matrices for the culling
-
         _sensitivity = 0.05f;
         _hasMouseMoved = false;
 

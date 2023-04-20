@@ -8,13 +8,16 @@ namespace HonoursStageProject.Managers;
 
 public class SceneManager : GameWindow
 {
-    public static int SWidth = 1280, SHeight = 720;
+    public static int SWidth = 1920, SHeight = 1080;
 
     private Scene _currentScene;
     public delegate void SceneDelegate(FrameEventArgs pE);
     public SceneDelegate Renderer;
     public SceneDelegate Updater;
-
+    
+    public ChunkManager _chunkManager;
+    public FileManager _fileManager;
+    
     public delegate void MouseMoveDelegate(MouseEventArgs pE);
     public MouseMoveDelegate? MouseMoveEvent;
 
@@ -24,13 +27,9 @@ public class SceneManager : GameWindow
     public delegate void KeyPressDelegate(KeyPressEventArgs pE);
     public KeyPressDelegate? KeyPressEvent;
 
-    // Stack of render delegates
-    // Update delegate stays the same
-    // Input manager for camera movement
-    
-    public SceneManager() : base(SWidth, SHeight, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 16))
+    public SceneManager() : base(SWidth, SHeight, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 16), "", GameWindowFlags.Fullscreen)
     {
-
+        this.VSync = VSyncMode.Off;
     }
     
     /// <summary>
@@ -46,6 +45,8 @@ public class SceneManager : GameWindow
         GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         
         _currentScene = new MainMenuScene(this);
+        _fileManager = new AscFileManager();
+        _chunkManager = new ChunkManager(_currentScene);
     }
     
     /// <summary>
@@ -66,6 +67,8 @@ public class SceneManager : GameWindow
     protected override void OnUpdateFrame(FrameEventArgs pFrameEventArgs)
     {
         base.OnUpdateFrame(pFrameEventArgs);
+        
+        // Update delegate usage, utilising the current scene's update function
         Updater(pFrameEventArgs);
     }
 
@@ -78,6 +81,7 @@ public class SceneManager : GameWindow
         base.OnRenderFrame(pFrameEventArgs);
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         
+        // Render delegate usage, utilising the current scene's render function
         Renderer(pFrameEventArgs);
 
         GL.Flush();
@@ -118,9 +122,7 @@ public class SceneManager : GameWindow
     public void ChangeScene(SceneTypes pSceneType)
     {
         _currentScene.Close();
-
-        //try
-        //{
+        
             switch (pSceneType)
             {
                 case SceneTypes.SceneMainMenu:
@@ -130,12 +132,8 @@ public class SceneManager : GameWindow
                     _currentScene = new TerrainScene(this);
                     break;
             }
-        //}
-        /*catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-            _currentScene = new MainMenuScene(this);
-        }*/
+ 
+        _chunkManager.UpdateParent(_currentScene);
     }
 
     /// <summary>
@@ -147,5 +145,4 @@ public class SceneManager : GameWindow
         base.OnUnload(pEventArgs);
         _currentScene.Close();
     }
-
 }

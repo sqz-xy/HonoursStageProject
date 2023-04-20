@@ -14,7 +14,6 @@ void main()
 {
 
     // Lighting
-
     float ambientStrength = 0.1;
     vec3 lightColour = vec3(1, 1, 1);
     vec3 lightPos = vec3(0, 10, 0);
@@ -36,8 +35,6 @@ void main()
     vec3 specular = specularStrength * spec * lightColour;
 
     vec3 result = (ambient + diffuse + specular) * vec3(1, 1, 1);
-   // FragColor = vec4(result, 1.0) * texture(uTextureSampler1, oTexCoords) + oColour;
-    
     vec4 colour = vec4(1, 1, 1, 1);
     
     if (oFragPos.y > 0.0f)

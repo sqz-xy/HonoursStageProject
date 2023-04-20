@@ -14,9 +14,6 @@ out vec3 oFragPos;
 
 void main()
 {
-    oTexCoords = aTexture;
-    
-    // Relief
     const float brightnessMultiplier = 1.5;
     vec4 position = vec4(aPosition, 1) * uModel * uView * uProjection;
     vec4 colour = vec4(0, aPosition.y, 0, 1) / 20;
@@ -25,5 +22,6 @@ void main()
     oNormal = mat3(transpose(inverse(uModel))) * aNormal;
       
     oColour = colour * brightnessMultiplier;
+    oTexCoords = aTexture;
     gl_Position = position;
 }

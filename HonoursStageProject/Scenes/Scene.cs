@@ -10,6 +10,8 @@ public abstract class Scene : IScene
     protected Scene(SceneManager pSceneManager)
     {
         this._sceneManager = pSceneManager;
+        pSceneManager.Updater = this.Update;
+        pSceneManager.Renderer = this.Render;
     }
 
     public abstract void Initialize();

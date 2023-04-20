@@ -50,7 +50,7 @@ public class Chunk : Object
     /// <param name="pSize">Size of the mesh</param>
     /// <param name="pScale">Resolution of the mesh</param>
     /// <param name="pVertices">Mesh Vertices</param>
-    private static void GenerateVertices(int pSize, float pScale, List<float> pVertices)
+    private void GenerateVertices(int pSize, float pScale, List<float> pVertices)
     {
         for (var heightIndex = 0; heightIndex < pSize; heightIndex++)
         for (var widthIndex = 0; widthIndex < pSize; widthIndex++)

@@ -21,10 +21,8 @@ static class VertexManager
         _vboIDs = new int[_bufferSize];
         _vaoIDs = new int[_bufferSize];
         _eboIDs = new int[_bufferSize];
-
-        _vboIndex = 0;
+        
         _vaoIndex = 0;
-        _eboIndex = 0;
 
         // Generates the Vertex arrays and buffers on handler initialization
         GL.GenVertexArrays(_vaoIDs.Length, _vaoIDs);

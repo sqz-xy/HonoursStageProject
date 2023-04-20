@@ -8,7 +8,6 @@ namespace HonoursStageProject.Managers;
 public class ChunkManager
 {
     private Chunk _sourceChunk;
-    private readonly int _textureIndex;
     private Chunk[,] _chunkGrid;
     private Settings _settings;
     private Scene _parentScene;
@@ -24,11 +23,8 @@ public class ChunkManager
         new(-1, 0)  // LEFT
     };
     
-    public ChunkManager(bool pBindTexture, Scene pParentScene)
+    public ChunkManager(Scene pParentScene)
     {
-        if (pBindTexture)
-            _textureIndex = TextureManager.BindTextureData("Textures/button.png");
-
         _parentScene = pParentScene;
         _fileManager = new AscFileManager();
     }
@@ -64,7 +60,7 @@ public class ChunkManager
                         new Chunk(
                             new Vector3(xOffset + ((j1 * ((_settings.ChunkSize * _settings.MapScale) - 1 * _settings.MapScale)) + centreOffset), 0, yOffset + (i1 * ((_settings.ChunkSize * _settings.MapScale) - 1 * _settings.MapScale)) + centreOffset),
                             _settings.ChunkSize, _settings.MapScale, 
-                            new Vector2(j1, i1), _textureIndex);
+                            new Vector2(j1, i1), -1);
                     _chunkGrid[i1, j1].ID = chunkID++;
                 });
                 threads.Add(t);
@@ -73,7 +69,7 @@ public class ChunkManager
         }
         else
         {
-            var success = _fileManager.ReadHeightData(pSettings.FileName, _textureIndex, out _chunkGrid, ref _settings);
+            var success = _fileManager.ReadHeightData(pSettings.FileName, -1, out _chunkGrid, ref _settings);
             if (!success)
             {
                 _parentScene.ChangeScene(SceneTypes.SceneMainMenu);
@@ -157,9 +153,6 @@ public class ChunkManager
             while (rightNode != null)
             {
                 // Cant multithread due to race condition
-                // Loop through adjacents, create an empty 2d array of chunksize and populate the sides with edge values of adjacents (Clockwise) 
-                // Fix Corners by taking an avg and make sure the terrain stitches together properly.
-            
                 float[,] heightValues = new float[rightNode.HeightData.GetLength(0), rightNode.HeightData.GetLength(1)];
 
                 // Initial pass for seeding data
@@ -180,7 +173,6 @@ public class ChunkManager
             downNode = downNode.Adjacents[2];
         }
         // Second size matching pass
-        
         MatchSides();
         
         //TODO: Chunks arent placed correctly im pretty sure causing the matching issue
@@ -208,9 +200,7 @@ public class ChunkManager
     {
         for (int i = 0; i < rightNode.Adjacents.Length; i++)
         {
-            // The bug is related to this, the 0s dont appear if my diamond square runs without pre seed, next thing to fix is other 0s
             float[] row, col;
-
             switch (i)
             {
                 case 0: // UP
@@ -364,5 +354,10 @@ public class ChunkManager
     public Chunk GetSourceChunk()
     {
         return _sourceChunk;
+    }
+
+    public void UpdateParent(Scene pParent)
+    {
+        _parentScene = pParent;
     }
 }

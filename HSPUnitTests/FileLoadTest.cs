@@ -38,7 +38,7 @@ public class FileLoadTest
         AscFileManager manager = new AscFileManager();
         var settings = manager.LoadSettings("Resources/settings_chunk_test.txt");
         
-        var chunkManager = new ChunkManager(false, null);
+        var chunkManager = new ChunkManager(null);
         chunkManager.GenerateMap(settings);
 
         var sourceChunk = chunkManager.GetSourceChunk();
@@ -68,7 +68,7 @@ public class FileLoadTest
         AscFileManager manager = new AscFileManager();
         var settings = manager.LoadSettings("Resources/settings_chunk_test.txt");
         
-        var chunkManager = new ChunkManager(false, null);
+        var chunkManager = new ChunkManager(null);
         chunkManager.GenerateMap(settings);
 
         var sourceChunk = chunkManager.GetSourceChunk();

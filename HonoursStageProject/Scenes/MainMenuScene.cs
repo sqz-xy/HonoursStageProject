@@ -22,9 +22,7 @@ public sealed class MainMenuScene : Scene
     public MainMenuScene(SceneManager pSceneManager) : base(pSceneManager)
     {
         pSceneManager.Title = "Welcome";
-
-        pSceneManager.Renderer = Render;
-        pSceneManager.Updater = Update;
+        
         pSceneManager.MouseMoveEvent += MouseMovement;
         pSceneManager.MouseClickEvent += MouseClick;
         pSceneManager.CursorVisible = true;
