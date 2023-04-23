@@ -46,16 +46,17 @@ public sealed class TerrainScene : Scene
 
         // Chunk sizes can only be 2, 3, 4, 9, 17, 33, 65, 129 
         _sceneManager._chunkManager.GenerateMap(_settings);
-        _sceneManager._chunkManager.BufferMap();
         
         GL.UseProgram(_shader.Handle);
+        
+        _shader.UseShader();
+        _sceneManager._chunkManager.BufferMap(_shader.Handle);
     }
     
     public override void Render(FrameEventArgs pE)
     {
         _shader.UseShader();
         _sceneManager._chunkManager.RenderMap(_shader.Handle, _camera);
-        
     }
 
     public override void Update(FrameEventArgs pE)

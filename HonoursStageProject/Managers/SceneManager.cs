@@ -8,7 +8,7 @@ namespace HonoursStageProject.Managers;
 
 public class SceneManager : GameWindow
 {
-    public static int SWidth = 1920, SHeight = 1080;
+    public static int SWidth = 1280, SHeight = 960;
 
     private Scene _currentScene;
     public delegate void SceneDelegate(FrameEventArgs pE);
@@ -27,7 +27,7 @@ public class SceneManager : GameWindow
     public delegate void KeyPressDelegate(KeyPressEventArgs pE);
     public KeyPressDelegate? KeyPressEvent;
 
-    public SceneManager() : base(SWidth, SHeight, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 16), "", GameWindowFlags.Fullscreen)
+    public SceneManager() : base(SWidth, SHeight, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 16))
     {
         this.VSync = VSyncMode.Off;
     }

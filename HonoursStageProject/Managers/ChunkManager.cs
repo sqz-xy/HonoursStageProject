@@ -2,6 +2,7 @@
 using HonoursStageProject.Objects;
 using HonoursStageProject.Scenes;
 using OpenTK;
+using OpenTK.Graphics.OpenGL4;
 
 namespace HonoursStageProject.Managers;
 
@@ -11,6 +12,9 @@ public class ChunkManager
     private Chunk[,] _chunkGrid;
     private Settings _settings;
     private Scene _parentScene;
+
+    private float _min = float.MaxValue;
+    private float _max = 0;
     
     private readonly FileManager _fileManager;
     
@@ -112,11 +116,30 @@ public class ChunkManager
             GenChunkHeightData();
     }
 
-    public void BufferMap()
+    public void BufferMap(int pShaderHandle)
     {
         // Buffer the chunk data
         foreach (var chunk in _chunkGrid)
+        {
+            // Get max and min for normalization
+            if (chunk.HeightData.Cast<float>().Max() > _max)
+                _max = chunk.HeightData.Cast<float>().Max();
+
+            if (chunk.HeightData.Cast<float>().Min() < _min)
+                _min = chunk.HeightData.Cast<float>().Min();
             chunk.BufferData();
+        }
+        
+        // Send to shader
+
+        var maxLocation = GL.GetUniformLocation(pShaderHandle, "uMaxVal");
+        Console.WriteLine(maxLocation);
+
+        var minLocation = GL.GetUniformLocation(pShaderHandle, "uMinVal");
+        Console.WriteLine(minLocation);
+        
+        GL.Uniform1(maxLocation, _max);
+        GL.Uniform1(minLocation, _min);
     }
 
     public void RegenerateMap()
