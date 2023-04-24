@@ -57,7 +57,10 @@ public sealed class MainMenuScene : Scene
     
     public override void Update(FrameEventArgs pE)
     {
-     
+        var input = Keyboard.GetState();
+        
+        if (input.IsKeyDown(Key.Escape))
+            _sceneManager.Exit();
     } 
     
     /// <summary>

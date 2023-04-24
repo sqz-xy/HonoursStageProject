@@ -51,6 +51,7 @@ public sealed class TerrainScene : Scene
         
         _shader.UseShader();
         _sceneManager._chunkManager.BufferMap(_shader.Handle);
+        
     }
     
     public override void Render(FrameEventArgs pE)
@@ -116,7 +117,7 @@ public sealed class TerrainScene : Scene
                 _sceneManager.Exit();
                 break;
             case 'z':
-                _sceneManager._chunkManager.SaveData("TestData.txt");
+                _sceneManager._chunkManager.SaveData("OutputData.txt");
                 break;
             case '.':
                 _sceneManager._chunkManager.ScaleChunkHeight(1.1f);
