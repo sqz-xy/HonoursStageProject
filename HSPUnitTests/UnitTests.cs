@@ -7,7 +7,7 @@ using OpenTK;
 
 namespace HSPUnitTests;
 
-public class FileLoadTest
+public class UnitTests
 {
     [Fact]
     public void LoadFileSuccess()

@@ -4,10 +4,10 @@
 
 map_size*:100
 chunk_size*:17
-map_scale*:1.0
+map_scale*:0.5
 render_distance:5.0
 roughness:0.5
-seed: 0123456
+seed:
 filename:
 terrain_algorithm:DiamondSquare
 culling_algorithms:DistanceCulling FrustumCulling
