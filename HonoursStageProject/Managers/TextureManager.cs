@@ -35,12 +35,14 @@ public static class TextureManager
             var filepath = @pFilePath;
             if (File.Exists(filepath))
             {            
+                // Gen bitmap
                 var textureBitmap = new Bitmap(filepath);
                 var textureData = textureBitmap.LockBits(
                 new Rectangle(0, 0, textureBitmap.Width,
                 textureBitmap.Height), ImageLockMode.ReadOnly,
                 System.Drawing.Imaging.PixelFormat.Format32bppRgb);
 
+                // Bind to current tex unit
                 GL.ActiveTexture(_currentTextureUnit);
                 GL.GenTextures(1, out _textureIDs[_textureIndex]);
                 GL.BindTexture(TextureTarget.Texture2D, _textureIDs[_textureIndex]);

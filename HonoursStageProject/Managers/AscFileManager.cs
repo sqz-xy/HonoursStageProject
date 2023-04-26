@@ -5,12 +5,6 @@ namespace HonoursStageProject.Managers;
 
 public class AscFileManager : FileManager
 {
-    //TODO: Next Week: Texturing, testing, REFACTOR REFACTOR REFACTOR
-    //TODO: Maybe store map data in a struct so i can re load them at runtime?
-    
-    //TODO: CellSize Limitation https://www.loc.gov/preservation/digital/formats/fdd/fdd000421.shtml, ive been using cellsize for the chunksize in line coordinate system
-    
-
     public override bool ReadHeightData(string pFileName, int pTextureIndex, out Chunk[,] pChunkGrid, ref Settings pSettings)
     {
         pChunkGrid = new Chunk[0, 0];
@@ -31,13 +25,14 @@ public class AscFileManager : FileManager
             else
                 numRowsCols = nrows;
 
-            // Need to add defaults for event of no header data
+            // Read header data
             cellSize = int.Parse(File.ReadLines(pFileName).Skip(4).Take(1).ToList()[0].Split(' ')[1]);
             mapScale = pSettings.MapScale;
             mapSize = numRowsCols / cellSize;
 
             var heightData = File.ReadLines(pFileName).Skip(6).ToList();
 
+            // Collate all the data into a big array
             chunkedData = new float[cellSize * mapSize, cellSize * mapSize];
             
             for (var i = 0; i < heightData.Count; ++i)
@@ -94,18 +89,15 @@ public class AscFileManager : FileManager
         var chunkPointerX = 0;
         var chunkPointerY = 0;
 
-        // Add height data
+        // Add height data to chunks
         for (int chunkIndexX = 0; chunkIndexX < chunkGrid.GetLength(0); chunkIndexX++)
         {
             for (int chunkIndexY = 0; chunkIndexY < chunkGrid.GetLength(1); chunkIndexY++)
             {
                 for (int i = 0; i < cellSize; i++)
-                {
-                    for (int j = 0; j < cellSize; j++)
-                    {
+                for (int j = 0; j < cellSize; j++)
                         chunkGrid[chunkIndexX, chunkIndexY].HeightData[i, j] = chunkedData[i + chunkPointerX, j + chunkPointerY];
-                    }
-                }
+                    
                 chunkGrid[chunkIndexX, chunkIndexY].AddHeightData(chunkGrid[chunkIndexX, chunkIndexY].HeightData);
                 chunkPointerY += cellSize;
             }
@@ -162,7 +154,6 @@ public class AscFileManager : FileManager
         }
 
         // Save cumulative data
-
         for (int i = 0; i < cumulativeData.GetLength(0); i++)
         {
             if (i != 0)

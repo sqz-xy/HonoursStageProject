@@ -19,6 +19,7 @@ public abstract class FileManager
 
     public Settings LoadSettings(string pFileName)
     {
+        // parse settings file into settings obj
         Settings settings = new Settings();
         Random rnd = new Random();
 

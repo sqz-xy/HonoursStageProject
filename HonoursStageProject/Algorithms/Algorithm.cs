@@ -43,8 +43,6 @@ public abstract class Algorithm : IAlgorithm
     /// <returns>A normalized dataset</returns>
     protected float[,] Normalise(float[,] pHeightData)
     {
-        // Change this to normalize between different values
-        
         var max = pHeightData.Cast<float>().Max();
         var min = pHeightData.Cast<float>().Min();
         

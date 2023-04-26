@@ -47,8 +47,10 @@ public class ChunkManager
         var threads = new List<Thread>();
         var chunkID = 0;
         
+        // If no external file
         if (pSettings.FileName == string.Empty)
         {
+            // Create chunks
             for (var i = 0; i < _settings.MapSize; i++)
             for (var j = 0; j < _settings.MapSize; j++)
             {
@@ -81,9 +83,9 @@ public class ChunkManager
             }
         }
 
+        // Join threads
         foreach (var thread in threads)
             thread.Join();
-        
         
         // Construct linked grid
         for (var i = 0; i < _settings.MapSize; i++)
@@ -130,7 +132,7 @@ public class ChunkManager
             chunk.BufferData();
         }
         
-        // Send to shader
+        // Send to shader for normalisation
         var maxLocation = GL.GetUniformLocation(pShaderHandle, "uMaxVal");
         var minLocation = GL.GetUniformLocation(pShaderHandle, "uMinVal");
 
@@ -193,8 +195,6 @@ public class ChunkManager
         }
         // Second size matching pass
         MatchSides();
-        
-        //TODO: Chunks arent placed correctly im pretty sure causing the matching issue
     }
 
     private void MatchSides()
@@ -207,7 +207,7 @@ public class ChunkManager
 
             while (rightNode != null)
             {
-                // Race condition -
+                // Race condition - can't multithread
                 rightNode.AddHeightData(MatchSides(rightNode, rightNode.HeightData));
                 rightNode = rightNode.Adjacents[1];
             }
@@ -217,6 +217,7 @@ public class ChunkManager
 
     private float[,] MatchSides(Chunk rightNode, float[,] heightValues)
     {
+        // Loop through adjacents, get the edge of the adjacent and add it to the height values for interpolation between chunks
         for (int i = 0; i < rightNode.Adjacents.Length; i++)
         {
             float[] row, col;
