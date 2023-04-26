@@ -1,0 +1,92 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "HonoursStageProject/1.0.0": {
+        "dependencies": {
+          "Microsoft.Win32.SystemEvents": "7.0.0-rc.2.22472.3",
+          "OpenTK": "3.3.3",
+          "System.Drawing.Common": "7.0.0-rc.2.22472.3"
+        },
+        "runtime": {
+          "HonoursStageProject.dll": {}
+        }
+      },
+      "Microsoft.Win32.SystemEvents/7.0.0-rc.2.22472.3": {
+        "runtime": {
+          "lib/net6.0/Microsoft.Win32.SystemEvents.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.47203"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.47203"
+          }
+        }
+      },
+      "OpenTK/3.3.3": {
+        "runtime": {
+          "lib/net20/OpenTK.dll": {
+            "assemblyVersion": "3.3.3.0",
+            "fileVersion": "3.3.3.0"
+          }
+        }
+      },
+      "System.Drawing.Common/7.0.0-rc.2.22472.3": {
+        "dependencies": {
+          "Microsoft.Win32.SystemEvents": "7.0.0-rc.2.22472.3"
+        },
+        "runtime": {
+          "lib/net6.0/System.Drawing.Common.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.47203"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net6.0/System.Drawing.Common.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.47203"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "HonoursStageProject/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.Win32.SystemEvents/7.0.0-rc.2.22472.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-/1Q4EliHYtAwVNBSB/qByvayhKV+1PYkpKF1VMKz67twIGjRcnw8UfvYrl7xWE426MiLl/fOsT/ql/7ii/HoTA==",
+      "path": "microsoft.win32.systemevents/7.0.0-rc.2.22472.3",
+      "hashPath": "microsoft.win32.systemevents.7.0.0-rc.2.22472.3.nupkg.sha512"
+    },
+    "OpenTK/3.3.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-KtnygHEuYj4+agNsZRtzh5iSiKlelDZvDB/OhfebEvIDX/97Pzygv8n5llZHgrI7Xa29vvkucVBeN55R6/k+4w==",
+      "path": "opentk/3.3.3",
+      "hashPath": "opentk.3.3.3.nupkg.sha512"
+    },
+    "System.Drawing.Common/7.0.0-rc.2.22472.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-3rIg2KRI+DqQysJ8mcpyOcNRaBR0L5gmVt91y7VOEBbTmK1jnfTXdm+zWHwv4SSCXRSOtYUKNW7iEnPuI6O9dw==",
+      "path": "system.drawing.common/7.0.0-rc.2.22472.3",
+      "hashPath": "system.drawing.common.7.0.0-rc.2.22472.3.nupkg.sha512"
+    }
+  }
+}
