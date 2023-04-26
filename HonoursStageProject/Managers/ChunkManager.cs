@@ -131,13 +131,9 @@ public class ChunkManager
         }
         
         // Send to shader
-
         var maxLocation = GL.GetUniformLocation(pShaderHandle, "uMaxVal");
-        Console.WriteLine(maxLocation);
-
         var minLocation = GL.GetUniformLocation(pShaderHandle, "uMinVal");
-        Console.WriteLine(minLocation);
-        
+
         GL.Uniform1(maxLocation, _max);
         GL.Uniform1(minLocation, _min);
     }

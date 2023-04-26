@@ -2,7 +2,7 @@
 // Settings with an asterisk are compulsory
 // When loading a file, map size and chunk size will be overridden based on the dimensions of the height map being loaded. 
 
-map_size*:100
+map_size*:10
 chunk_size*:17
 map_scale*:0.5
 render_distance:5.0
